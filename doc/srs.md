@@ -23,13 +23,12 @@ The proposed solution is to develop a web application that connects job seekers 
 - As an employer, I want to receive notifications (via email potentially) about users that can be a good fit for the non-expired, opportunities I’ve posted.
 - As an employer, I want any user to go through channel(s) of authentication, so my company does not have to deal with bot applications and instead focus on candidates that are truly interested in working here. Similarly, as a jobseeker, I want any employer to go through channel(s) of authentication, so I can ensure my safety.
 - As a user looking for a job, I want to be able to upload files such as my resume, so employers can have a closer look at my skillsets and experience.
-- Searching for job
 
 ## Nice to Have
 - As a user looking for a job, I want to be able to research different companies (Company A, B, & C) and receive a suggestion as to which would be best for me so that I can narrow down the opportunities available to me. 
 - As an employer, I want to be able to directly message users so that I can interact with those who are a good fit and encourage them to apply to the opportunities we have available. 
 - As an employer, I want to be able to see an activity log for jobseekers so I can learn more about things they do that won't necessarily be found on a resume. 
-- Profile views
+- As a jobseeker, I want to be able to see who views my user profile so I can get a sense of which companies are interested in me. 
 
 ## Non-functional Requirements
 - App interface should user friendly and only need at most 5 minutes to be fully adjusted. 
@@ -38,17 +37,20 @@ The proposed solution is to develop a web application that connects job seekers 
 
 ## Software Architecture & Technology Stack 
 - The application will be a web app for now, and if time permits, we will try to expand to mobile. 
+- In terms of software architecture, we will try to follow a microservices approach. 
 - Frontend: Next.js
 - Backend: Java - Spring Boot/ .NET Core
 - Database: PostgreSQL
 - Dockerization
 - Testing: JUnit, XUnit
 - Github: testing, ci runner
-- CD: AWS
-
+- CD: AWS, if time allows
 
 ## Similar Apps
-- LinkedIn
+- LinkedIn. 
 - Indeed
 - Handshake
 - Glassdoor
+
+## How we're different
+Personalized internship page. 
