@@ -31,20 +31,21 @@ The proposed solution is to develop a web application that connects job seekers 
 - As a jobseeker, I want to be able to see who views my user profile so I can get a sense of which companies are interested in me. 
 
 ## Non-functional Requirements
-- App interface should user friendly and only need at most 5 minutes to be fully adjusted. 
-- The system should be available at all times, meaning a user's experience, regardless of whether they are an employer or jobseeker, should not be hindered at all. 
-- After updating a user profile, the app should take no longer than one week to send tailored notifications based on any new preferences. (Notifications will be sent out weekly) 
+- The app interface should be user-friendly and only require a maximum of 5 minutes for a new user to fully adjust and navigate. This includes completing essential tasks such as registering, editing their profile, and searching for jobs without confusion.
+- The system should be available at all times to ensure that users, whether they are employers or job seekers, do not experience any interruptions in their user experience. A downtime of no more than 43 minutes per month (99.9% uptime) will be tolerated, and real-time monitoring will ensure that any issues are identified and addressed quickly.
+- After a user updates their profile, the system will take no longer than three days to send tailored notifications based on the new preferences. Notifications will be sent out every three days to ensure users stay updated about new opportunities that match their updated criteria.
 
-## Software Architecture & Technology Stack 
+## Software Architecture & Technology Stack
 - The application will be a web app for now, and if time permits, we will try to expand to mobile. 
-- In terms of software architecture, we will try to follow a microservices approach. 
+- In terms of software architecture, we will try to follow a microservices approach (over HTTP and Kafka).
 - Frontend: Next.js
-- Backend: Java - Spring Boot/ .NET Core
+- Backend: Spring Boot
 - Database: PostgreSQL
-- Dockerization
-- Testing: JUnit, XUnit
-- Github: testing, ci runner
-- CD: AWS, if time allows
+- Authentication: JWT (Spring Security)
+- Notifications: Twilio or SendGrid
+- Containerization: Docker + Docker Compose
+- CI/CD: GitHub Actions or GitLab CI
+- Hosting: AWS EC2 (for apps), AWS S3 (for static files) (if time allows)
 
 ## Similar Apps
 - LinkedIn. 
@@ -53,4 +54,4 @@ The proposed solution is to develop a web application that connects job seekers 
 - Glassdoor
 
 ## How we're different
-Personalized internship page. 
+Personalized internship page for students.
