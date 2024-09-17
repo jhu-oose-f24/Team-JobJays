@@ -54,4 +54,4 @@ The proposed solution is to develop a web application that connects job seekers 
 - Glassdoor
 
 ## How we're different
-Personalized internship page for students.
+The main way we will separate ourselves from other applications is by having a personalized internship page for students. The similar apps mentioned above leave students overwhelmed with full-time positions and forces them to instead resort to other avenues like spreadsheets with internship positions or flyers. We will specifically tailor to students looking for internships by having a place where they can easily find opportunities for them.  
