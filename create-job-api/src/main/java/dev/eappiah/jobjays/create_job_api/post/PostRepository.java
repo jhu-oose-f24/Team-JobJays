@@ -26,11 +26,10 @@ public class PostRepository {
   }
 
   Optional<Post> findById(Integer id) {
-    return posts.stream().filter(post -> post.getId().equals(id)).findFirst();
+    return posts.stream().filter(post -> post.getID().equals(id)).findFirst();
   }
 
-  //TODO this method does not update the LocalDateTime field
-  // returns null for LocalDateTime field for some reason
+
   void update(Post post, Integer id) {
 //    Optional<Post> postToUpdate = findById(id);
 //    if (postToUpdate.isEmpty()) {
@@ -40,14 +39,31 @@ public class PostRepository {
 //    postFound.editTitle(post.getTitle());
 //    postFound.editDescription(post.getDescription());
 
-    Optional<Post> postToUpdate = findById(id);
-    postToUpdate.ifPresent(value -> posts.set(posts.indexOf(value), post));
+    Optional<Post> postFromGivenID = findById(id);
+    if(postFromGivenID.isEmpty()) {
+      throw new PostNotFoundException();
+    }
+
+
+    JobPost updatePost = (JobPost) postFromGivenID.get();
+    JobPost editedPost = (JobPost) post; //object to hold new information to transfer to updatePost
+
+    //doing it this way to avoid new ID being generated
+    updatePost.setTitle(editedPost.getTitle()); //update the title
+    updatePost.setDescription(editedPost.getDescription()); //update the description
+    updatePost.setLocation(editedPost.getLocation()); //update the location
+    updatePost.setSalary(editedPost.getSalary()); //update the salary
+    editedPost.setPostedDate(((JobPost) post).getPostedDate()); //update the posted date
+    updatePost.setClosedDate(editedPost.getClosedDate()); //update the closed date
+
+    //postToUpdate.ifPresent(value -> posts.set(posts.indexOf(value), editedPost));
+
   }
 
   void delete(Integer id) {
 //    Optional<Post> postToDelete = findById(id);
 //    postToDelete.ifPresent(posts::remove);
-    posts.removeIf(post -> post.getId().equals(id));
+    posts.removeIf(post -> post.getID().equals(id));
 
   }
 
