@@ -33,6 +33,17 @@ public class PostRepository {
     return posts.stream().filter(post -> post.getID().equals(id)).findFirst();
   }
 
+  //  Optional<Post> findByTitle(String title) {return posts.stream().filter(post -> post.getTitle().equals(title)).findFirst();}
+  Optional<Post> findByTitle(String title) {
+    return posts.stream()
+            .filter(post -> post.getTitle().toLowerCase().contains(title.toLowerCase()))
+            .findFirst();
+  }
+
+  Optional<Post> findByCompany(String company) {
+    return posts.stream().filter(post -> post.getPostedBy().equals(company)).findFirst();
+  }
+
 
   void update(Post post, Integer id) {
 //    Optional<Post> postToUpdate = findById(id);

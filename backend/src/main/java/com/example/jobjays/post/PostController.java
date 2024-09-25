@@ -31,6 +31,24 @@ public class PostController {
     return post.get();
   }
 
+  @GetMapping("/title")
+  Post findByTitle(@RequestParam String title) {
+    Optional<Post> post = postRepository.findByTitle(title);
+    if (post.isEmpty()) {
+      throw new PostNotFoundException();
+    }
+    return post.get();
+  }
+
+  @GetMapping("/company")
+  Post findByCompany(@RequestParam String company) {
+    Optional<Post> post = postRepository.findByCompany(company);
+    if (post.isEmpty()) {
+      throw new PostNotFoundException();
+    }
+    return post.get();
+  }
+
   @ResponseStatus(HttpStatus.CREATED)
   @PostMapping("")
   void addPost(@RequestBody Post post) {
