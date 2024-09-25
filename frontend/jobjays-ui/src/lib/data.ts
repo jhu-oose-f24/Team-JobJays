@@ -90,11 +90,10 @@ const sampleApplicant: Applicant = {
 const sampleProfile: Profile = {
     profileID: 101,
     user: sampleUser,
-    firstName: "John",
-    lastName: "Doe",
+    name: "John Doe",
     bio: "A passionate software developer.",
     editProfile() {
-        console.log(`${this.firstName} ${this.lastName} edited their profile.`);
+        console.log(`${this.name} edited their profile.`);
     }
 };
 
@@ -103,7 +102,7 @@ const sampleEmployerProfile: EmployerProfile = {
     ...sampleProfile,
     jobPosts: [sampleJobPost],
     manageJobPosts() {
-        console.log(`Employer ${this.firstName} ${this.lastName} is managing job posts.`);
+        console.log(`Employer ${this.name} is managing job posts.`);
     }
 };
 
@@ -112,7 +111,7 @@ const sampleApplicantProfile: ApplicantProfile = {
     ...sampleProfile,
     appliedJobs: [sampleJobPost],
     trackApplications() {
-        console.log(`${this.firstName} ${this.lastName} is tracking their applications.`);
+        console.log(`${this.name} is tracking their applications.`);
     }
 };
 

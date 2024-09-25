@@ -9,8 +9,8 @@ export default function ProfileCard() {
                     <AvatarImage src="https://github.com/shadcn.png"/>
                 </Avatar>
                 <div className="ml-4">
-                    <h1 className="text-xl font-bold">User Name and Last</h1>
-                    <p className="text-gray-500">User Bio </p>
+                    <h1 className="text-xl font-bold">{sampleProfile.name}</h1>
+                    <p className="text-gray-500">{sampleProfile.bio}</p>
                 </div>
             </div>
             <div className="mt-4">

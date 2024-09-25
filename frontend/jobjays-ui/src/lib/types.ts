@@ -44,8 +44,7 @@ export interface Applicant extends User {
 export interface Profile {
     profileID: number;
     user: User;
-    firstName: string;
-    lastName: string;
+    name: string;
     bio: string;
     editProfile: () => void;
 }
