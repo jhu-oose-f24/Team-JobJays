@@ -1,0 +1,42 @@
+### Find ALl Posts
+GET http://localhost:8080/api/posts
+
+### Find Post By ID
+GET http://localhost:8080/api/posts/{id}
+
+### Find Post By ID that doesn't exist
+GET http://localhost:8080/api/posts/100
+
+
+### Create new Post
+POST http://localhost:8080/api/posts
+Content-Type: application/json
+
+{
+  "type": "jobPost",
+  "title": "job1",
+  "description": "This is a new job posting 1",
+  "location": "Baltimore, MD",
+  "salary": 100000.0,
+  "closedDate": "2024-12-25T23:57:16.494223",
+  "employer": "COMPANY_A"
+}
+
+
+### Update a Post
+PUT http://localhost:8080/api/posts/{id}
+Content-Type: application/json
+
+{
+  "type": "jobPost",
+  "title": "edited job1",
+  "description": "This is a edited job posting 1",
+  "location": "New York, NY",
+  "salary": 150000.0,
+  "closedDate": "2024-12-25T23:57:16.494223"
+}
+
+### Delete a Post
+DELETE http://localhost:8080/api/posts/{id}
+
+###
