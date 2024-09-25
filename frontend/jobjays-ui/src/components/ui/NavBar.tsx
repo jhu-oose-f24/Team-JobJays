@@ -9,21 +9,27 @@ export default function NavBar() {
 
     return (
         <nav className="flex justify-center space-x-8 py-4 bg-gray-100 shadow-md">
-            <Link href={"/feed"}>
-                <a className={`text-lg ${pathname === '/feed' ? 'underline' : ''}`}>
+            <Link
+                href={"/feed"}
+                className={`text-lg ${pathname === '/feed' ? 'underline' : ''}`}>
+                
                 Feed
-                </a>
+                
             </Link>
-            <Link href={"/search"}>
-                <a className={`text-lg ${pathname === '/search' ? 'underline' : ''}`}>
+            <Link
+                href={"/search"}
+                className={`text-lg ${pathname === '/search' ? 'underline' : ''}`}>
+                
                 Search
-                </a>
+                
             </Link>
-            <Link href={"/profile"}>
-                <a className={`text-lg ${pathname === '/profile' ? 'underline' : ''}`}>
+            <Link
+                href={"/profile"}
+                className={`text-lg ${pathname === '/profile' ? 'underline' : ''}`}>
+                
                 Profile
-                </a>
+                
             </Link>
         </nav>
-    )
+    );
 }
