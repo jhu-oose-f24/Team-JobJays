@@ -3,13 +3,7 @@ import ProfileCard from "@/components/ui/ProfileCard";
 
 
 export default function ApplicantProfilePage() {
-    return (
-        <div className="min-h-screen bg-gray-50">
+    return <p>Applicant Profile Page</p>
 
-            <div className="container mx-auto mt-8">
-                <ProfileCard/>
-            </div>
-        </div>
-    )
 
 }
