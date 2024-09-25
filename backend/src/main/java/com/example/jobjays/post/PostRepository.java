@@ -1,5 +1,6 @@
 package com.example.jobjays.post;
 
+import org.springframework.boot.autoconfigure.batch.BatchProperties;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -41,7 +42,20 @@ public class PostRepository {
   }
 
   Optional<Post> findByCompany(String company) {
-    return posts.stream().filter(post -> post.getPostedBy().equals(company)).findFirst();
+
+    //TODO FIX HERE MAY NEED TO TYPECAST TO JOBPOST OBJECT
+
+
+
+    //posts.stream().findFirst()
+    return posts.stream()
+        .filter(post -> post instanceof JobPost)
+        .map(post -> (JobPost) post)
+        .filter(jobPost -> jobPost.getEmployer().employerName().equalsIgnoreCase(company))
+        .map(jobPost -> (Post) jobPost)
+        .findFirst();
+
+    //return posts.stream().filter(post -> post.getPostedBy().equals(company)).findFirst();
   }
 
 
