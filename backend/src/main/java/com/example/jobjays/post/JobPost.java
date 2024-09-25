@@ -1,11 +1,9 @@
-package dev.eappiah.jobjays.create_job_api.post;
+package com.example.jobjays.post;
 
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import java.util.concurrent.ThreadLocalRandom;
-import org.springframework.cglib.core.Local;
-
 
 
 @JsonTypeName("jobPost")

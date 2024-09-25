@@ -1,4 +1,4 @@
-package dev.eappiah.jobjays.create_job_api.post;
+package com.example.jobjays.post;
 
 
 

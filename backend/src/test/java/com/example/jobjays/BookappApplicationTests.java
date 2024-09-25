@@ -1,13 +1,13 @@
-package dev.eappiah.jobjays.create_job_api;
+package com.example.jobjays;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CreateJobApiApplicationTests {
+class JobJaysApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+    @Test
+    void contextLoads() {
+    }
 
 }

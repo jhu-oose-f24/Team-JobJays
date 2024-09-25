@@ -11,8 +11,8 @@
     <groupId>com.example</groupId>
     <artifactId>JobJays</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>bookapp</name>
-    <description>bookapp</description>
+    <name>JobJaysApp</name>
+    <description>JobJaysApp</description>
     <url/>
     <licenses>
         <license/>

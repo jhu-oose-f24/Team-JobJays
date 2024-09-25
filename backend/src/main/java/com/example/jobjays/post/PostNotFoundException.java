@@ -1,4 +1,4 @@
-package dev.eappiah.jobjays.create_job_api.post;
+package com.example.jobjays.post;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;

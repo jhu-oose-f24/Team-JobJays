@@ -1,12 +1,9 @@
-package dev.eappiah.jobjays.create_job_api.post;
+package com.example.jobjays.post;
 
 
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

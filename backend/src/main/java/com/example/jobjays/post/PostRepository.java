@@ -1,13 +1,17 @@
-package dev.eappiah.jobjays.create_job_api.post;
+package com.example.jobjays.post;
 
-import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+/*
+import org.springframework.data.jpa.repository.JpaRepository;
 
+public interface BookRepository extends JpaRepository<Book, Long> {
+}
+
+ */
 @Repository
 
 public class PostRepository {
