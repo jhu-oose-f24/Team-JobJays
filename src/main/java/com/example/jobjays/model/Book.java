@@ -1,4 +1,4 @@
-package com.example.bookapp.model;
+package com.example.jobjays.model;
 
 
 import jakarta.persistence.Entity;

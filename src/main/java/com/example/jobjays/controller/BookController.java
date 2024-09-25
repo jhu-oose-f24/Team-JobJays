@@ -1,7 +1,7 @@
-package com.example.bookapp.controller;
+package com.example.jobjays.controller;
 
-import com.example.bookapp.model.Book;
-import com.example.bookapp.repository.BookRepository;
+import com.example.jobjays.model.Book;
+import com.example.jobjays.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
