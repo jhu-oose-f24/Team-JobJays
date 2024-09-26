@@ -1,7 +1,9 @@
-package com.example.jobjays.post;
+package com.example.jobjays.controller;
 
 
 import com.example.jobjays.model.Post;
+import com.example.jobjays.exception.PostNotFoundException;
+import com.example.jobjays.repository.PostRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
