@@ -9,7 +9,7 @@ public class ApplicantProfile implements Profile {
 
   private String name;
   private String bio;
-  private final Applicant applicant;
+  private final Applicant applicant; //User
   private ArrayList<JobPost> appliedJobs;
 
 
@@ -20,7 +20,7 @@ public class ApplicantProfile implements Profile {
     this.bio = bio;
   }
 
-  public Applicant getApplicant() {
+  public Applicant getUser() {
     return this.applicant;
   }
 

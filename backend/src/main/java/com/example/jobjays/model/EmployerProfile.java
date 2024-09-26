@@ -10,7 +10,7 @@ public class EmployerProfile implements Profile {
   private String name;
   private String bio;
 
-  private final Employer employer;
+  private final Employer employer; //User
   private ArrayList<JobPost> jobPosts;
 
 
@@ -23,7 +23,7 @@ public class EmployerProfile implements Profile {
   }
 
 
-  public Employer getEmployer() {
+  public Employer getUser() {
     return this.employer;
   }
 

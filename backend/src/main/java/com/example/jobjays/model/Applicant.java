@@ -3,7 +3,7 @@ package com.example.jobjays.model;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.UUID;
 
 @JsonTypeName("applicant")
 public class Applicant implements User {
@@ -11,9 +11,9 @@ public class Applicant implements User {
   private String password;
   private String email;
 
-  private Integer applicantId;
+  private final String applicantId;
   private String resume;
-  private ApplicantProfile profile;
+  private final ApplicantProfile profile;
 
 
   public Applicant(
@@ -25,13 +25,13 @@ public class Applicant implements User {
     this.username = username;
     this.password = password;
     this.email = email;
-    this.applicantId = ThreadLocalRandom.current().nextInt(1, 2147483647); //TODO: Placeholder until we have a database;
+    this.applicantId = UUID.randomUUID().toString();
     this.resume = resume;
     this.profile = new ApplicantProfile(this, "", "");
 
   }
 
-  public Integer getApplicantId() {
+  public String getID() {
     return this.applicantId;
   }
 
