@@ -31,7 +31,7 @@ public class PostRepository {
     return posts;
   }
 
-  Optional<Post> findById(Integer id) {
+  Optional<Post> findById(String id) {
     return posts.stream().filter(post -> post.getID().equals(id)).findFirst();
   }
 
@@ -43,10 +43,6 @@ public class PostRepository {
   }
 
   Optional<Post> findByCompany(String company) {
-
-    //TODO FIX HERE MAY NEED TO TYPECAST TO JOBPOST OBJECT
-
-
 
     //posts.stream().findFirst()
     return posts.stream()
@@ -60,7 +56,7 @@ public class PostRepository {
   }
 
 
-  void update(Post post, Integer id) {
+  void update(Post post, String id) {
 //    Optional<Post> postToUpdate = findById(id);
 //    if (postToUpdate.isEmpty()) {
 //      throw new IllegalArgumentException("Post not found");
@@ -90,7 +86,7 @@ public class PostRepository {
 
   }
 
-  void delete(Integer id) {
+  void delete(String id) {
 //    Optional<Post> postToDelete = findById(id);
 //    postToDelete.ifPresent(posts::remove);
     posts.removeIf(post -> post.getID().equals(id));

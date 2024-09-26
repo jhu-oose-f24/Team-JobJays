@@ -19,4 +19,6 @@ public interface Profile {
   String getBio();
 
   void editProfile(String name, String bio);
+
+  User getUser();
 }

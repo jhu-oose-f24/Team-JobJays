@@ -3,6 +3,8 @@ package com.example.jobjays.model;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -15,7 +17,7 @@ public class JobPost implements Post {
   private String location;
   private Double salary;
 
-  private final Integer jobID;
+  private final String jobID;
   private LocalDateTime postedDate;
   private LocalDateTime closedDate;
   public final Employer employer;
@@ -31,7 +33,7 @@ public class JobPost implements Post {
       Employer employer
       ) {
 
-    this.jobID = ThreadLocalRandom.current().nextInt(1, 2147483647); //TODO: Placeholder until we have a database
+    this.jobID = UUID.randomUUID().toString();
     this.title = title;
     this.description = description;
     this.location = location;
@@ -79,7 +81,7 @@ public class JobPost implements Post {
   }
 
   //Should not change
-  public Integer getID() {
+  public String getID() {
     return jobID;
   }
 

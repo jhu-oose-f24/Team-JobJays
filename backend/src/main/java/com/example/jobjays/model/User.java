@@ -18,4 +18,5 @@ public interface User {
   String getEmail();
 
   Profile getProfile();
+  String getID();
 }

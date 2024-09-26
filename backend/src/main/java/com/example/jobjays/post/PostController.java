@@ -24,7 +24,7 @@ public class PostController {
   }
 
   @GetMapping("/{id}")
-  Post findById(@PathVariable Integer id) {
+  Post findById(@PathVariable String id) {
     Optional<Post> post = postRepository.findById(id);
     if (post.isEmpty()) {
       throw new PostNotFoundException();
@@ -58,13 +58,13 @@ public class PostController {
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @PutMapping("/{id}")
-  void updatePost(@RequestBody Post post, @PathVariable Integer id) {
+  void updatePost(@RequestBody Post post, @PathVariable String id) {
     postRepository.update(post, id);
   }
 
   @ResponseStatus(HttpStatus.NO_CONTENT)
   @DeleteMapping("/{id}")
-  void deletePost(@PathVariable Integer id) {
+  void deletePost(@PathVariable String id) {
     postRepository.delete(id);
   }
 
