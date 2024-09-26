@@ -1,4 +1,4 @@
-package com.example.jobjays.post;
+package com.example.jobjays.model;
 
 
 

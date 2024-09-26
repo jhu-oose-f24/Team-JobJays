@@ -1,6 +1,7 @@
 package com.example.jobjays.post;
 
 
+import com.example.jobjays.model.Post;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

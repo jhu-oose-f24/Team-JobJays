@@ -1,6 +1,7 @@
 package com.example.jobjays.post;
 
-import org.springframework.boot.autoconfigure.batch.BatchProperties;
+import com.example.jobjays.model.JobPost;
+import com.example.jobjays.model.Post;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class PostRepository {
     return posts.stream()
         .filter(post -> post instanceof JobPost)
         .map(post -> (JobPost) post)
-        .filter(jobPost -> jobPost.getEmployer().employerName().equalsIgnoreCase(company))
+        .filter(jobPost -> jobPost.getEmployer().getProfile().getName().equalsIgnoreCase(company))
         .map(jobPost -> (Post) jobPost)
         .findFirst();
 
