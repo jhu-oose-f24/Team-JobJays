@@ -1,0 +1,83 @@
+/* Navbar.module.css */
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: #f5f5f5;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navLinks {
+    display: flex;
+    gap: 25px;
+    list-style: none;
+}
+
+.navLinks li a {
+    text-decoration: none;
+    font-size: 1rem;
+    color: #333;
+    padding: 8px 12px;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+.navLinks li a:hover {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+}
+
+.navRight {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.phone {
+    font-size: 0.9rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.language {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.flag {
+    font-size: 1.2rem;
+}
+
+.languageDropdown {
+    padding: 5px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+/* Navbar.module.css */
+
+/* Ensure navRight is using flex for horizontal alignment */
+.navRight {
+    display: flex;
+    align-items: center; /* Aligns items vertically in the center */
+    gap: 20px; /* Space between phone and language dropdown */
+}
+
+/* Additional styles for phone and language */
+.phone {
+    font-size: 0.9rem;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Gap between phone icon and number */
+}
+
+.language {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Adjusts space between flag and dropdown */
+}
