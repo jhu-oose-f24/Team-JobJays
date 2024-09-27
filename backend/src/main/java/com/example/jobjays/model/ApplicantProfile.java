@@ -1,11 +1,11 @@
 package com.example.jobjays.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 @JsonTypeName("applicantProfile")
 @Embeddable
@@ -17,7 +17,8 @@ public class ApplicantProfile implements Profile {
 
   @Transient
   private Applicant applicant;
-  private ArrayList<JobPost> appliedJobs;
+  @OneToMany
+  private List<JobPost> appliedJobs;
 
 
   public ApplicantProfile() {}
@@ -33,6 +34,7 @@ public class ApplicantProfile implements Profile {
   public Applicant getUser() {
     return this.applicant;
   }
+
 
   public String getName() {
     return this.name;
@@ -52,7 +54,7 @@ public class ApplicantProfile implements Profile {
     return bio;
   }
 
-  public ArrayList<JobPost> getAppliedJobs() {
+  public List<JobPost> getAppliedJobs() {
     return this.appliedJobs;
   }
 
@@ -67,6 +69,12 @@ public class ApplicantProfile implements Profile {
     } else {
       this.setBio(bio);
     }
+  }
+
+  public Profile editProfile(Profile profile) {
+    this.setName(profile.getName());
+    this.setBio(profile.getBio());
+    return this;
   }
 
   void trackApplications() {
