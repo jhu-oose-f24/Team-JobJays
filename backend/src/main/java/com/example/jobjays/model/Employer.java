@@ -1,20 +1,31 @@
 package com.example.jobjays.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
 
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
+
 
 @JsonTypeName("employer")
+@Entity
 public class Employer implements User {
   private String username;
   private String password;
   private String email;
-  private final String companyID;
+
+  @Id
+  @GeneratedValue
+  private String companyID;
   private String employerName; //companyName
   private String employerInfo; //companyInfo
-  private final EmployerProfile profile;
 
+  @Embedded
+  private EmployerProfile profile;
+
+  public Employer() {}
 
   public Employer(
       String username,
