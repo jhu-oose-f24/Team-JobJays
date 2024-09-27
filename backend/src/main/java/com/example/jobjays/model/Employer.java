@@ -1,12 +1,7 @@
 package com.example.jobjays.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-
-import java.util.UUID;
+import jakarta.persistence.*;
 
 
 @JsonTypeName("employer")
@@ -17,7 +12,7 @@ public class Employer implements User {
   private String email;
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long employer_id;
   private String employerName; //companyName
   private String employerInfo; //companyInfo
@@ -38,7 +33,6 @@ public class Employer implements User {
     this.username = username;
     this.password = password;
     this.email = email;
-    //this.employer_id = UUID.randomUUID().toString(); //TODO: Placeholder until we have a database;
     this.employerName = employerName;
     this.employerInfo = employerInfo;
     this.profile = new EmployerProfile(this, employerName, employerInfo); //could also replace employerName and Info with empty strings literals
