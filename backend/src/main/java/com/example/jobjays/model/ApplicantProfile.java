@@ -20,7 +20,6 @@ public class ApplicantProfile implements Profile {
   @OneToMany
   private List<JobPost> appliedJobs;
 
-
   public ApplicantProfile() {}
 
   public ApplicantProfile(Applicant applicant, String name, String bio) {

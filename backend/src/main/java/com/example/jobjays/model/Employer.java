@@ -18,7 +18,7 @@ public class Employer implements User {
 
   @Id
   @GeneratedValue
-  private String employer_id;
+  private Long employer_id;
   private String employerName; //companyName
   private String employerInfo; //companyInfo
 
@@ -44,7 +44,7 @@ public class Employer implements User {
     this.profile = new EmployerProfile(this, employerName, employerInfo); //could also replace employerName and Info with empty strings literals
   }
 
-  public String getID() {
+  public Long getID() {
     return this.employer_id;
   }
 

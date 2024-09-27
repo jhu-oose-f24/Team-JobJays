@@ -19,7 +19,7 @@ public class Applicant implements User {
 
   @Id
   @GeneratedValue
-  private String applicantId;
+  private Long applicantId;
   private String resume;
 
   @Embedded
@@ -42,7 +42,7 @@ public class Applicant implements User {
   }
   public Applicant(){}
 
-  public String getID() {
+  public Long getID() {
     return this.applicantId;
   }
 

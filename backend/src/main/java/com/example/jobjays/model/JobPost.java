@@ -21,7 +21,7 @@ public class JobPost implements Post {
 
   @Id
   @GeneratedValue
-  private String jobID;
+  private Long jobID;
   private LocalDateTime postedDate;
   private LocalDateTime closedDate;
 
@@ -87,7 +87,7 @@ public JobPost() {}
   }
 
   //Should not change
-  public String getID() {
+  public Long getID() {
     return jobID;
   }
 

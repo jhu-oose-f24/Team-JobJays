@@ -18,7 +18,7 @@ public interface Post {
   String getDescription();
   String getLocation();
   Double getSalary();
-  String getID();
+  Long getID();
 
   void publish();
   void close();
