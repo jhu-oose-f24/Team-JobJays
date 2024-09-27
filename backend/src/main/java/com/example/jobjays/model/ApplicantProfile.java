@@ -1,17 +1,26 @@
 package com.example.jobjays.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Transient;
+
 
 import java.util.ArrayList;
 
 @JsonTypeName("applicantProfile")
+@Embeddable
 public class ApplicantProfile implements Profile {
+
 
   private String name;
   private String bio;
-  private final Applicant applicant; //User
+
+  @Transient
+  private Applicant applicant;
   private ArrayList<JobPost> appliedJobs;
 
+
+  public ApplicantProfile() {}
 
   public ApplicantProfile(Applicant applicant, String name, String bio) {
     this.applicant = applicant;
@@ -20,6 +29,7 @@ public class ApplicantProfile implements Profile {
     this.bio = bio;
   }
 
+  @Transient
   public Applicant getUser() {
     return this.applicant;
   }
