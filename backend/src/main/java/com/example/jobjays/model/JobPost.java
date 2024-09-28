@@ -3,12 +3,14 @@ package com.example.jobjays.model;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import jakarta.persistence.*;
 
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 
 @JsonTypeName("jobPost")
+@Entity
 public class JobPost implements Post {
 
 
@@ -17,12 +19,16 @@ public class JobPost implements Post {
   private String location;
   private Double salary;
 
-  private final String jobID;
+  @Id
+  @GeneratedValue
+  private Long jobID;
   private LocalDateTime postedDate;
   private LocalDateTime closedDate;
-  public final Employer employer;
 
+  @ManyToOne
+  public Employer employer;
 
+public JobPost() {}
 
   public JobPost(
       String title,
@@ -33,7 +39,7 @@ public class JobPost implements Post {
       Employer employer
       ) {
 
-    this.jobID = UUID.randomUUID().toString();
+    //this.jobID = UUID.randomUUID().toString();
     this.title = title;
     this.description = description;
     this.location = location;
@@ -81,7 +87,7 @@ public class JobPost implements Post {
   }
 
   //Should not change
-  public String getID() {
+  public Long getID() {
     return jobID;
   }
 

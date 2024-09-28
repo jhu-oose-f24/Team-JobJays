@@ -1,7 +1,8 @@
-package com.example.jobjays.post;
+package com.example.jobjays.repository;
 
 import com.example.jobjays.model.JobPost;
 import com.example.jobjays.model.Post;
+import com.example.jobjays.exception.PostNotFoundException;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -31,18 +32,18 @@ public class PostRepository {
     return posts;
   }
 
-  Optional<Post> findById(String id) {
+  public Optional<Post> findById(String id) {
     return posts.stream().filter(post -> post.getID().equals(id)).findFirst();
   }
 
   //  Optional<Post> findByTitle(String title) {return posts.stream().filter(post -> post.getTitle().equals(title)).findFirst();}
-  Optional<Post> findByTitle(String title) {
+  public Optional<Post> findByTitle(String title) {
     return posts.stream()
             .filter(post -> post.getTitle().toLowerCase().contains(title.toLowerCase()))
             .findFirst();
   }
 
-  Optional<Post> findByCompany(String company) {
+  public Optional<Post> findByCompany(String company) {
 
     //posts.stream().findFirst()
     return posts.stream()
@@ -56,7 +57,7 @@ public class PostRepository {
   }
 
 
-  void update(Post post, String id) {
+  public void update(Post post, String id) {
 //    Optional<Post> postToUpdate = findById(id);
 //    if (postToUpdate.isEmpty()) {
 //      throw new IllegalArgumentException("Post not found");
@@ -86,7 +87,7 @@ public class PostRepository {
 
   }
 
-  void delete(String id) {
+  public void delete(String id) {
 //    Optional<Post> postToDelete = findById(id);
 //    postToDelete.ifPresent(posts::remove);
     posts.removeIf(post -> post.getID().equals(id));
@@ -94,7 +95,7 @@ public class PostRepository {
   }
 
   //if we have a post object passed in
-  void deleteByPost(Post post) {
+  public void deleteByPost(Post post) {
     posts.remove(post);
   }
 

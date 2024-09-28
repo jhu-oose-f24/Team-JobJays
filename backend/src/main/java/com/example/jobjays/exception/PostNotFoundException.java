@@ -1,4 +1,4 @@
-package com.example.jobjays.post;
+package com.example.jobjays.exception;
 
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.http.HttpStatus;

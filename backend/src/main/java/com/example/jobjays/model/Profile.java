@@ -21,4 +21,5 @@ public interface Profile {
   void editProfile(String name, String bio);
 
   User getUser();
+
 }
