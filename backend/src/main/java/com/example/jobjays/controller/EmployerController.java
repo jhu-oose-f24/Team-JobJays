@@ -5,8 +5,10 @@ import com.example.jobjays.dto.ResponseProfileDto;
 import com.example.jobjays.dto.employer.CreateEmployerDto;
 import com.example.jobjays.dto.employer.ResponseEmployerDto;
 import com.example.jobjays.dto.employer.UpdateEmployerDto;
+import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
 import com.example.jobjays.model.Employer;
 import com.example.jobjays.model.EmployerProfile;
+import com.example.jobjays.model.JobPost;
 import com.example.jobjays.service.EmployerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,6 +56,8 @@ public class EmployerController {
     return ResponseEntity.ok(mapToResponseEmployerDto(employer));
   }
 
+  //TODO CREATE A GET ALL EMPLOYER PROFILES METHOD
+
   @GetMapping
   public ResponseEntity<List<ResponseEmployerDto>> getAllEmployers() {
     List<Employer> employers = employerService.findAllEmployers();
@@ -81,6 +85,10 @@ public class EmployerController {
     return ResponseEntity.ok(mapToResponseEmployerDto(employer));
   }
 
+
+  /*
+    * TODO: not returning anything, maybe it should be request param or method in repository/service should be changed
+   */
   @GetMapping("/name/{name}")
   public ResponseEntity<List<ResponseEmployerDto>> getEmployersByName(@PathVariable String name) {
     List<Employer> employers = employerService.findEmployersByName(name);
@@ -90,20 +98,38 @@ public class EmployerController {
     return ResponseEntity.ok(responseList);
   }
 
-  @GetMapping("/email/{email}")
-  public ResponseEntity<List<ResponseEmployerDto>> getEmployersByEmail(@PathVariable String email) {
-    List<Employer> employers = employerService.findEmployersByEmail(email);
-    List<ResponseEmployerDto> responseList = employers.stream()
-        .map(this::mapToResponseEmployerDto)
-        .collect(Collectors.toList());
-    return ResponseEntity.ok(responseList);
+
+//  @GetMapping("/email/{email}")
+//  public ResponseEntity<List<ResponseEmployerDto>> getEmployersByEmail(@PathVariable String email) {
+//    List<Employer> employers = employerService.findEmployersByEmail(email);
+//    List<ResponseEmployerDto> responseList = employers.stream()
+//        .map(this::mapToResponseEmployerDto)
+//        .collect(Collectors.toList());
+//    return ResponseEntity.ok(responseList);
+//  }
+
+  //TODO can refactor into a class
+  private ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
+    ResponseJobPostDto responseJobPostDto = new ResponseJobPostDto();
+    responseJobPostDto.id = jobPost.getID();
+    responseJobPostDto.title = jobPost.getTitle();
+    responseJobPostDto.description = jobPost.getDescription();
+    responseJobPostDto.location = jobPost.getLocation();
+    responseJobPostDto.salary = jobPost.getSalary();
+    responseJobPostDto.postedDate = jobPost.getPostedDate(); // Assuming this exists in JobPost
+    responseJobPostDto.closedDate = jobPost.getClosedDate();
+    responseJobPostDto.applicantsSize = jobPost.getApplicants().size();
+    return responseJobPostDto;
   }
 
   private ResponseEmployerProfileDto mapToResponseProfileDto(EmployerProfile profile) {
     ResponseEmployerProfileDto responseProfileDto = new ResponseEmployerProfileDto();
     responseProfileDto.name = profile.getName();
     responseProfileDto.bio = profile.getBio();
-    responseProfileDto.jobPosts = profile.getJobPosts();
+    responseProfileDto.jobPostsSize = profile.getJobPosts().size();
+    responseProfileDto.jobPosts = profile.getJobPosts().stream().map(this::mapToResponseJobPostDto).collect(Collectors.toList());
+
+    //responseProfileDto.profile = profile.getJobPosts();
     return responseProfileDto;
   }
 

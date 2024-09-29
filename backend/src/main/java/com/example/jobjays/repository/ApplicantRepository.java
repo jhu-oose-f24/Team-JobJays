@@ -18,6 +18,8 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
   Applicant findByUsernameIs(String username);
 
+  //TODO CREATE A JOB APPLICATION REPOSITORY
+
 
 
 

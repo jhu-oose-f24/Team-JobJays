@@ -40,7 +40,3 @@ GET http://localhost:8080/api/companies/username/{{username}}
 ### GET MANY EMPLOYERS BY NAME
 ###
 GET http://localhost:8080/api/companies/name/{{name}}
-
-### GET MANY EMPLOYERS BY EMAIL
-###
-GET http://localhost:8080/api/companies/email/{{email}}

@@ -25,7 +25,7 @@ public class CreateJobPostDto {
   private LocalDateTime closedDate; // Needs to be converted to LocalDateTime on frontend before passed
 
   @NotBlank
-  private Long userId; // userId of user is passed and used to find employer on backend (service)
+  private String username; // username of user is passed and used to find employer on backend (service)
 
   public String getTitle() {
     return title;
@@ -47,7 +47,7 @@ public class CreateJobPostDto {
     return closedDate;
   }
 
-  public Long getUserId() {
-    return userId;
+  public String getUsername() {
+    return username;
   }
 }

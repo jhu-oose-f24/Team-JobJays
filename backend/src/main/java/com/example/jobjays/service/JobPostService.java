@@ -23,7 +23,8 @@ public class JobPostService {
 
   public JobPost addJobPost(CreateJobPostDto newJobPost) {
 
-    Employer employer = employerService.findEmployerById(newJobPost.getUserId());
+    Employer employer = employerService.findEmployerByUsername(newJobPost.getUsername());
+
 
     JobPost jobPost = new JobPost(
       newJobPost.getTitle(),

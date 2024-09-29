@@ -1,14 +1,12 @@
 package com.example.jobjays.controller;
 
 import com.example.jobjays.dto.ResponseApplicantProfileDto;
-import com.example.jobjays.dto.ResponseEmployerProfileDto;
 import com.example.jobjays.dto.ResponseProfileDto;
 import com.example.jobjays.dto.applicant.CreateApplicantDto;
 import com.example.jobjays.dto.applicant.ResponseApplicantDto;
 import com.example.jobjays.dto.applicant.UpdateApplicantDto;
 import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
-import com.example.jobjays.model.EmployerProfile;
 import com.example.jobjays.service.ApplicantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -100,6 +98,9 @@ public class ApplicantController {
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
+
+  //@GetMapping("/profile/apply/{jobId}")
+  //TODO: create a job application endpoint
 
   private ResponseApplicantProfileDto mapToResponseProfileDto(ApplicantProfile profile) {
     ResponseApplicantProfileDto responseProfileDto = new ResponseApplicantProfileDto();

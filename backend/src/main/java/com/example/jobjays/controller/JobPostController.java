@@ -89,15 +89,17 @@ public class JobPostController {
   }
 
   // Helper method to map JobPost to ResponseJobPostDto
-  private ResponseJobPostDto mapToResponseDto(JobPost jobPost) {
+  public ResponseJobPostDto mapToResponseDto(JobPost jobPost) {
     ResponseJobPostDto responseJobPostDto = new ResponseJobPostDto();
     responseJobPostDto.id = jobPost.getID();
+    responseJobPostDto.companyName = jobPost.getEmployer().getProfile().getName();
     responseJobPostDto.title = jobPost.getTitle();
     responseJobPostDto.description = jobPost.getDescription();
     responseJobPostDto.location = jobPost.getLocation();
     responseJobPostDto.salary = jobPost.getSalary();
     responseJobPostDto.postedDate = jobPost.getPostedDate(); // Assuming this exists in JobPost
     responseJobPostDto.closedDate = jobPost.getClosedDate();
+    responseJobPostDto.applicantsSize = jobPost.getApplicants().size();
     return responseJobPostDto;
   }
 }

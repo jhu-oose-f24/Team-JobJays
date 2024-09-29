@@ -34,6 +34,8 @@ public class ApplicantService {
     return applicantRepository.save(newApplicant);
   }
 
+  //TODO CREATE A JOB APPLICATION SERVICE
+
   public Applicant updateApplicant(UpdateApplicantDto newApplicant, Long id) {
     Applicant applicantToUpdate = applicantRepository.findById(id).orElse(null);
 
