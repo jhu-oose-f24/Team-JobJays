@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
 
 
-@JsonTypeName("employer")
 @Entity
 public class Employer implements User {
   private String username;

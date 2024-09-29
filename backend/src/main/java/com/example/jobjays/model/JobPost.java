@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-@JsonTypeName("jobPost")
+
 @Entity
 public class JobPost implements Post {
 

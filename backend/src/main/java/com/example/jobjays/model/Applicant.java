@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Entity
-@JsonTypeName("applicant")
 public class Applicant implements User {
   private String username;
   private String password;

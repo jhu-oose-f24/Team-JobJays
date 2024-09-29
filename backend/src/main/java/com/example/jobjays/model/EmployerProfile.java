@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Embeddable
-@JsonTypeName("employerProfile")
 public class EmployerProfile implements Profile {
 
   private String name;

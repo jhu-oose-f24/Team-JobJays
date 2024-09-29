@@ -20,8 +20,6 @@ public class UpdateJobPostDto {
   @Future
   LocalDateTime closedDate; // Needs to be converted to LocalDateTime on frontend before passed
 
-  @NotNull
-  Long jobId; // username of user is passed and converted to employer on backend (service)
 
   public String getTitle() {
     return title;
@@ -43,8 +41,6 @@ public class UpdateJobPostDto {
     return closedDate;
   }
 
-  public Long getJobId() {
-    return jobId;
-  }
+
 
 }

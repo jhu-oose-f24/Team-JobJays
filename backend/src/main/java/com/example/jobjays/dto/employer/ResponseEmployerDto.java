@@ -1,12 +1,13 @@
 package com.example.jobjays.dto.employer;
 
+import com.example.jobjays.dto.ResponseProfileDto;
 import com.example.jobjays.model.EmployerProfile;
 
 public class ResponseEmployerDto {
 
-    Long employer_id;
+    public Long employer_id;
 
-    String username;
+    public String username;
 
-    EmployerProfile employerProfile;
+    public ResponseProfileDto employerProfile;
 }

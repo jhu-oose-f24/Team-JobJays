@@ -5,9 +5,9 @@ import com.example.jobjays.model.ApplicantProfile;
 
 
 public class ResponseApplicantDto {
-  Long applicantId;
+  public Long applicantId;
 
-  String username;
+  public String username;
 
-  ApplicantProfile applicantProfile;
+  public ApplicantProfile applicantProfile;
 }

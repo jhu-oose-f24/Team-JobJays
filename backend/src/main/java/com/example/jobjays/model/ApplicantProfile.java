@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonTypeName("applicantProfile")
 @Embeddable
 public class ApplicantProfile implements Profile {
 
