@@ -1,10 +1,14 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.dto.ResponseApplicantProfileDto;
+import com.example.jobjays.dto.ResponseEmployerProfileDto;
+import com.example.jobjays.dto.ResponseProfileDto;
 import com.example.jobjays.dto.applicant.CreateApplicantDto;
 import com.example.jobjays.dto.applicant.ResponseApplicantDto;
 import com.example.jobjays.dto.applicant.UpdateApplicantDto;
 import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
+import com.example.jobjays.model.EmployerProfile;
 import com.example.jobjays.service.ApplicantService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,12 +66,12 @@ public class ApplicantController {
   }
 
   @GetMapping("/profile/{id}")
-  public ResponseEntity<ApplicantProfile> getApplicantProfileById(@PathVariable Long id) {
+  public ResponseEntity<ResponseProfileDto> getApplicantProfileById(@PathVariable Long id) {
     ApplicantProfile applicantProfile = applicantService.findApplicantProfileById(id);
     if (applicantProfile == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(applicantProfile);
+    return ResponseEntity.ok(mapToResponseProfileDto(applicantProfile));
   }
 
   @GetMapping("/username/{username}")
@@ -97,12 +101,20 @@ public class ApplicantController {
     return ResponseEntity.ok(responseList);
   }
 
+  private ResponseApplicantProfileDto mapToResponseProfileDto(ApplicantProfile profile) {
+    ResponseApplicantProfileDto responseProfileDto = new ResponseApplicantProfileDto();
+    responseProfileDto.name = profile.getName();
+    responseProfileDto.bio = profile.getBio();
+    responseProfileDto.appliedJobs = profile.getAppliedJobs();
+    return responseProfileDto;
+  }
+
   // Utility method to map Applicant entity to ResponseApplicantDto
   private ResponseApplicantDto mapToResponseApplicantDto(Applicant applicant) {
     ResponseApplicantDto responseApplicantDto = new ResponseApplicantDto();
     responseApplicantDto.applicantId = applicant.getID();
     responseApplicantDto.username = applicant.getUsername();
-    responseApplicantDto.applicantProfile = applicant.getProfile();
+    responseApplicantDto.applicantProfile = mapToResponseProfileDto(applicant.getProfile());
     return responseApplicantDto;
   }
 }

@@ -1,5 +1,6 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.dto.ResponseEmployerProfileDto;
 import com.example.jobjays.dto.ResponseProfileDto;
 import com.example.jobjays.dto.employer.CreateEmployerDto;
 import com.example.jobjays.dto.employer.ResponseEmployerDto;
@@ -63,12 +64,12 @@ public class EmployerController {
   }
 
   @GetMapping("/profile/{id}")
-  public ResponseEntity<EmployerProfile> getEmployerProfileById(@PathVariable Long id) {
+  public ResponseEntity<ResponseProfileDto> getEmployerProfileById(@PathVariable Long id) {
     EmployerProfile employerProfile = employerService.findEmployerProfileById(id);
     if (employerProfile == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(employerProfile);
+    return ResponseEntity.ok(mapToResponseProfileDto(employerProfile));
   }
 
   @GetMapping("/username/{username}")
@@ -98,10 +99,11 @@ public class EmployerController {
     return ResponseEntity.ok(responseList);
   }
 
-  private ResponseProfileDto mapToResponseProfileDto(EmployerProfile profile) {
-    ResponseProfileDto responseProfileDto = new ResponseProfileDto();
+  private ResponseEmployerProfileDto mapToResponseProfileDto(EmployerProfile profile) {
+    ResponseEmployerProfileDto responseProfileDto = new ResponseEmployerProfileDto();
     responseProfileDto.name = profile.getName();
     responseProfileDto.bio = profile.getBio();
+    responseProfileDto.jobPosts = profile.getJobPosts();
     return responseProfileDto;
   }
 

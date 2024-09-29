@@ -1,6 +1,6 @@
 package com.example.jobjays.dto.applicant;
 
-
+import com.example.jobjays.dto.ResponseProfileDto;
 import com.example.jobjays.model.ApplicantProfile;
 
 
@@ -9,5 +9,5 @@ public class ResponseApplicantDto {
 
   public String username;
 
-  public ApplicantProfile applicantProfile;
+  public ResponseProfileDto applicantProfile;
 }
