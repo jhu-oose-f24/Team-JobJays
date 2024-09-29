@@ -2,7 +2,7 @@ package com.example.jobjays.dto.jobPost;
 
 import java.time.LocalDateTime;
 
-public class responseJobPostDto {
+public class ResponseJobPostDto {
   Long id;
   String title;
   String description;

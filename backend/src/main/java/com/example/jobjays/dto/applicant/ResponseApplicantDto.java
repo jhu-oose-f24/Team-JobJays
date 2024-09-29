@@ -4,7 +4,7 @@ package com.example.jobjays.dto.applicant;
 import com.example.jobjays.model.ApplicantProfile;
 
 
-public class responseApplicantDto {
+public class ResponseApplicantDto {
   Long applicantId;
 
   String username;

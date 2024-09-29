@@ -13,16 +13,9 @@ public interface EmployerRepository extends JpaRepository<Employer, Long> {
 
   List<Employer> findAllByEmailIsLikeIgnoreCase(String email);
 
-  List<Employer> findByUsernameIs(String username);
+  Employer findByUsernameIs(String username);
 
 
-/*
-List<Employer> employers = employerRepository.findEmployersByUsername(username);
-List<EmployerProfile> profiles = employers.stream()
-                                          .map(Employer::getProfile)  // Assuming getProfile() returns EmployerProfile
-                                          .collect(Collectors.toList());
-
- */
 
 
 

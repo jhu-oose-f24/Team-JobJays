@@ -35,7 +35,6 @@ public class Applicant implements User {
     this.username = username;
     this.password = password;
     this.email = email;
-    //this.applicantId = UUID.randomUUID().toString();
     this.resume = resume;
     this.profile = new ApplicantProfile(this, "", "");
 
@@ -83,7 +82,7 @@ public class Applicant implements User {
     return resume;
   }
 
-  public Profile getProfile() {
+  public ApplicantProfile getProfile() {
     return this.profile;
   }
 

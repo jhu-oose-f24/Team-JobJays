@@ -12,11 +12,11 @@ import java.util.List;
 @Repository
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
-  List<Applicant> findAllByUsernameIsLikeIgnoreCase(String name);
+  List<Applicant> findAllByUsernameContainingIgnoreCase(String name);
 
-  List<Applicant> findAllByEmailIsLikeIgnoreCase(String email);
+  List<Applicant> findAllByEmailContainingIgnoreCase(String email);
 
-  List<Applicant> findByUsernameIs(String username);
+  Applicant findByUsernameIs(String username);
 
 
 

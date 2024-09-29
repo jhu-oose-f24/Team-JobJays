@@ -2,7 +2,7 @@ package com.example.jobjays.dto.employer;
 
 import com.example.jobjays.model.EmployerProfile;
 
-public class responseEmployerDto {
+public class ResponseEmployerDto {
 
     Long employer_id;
 

@@ -14,7 +14,6 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
 
   Optional<List<JobPost>> findJobPostsByEmployer_Profile_Name(String employer);
   //Optional<List<JobPost>> findJobPostsByEmployer_Profile(EmployerProfile employer);
-
   Optional<List<JobPost>> findJobPostsByTitleIsLikeIgnoreCase(String title);
 
   Optional<List<JobPost>> findJobPostsByTitleContainingIgnoreCase(String title);

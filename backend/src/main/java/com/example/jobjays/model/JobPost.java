@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -24,6 +26,9 @@ public class JobPost implements Post {
   private Long jobID;
   private LocalDateTime postedDate;
   private LocalDateTime closedDate;
+
+  @ManyToMany
+  private List<Applicant> applicants;
 
   @ManyToOne
   public Employer employer;
@@ -47,6 +52,7 @@ public JobPost() {}
     this.postedDate = LocalDateTime.now();
     this.closedDate = closedDate;
     this.employer = employer;
+    this.applicants = new ArrayList<>();
 
   }
 
@@ -112,6 +118,18 @@ public JobPost() {}
   //Should not change
   public Employer getEmployer() {
     return employer;
+  }
+
+  public void addApplicant(Applicant applicant) {
+    applicants.add(applicant);
+  }
+
+  public void removeApplicant(Applicant applicant) {
+    applicants.remove(applicant);
+  }
+
+  public List<Applicant> getApplicants() {
+    return applicants;
   }
 
   /*
