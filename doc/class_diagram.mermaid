@@ -1,0 +1,74 @@
+classDiagram
+    User <|-- Employer
+    User <|-- Applicant
+    Profile <|-- EmployerProfile
+    Profile <|-- ApplicantProfile
+    Post <|-- JobPost
+    Post <|-- Announcement
+
+    class User {
+        +int id
+        +string email
+        +string password
+    }
+
+    class Employer {
+        +string companyName
+        +string contactEmail
+    }
+
+    class Applicant {
+        +string firstName
+        +string lastName
+        +string resume
+    }
+
+    class Profile {
+        +int id
+        +string phoneNumber
+    }
+
+    class EmployerProfile {
+        +int employerId
+        +string companyDescription
+        +int employeeCount
+    }
+
+    class ApplicantProfile {
+        +int applicantId
+        +string experience
+        +string bio
+    }
+
+    class Post {
+        +int id
+        +string heading
+        +string description
+    }
+
+    class JobPost {
+        +int employerId
+        +string requirements
+    }
+
+    class Announcement {
+        +int employerId
+        +string targetAudience
+    }
+
+    class Application {
+        +int id
+        +int applicantId
+        +int jobId
+        +date applicationDate
+    }
+
+    class Interview {
+        +int id
+        +int applicationId
+        +date interviewDate
+    }
+
+    Applicant --> Application : "applies"
+    EmployerProfile --> JobPost : "creates"
+    Application --> Interview : "results in"
