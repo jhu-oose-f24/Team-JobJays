@@ -3,7 +3,7 @@ import { useState } from "react";
 import { HomeIcon, GearIcon, ExitIcon } from "@radix-ui/react-icons";
 
 export default function Sidebar() {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen] = useState(false);
 
     return (
         <div className="flex">

@@ -1,5 +1,7 @@
 import styles from '@/styles/headerActions.module.css';
 import Link from "next/link";
+import Image from "next/image";
+import ImageUrls  from "../ImageUrls";
 
 const HeaderActions = () => {
     return (
@@ -10,7 +12,13 @@ const HeaderActions = () => {
                     <span>Job Jays</span>
                 </div>
                 <div className={styles.countrySelector}>
-                    <img src={"usa-flag.png"} alt="USA" className={styles.flag} /> {/* Placeholder for flag image */}
+                    <Image
+                        src={ImageUrls.usaFlag}
+                        width={10}
+                        height={10} // Add the height attribute here
+                        alt="USA"
+                        className={styles.flag}
+                    />
                     <span>USA</span>
                     <i className="fas fa-chevron-down"></i>
                 </div>
@@ -18,12 +26,12 @@ const HeaderActions = () => {
 
             <div className={styles.searchBar}>
                 <i className="fas fa-search"></i> {/* Placeholder for search icon */}
-                <input type="text" placeholder="Job title, keyword, company" />
+                <input type="text" placeholder="Job title, keyword, company"/>
             </div>
 
             <div className={styles.rightSection}>
                 <button className={styles.signIn}>Sign In</button>
-                <Link href="/post_job" passHref>
+                <Link href="/employer/post-job" passHref>
                     <button className={styles.postJob}>Post A Job</button>
                 </Link>
             </div>
