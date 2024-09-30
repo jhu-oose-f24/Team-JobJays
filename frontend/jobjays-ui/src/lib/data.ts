@@ -2,7 +2,7 @@
 
 // placeholder-data.ts
 
-import { Post, JobPost, User, Employer, Applicant, Profile, EmployerProfile, ApplicantProfile } from './types';
+import { Post, JobPost, User, JobListing, Employer, Applicant, Profile, EmployerProfile, ApplicantProfile } from './types';
 
 // Placeholder for Post
 const samplePost: Post = {
@@ -18,6 +18,31 @@ const samplePost: Post = {
         console.log(`${this.title} has been closed.`);
     }
 };
+
+const sampleJobListing: JobListing = {
+    jobID: 101,
+    title: "Software Engineer",
+    type: "Full-time",
+    location: "New York, NY",
+    salary: 120000
+};
+
+const sampleJobListingB: JobListing = {
+    jobID: 101,
+    title: "Software Engineer",
+    type: "Full-time",
+    location: "New York, NY",
+    salary: 120000
+};
+
+const sampleJobListingC: JobListing = {
+    jobID: 101,
+    title: "Software Engineer",
+    type: "Full-time",
+    location: "New York, NY",
+    salary: 120000
+};
+
 
 // Placeholder for JobPost
 const sampleJobPost: JobPost = {
@@ -122,6 +147,9 @@ sampleApplicant.profile = sampleApplicantProfile;
 // Exporting the placeholders
 export {
     samplePost,
+    sampleJobListing,
+    sampleJobListingB,
+    sampleJobListingC,
     sampleJobPost,
     sampleUser,
     sampleEmployer,

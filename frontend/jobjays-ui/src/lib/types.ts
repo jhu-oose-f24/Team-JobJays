@@ -8,6 +8,14 @@ export interface Post {
     close: () => void;
 }
 
+export interface JobListing {
+    jobID: number;
+    title: string;
+    type: string;
+    location: string;
+    salary: number;
+}
+
 export interface JobPost extends Post {
     jobID: number;
     postedDate: Date;
