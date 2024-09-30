@@ -1,6 +1,5 @@
-package com.example.jobjays.dto;
+package com.example.jobjays.dto.profile;
 
-import com.example.jobjays.model.JobPost;
 import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
 
 import java.util.List;

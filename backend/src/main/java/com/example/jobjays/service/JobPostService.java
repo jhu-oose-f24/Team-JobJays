@@ -5,6 +5,7 @@ import com.example.jobjays.model.EmployerProfile;
 import com.example.jobjays.model.JobPost;
 import com.example.jobjays.dto.jobPost.*;
 import com.example.jobjays.repository.JobPostRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,9 +22,9 @@ public class JobPostService {
     this.employerService = employerService;
   }
 
-  public JobPost addJobPost(CreateJobPostDto newJobPost) {
+  public JobPost addJobPost(CreateJobPostDto newJobPost, Employer employer) {
 
-    Employer employer = employerService.findEmployerByUsername(newJobPost.getUsername());
+
 
 
     JobPost jobPost = new JobPost(
@@ -40,6 +41,8 @@ public class JobPostService {
   }
 
   public JobPost updateJobPost(UpdateJobPostDto jobPost, Long id) {
+
+
 
     JobPost jobPostToUpdate = jobPostRepository.findById(id).orElse(null);
 
@@ -86,15 +89,15 @@ public class JobPostService {
   }
 
   public List<JobPost> getJobPostsByEmployer(String employer) {
-    return jobPostRepository.findJobPostsByEmployer_Profile_Name(employer).orElse(null);
+    return jobPostRepository.findJobPostsByEmployer_Profile_NameIgnoreCase(employer);
   }
 
   public List<JobPost> getJobPostsByTitle(String title) {
-    return jobPostRepository.findJobPostsByTitleIsLikeIgnoreCase(title).orElse(null);
+    return jobPostRepository.findJobPostsByTitleContainingIgnoreCase(title);
   }
 
   public List<JobPost> getJobPostsByTitleContaining(String title) {
-    return jobPostRepository.findJobPostsByTitleContainingIgnoreCase(title).orElse(null);
+    return jobPostRepository.findJobPostsByTitleContainingIgnoreCase(title);
   }
 
 }

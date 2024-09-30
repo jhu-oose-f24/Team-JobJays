@@ -6,7 +6,6 @@ import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
 import com.example.jobjays.repository.ApplicantRepository;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Objects;
 
@@ -75,11 +74,11 @@ public class ApplicantService {
   }
 
   public Applicant findApplicantByUsername(String username) {
-    return applicantRepository.findByUsernameIs(username);
+    return applicantRepository.findByUsernameIsIgnoreCase(username);
   }
 
   public ApplicantProfile findApplicantProfileByUsername(String username) {
-    return Objects.requireNonNull(applicantRepository.findByUsernameIs(username)).getProfile();
+    return Objects.requireNonNull(applicantRepository.findByUsernameIsIgnoreCase(username)).getProfile();
   }
 
   public List<Applicant> findAllApplicants() {
@@ -90,21 +89,21 @@ public class ApplicantService {
     return applicantRepository.findAll().stream().map(Applicant::getProfile).toList();
   }
 
-  public List<Applicant> findApplicantsByUsernameFuzzy(String username) {
+  public List<Applicant> findApplicantsByUsername(String username) {
     return applicantRepository.findAllByUsernameContainingIgnoreCase(username);
   }
 
-  public List<ApplicantProfile> findApplicantProfilesByUsernameFuzzy(String username) {
+  public List<ApplicantProfile> findApplicantProfilesByUsername(String username) {
     List<Applicant> applicants = applicantRepository.findAllByUsernameContainingIgnoreCase(username);
     return applicants.stream().map(Applicant::getProfile).toList();
   }
 
-  public List<Applicant> findApplicantsByEmailFuzzy(String email) {
-    return applicantRepository.findAllByEmailContainingIgnoreCase(email);
+  public List<Applicant> findApplicantsByEmail(String email) {
+    return applicantRepository.findAllByNameContainingIgnoreCase(email);
   }
 
-  public List<ApplicantProfile> findApplicantProfilesByEmailFuzzy(String email) {
-    List<Applicant> applicants = applicantRepository.findAllByEmailContainingIgnoreCase(email);
+  public List<ApplicantProfile> findApplicantProfilesByEmail(String email) {
+    List<Applicant> applicants = applicantRepository.findAllByNameContainingIgnoreCase(email);
     return applicants.stream().map(Applicant::getProfile).toList();
   }
 

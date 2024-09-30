@@ -45,13 +45,11 @@ public class EmployerService {
     if (employerToUpdate == null) {
       return null;
     }
-
     EmployerProfile profile = employerToUpdate.getProfile();
 
     if (newEmployer.getEmployerInfo() != null && !newEmployer.getEmployerInfo().isEmpty()) {
       profile.setBio(newEmployer.getEmployerInfo());
     }
-
     if (newEmployer.getEmployerName() != null && !newEmployer.getEmployerName().isEmpty()) {
       profile.setName(newEmployer.getEmployerInfo());
     }
@@ -63,7 +61,7 @@ public class EmployerService {
   public void deleteEmployer(Long id) {
     EmployerProfile profile = Objects.requireNonNull(employerRepository.findById(id).orElse(null)).getProfile();
     if (profile != null) {
-      List<JobPost> jobPosts = jobPostRepository.findJobPostsByEmployer_Profile_Name(profile.getName()).orElse(null);
+      List<JobPost> jobPosts = jobPostRepository.findJobPostsByEmployer_Profile_NameIgnoreCase(profile.getName());
       if (jobPosts != null) {
         for (JobPost jobPost : jobPosts) {
           for (Applicant applicant : jobPost.getApplicants()) {
@@ -79,13 +77,17 @@ public class EmployerService {
   }
 
 
-
   public Employer findEmployerById(Long id) {
     return employerRepository.findById(id).orElse(null);
   }
 
   public List<Employer> findAllEmployers() {
     return employerRepository.findAll();
+  }
+  public List<EmployerProfile> findAllEmployerProfiles() {
+    return employerRepository.findAll().stream()
+        .map(Employer::getProfile)  // Assuming getProfile() returns EmployerProfile
+        .collect(Collectors.toList());
   }
 
   public EmployerProfile findEmployerProfileById(Long id) {
@@ -105,22 +107,24 @@ public class EmployerService {
   }
 
   public List<Employer> findEmployersByName(String name) {
-    return employerRepository.findAllByEmployerNameIsLikeIgnoreCase(name);
+    return employerRepository.findAllByEmployerNameContainingIgnoreCase(name);
   }
 
   public List<EmployerProfile> findEmployerProfilesByName(String name) {
-    List<Employer> employers = employerRepository.findAllByEmployerNameIsLikeIgnoreCase(name);
+    List<Employer> employers = employerRepository.findAllByEmployerNameContainingIgnoreCase(name);
     return employers.stream()
         .map(Employer::getProfile)  // Assuming getProfile() returns EmployerProfile
         .collect(Collectors.toList());
   }
 
+  //WILL NOT USE
   public List<Employer> findEmployersByEmail(String email) {
-    return employerRepository.findAllByEmailIsLikeIgnoreCase(email);
+    return employerRepository.findAllByEmailContainingIgnoreCase(email);
   }
 
+  //WILL NOT USE
   public List<EmployerProfile> findEmployerProfilesByEmail(String email) {
-    List<Employer> employers = employerRepository.findAllByEmailIsLikeIgnoreCase(email);
+    List<Employer> employers = employerRepository.findAllByEmailContainingIgnoreCase(email);
     return employers.stream()
         .map(Employer::getProfile)  // Assuming getProfile() returns EmployerProfile
         .collect(Collectors.toList());

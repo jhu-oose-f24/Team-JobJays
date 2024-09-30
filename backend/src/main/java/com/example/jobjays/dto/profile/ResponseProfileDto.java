@@ -1,4 +1,4 @@
-package com.example.jobjays.dto;
+package com.example.jobjays.dto.profile;
 
 public class ResponseProfileDto {
 

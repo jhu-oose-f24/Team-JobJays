@@ -1,7 +1,6 @@
 package com.example.jobjays.dto.applicant;
 
-import com.example.jobjays.dto.ResponseProfileDto;
-import com.example.jobjays.model.ApplicantProfile;
+import com.example.jobjays.dto.profile.ResponseProfileDto;
 
 
 public class ResponseApplicantDto {
