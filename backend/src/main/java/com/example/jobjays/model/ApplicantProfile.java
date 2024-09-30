@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonTypeName("applicantProfile")
 @Embeddable
 public class ApplicantProfile implements Profile {
 
@@ -17,7 +16,7 @@ public class ApplicantProfile implements Profile {
 
   @Transient
   private Applicant applicant;
-  @OneToMany
+  @ManyToMany
   private List<JobPost> appliedJobs;
 
   public ApplicantProfile() {}
@@ -39,7 +38,7 @@ public class ApplicantProfile implements Profile {
     return this.name;
   }
 
-  String setName(String name) {
+  public String setName(String name) {
     this.name = name;
     return name;
   }
@@ -48,7 +47,7 @@ public class ApplicantProfile implements Profile {
     return this.bio;
   }
 
-  String setBio(String bio) {
+  public String setBio(String bio) {
     this.bio = bio;
     return bio;
   }

@@ -1,0 +1,42 @@
+
+### CREATE EMPLOYER
+POST http://localhost:8080/api/companies/add
+Content-Type: application/json
+
+{
+  "username": "employerUsername",
+  "password": "employerPassword",
+  "email": "employer@example.com",
+  "employerName": "Employer Company",
+  "employerInfo": "Information about the employer."
+}
+
+### UPDATE EMPLOYER
+PUT http://localhost:8080/api/companies/update/{{id}}
+Content-Type: application/json
+
+{
+  "employerInfo": "Updated employer information.",
+  "employerName": "Updated Employer Name"
+}
+
+### DELETE EMPLOYER
+DELETE http://localhost:8080/api/companies/delete/{{id}}
+
+### GET EMPLOYER BY ID
+GET http://localhost:8080/api/companies/{{id}}
+
+### GET ALL EMPLOYERS
+GET http://localhost:8080/api/companies
+
+### GET EMPLOYER PROFILE BY ID
+###
+GET http://localhost:8080/api/companies/profile/{{id}}
+
+### GET EMPLOYER BY USERNAME
+###
+GET http://localhost:8080/api/companies/username/{{username}}
+
+### GET MANY EMPLOYERS BY NAME
+###
+GET http://localhost:8080/api/companies/name/{{name}}

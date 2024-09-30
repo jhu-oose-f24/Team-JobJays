@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 @Entity
-@JsonTypeName("applicant")
 public class Applicant implements User {
   private String username;
   private String password;
@@ -35,7 +34,6 @@ public class Applicant implements User {
     this.username = username;
     this.password = password;
     this.email = email;
-    //this.applicantId = UUID.randomUUID().toString();
     this.resume = resume;
     this.profile = new ApplicantProfile(this, "", "");
 
@@ -83,7 +81,7 @@ public class Applicant implements User {
     return resume;
   }
 
-  public Profile getProfile() {
+  public ApplicantProfile getProfile() {
     return this.profile;
   }
 

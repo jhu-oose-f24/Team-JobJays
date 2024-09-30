@@ -1,0 +1,47 @@
+### ADD APPLICANT
+POST http://localhost:8080/api/applicants/add
+Content-Type: application/json
+
+{
+    "username": "applicantUsername",
+    "password": "applicantPassword",
+    "email": "applicant@example.com",
+    "applicantName": "Applicant Name",
+    "applicantInfo": "Information about the applicant.",
+    "resume": "Link or text to the applicant's resume."
+}
+
+### UPDATE APPLICANT
+PUT http://localhost:8080/api/applicants/update/{{id}}
+Content-Type: application/json
+
+{
+  "resume": "Updated resume link or text.",
+  "bio": "Updated bio.",
+  "name": "Updated Applicant Name"
+}
+
+### DELETE APPLICANT
+DELETE http://localhost:8080/api/applicants/delete/{{id}}
+
+### GET APPLICANT BY ID
+GET http://localhost:8080/api/applicants/{{id}}
+
+### GET ALL APPLICANTS
+###
+GET http://localhost:8080/api/applicants
+
+### GET APPLICANT PROFILE BY ID
+###
+GET http://localhost:8080/api/applicants/profile/{{id}}
+
+### GET APPLICANT BY USERNAME
+###
+GET http://localhost:8080/api/applicants/username/{{username}}
+
+### GET MANY APPLICANTS BY NAME
+GET http://localhost:8080/api/applicants/username/fuzzy/{{username}}
+
+### GET MANY APPLICANTS BY EMAIL
+###
+GET http://localhost:8080/api/applicants/email/fuzzy/{{email}}

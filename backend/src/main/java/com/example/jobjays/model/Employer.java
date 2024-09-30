@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
 
 
-@JsonTypeName("employer")
 @Entity
 public class Employer implements User {
   private String username;
@@ -56,7 +55,7 @@ public class Employer implements User {
   }
 
 
-  String setPassword(String password) {
+   String setPassword(String password) {
     this.password = password;
     return password;
   }
@@ -65,16 +64,16 @@ public class Employer implements User {
     return this.email;
   }
 
-  String setEmail(String email) {
+  public String setEmail(String email) {
     this.email = email;
     return email;
   }
 
-  public Profile getProfile() {
+  public EmployerProfile getProfile() {
     return this.profile;
   }
 
-  void postJob(JobPost job) {
+  public void postJob(JobPost job) {
     this.profile.getJobPosts().add(job);
   }
 

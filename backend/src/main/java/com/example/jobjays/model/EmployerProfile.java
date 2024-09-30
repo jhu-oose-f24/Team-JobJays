@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Embeddable
-@JsonTypeName("employerProfile")
 public class EmployerProfile implements Profile {
 
   private String name;
@@ -16,7 +15,7 @@ public class EmployerProfile implements Profile {
   @Transient
   private Employer employer; //User
 
-  @OneToMany
+  @OneToMany(mappedBy = "employer", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<JobPost> jobPosts;
 
 
@@ -39,7 +38,7 @@ public class EmployerProfile implements Profile {
     return this.name;
   }
 
-  String setName(String name) {
+  public String setName(String name) {
     this.name = name;
     return name;
   }
@@ -48,12 +47,12 @@ public class EmployerProfile implements Profile {
     return this.bio;
   }
 
-  String setBio(String bio) {
+  public String setBio(String bio) {
     this.bio = bio;
     return bio;
   }
 
-  List<JobPost> getJobPosts() {
+  public List<JobPost> getJobPosts() {
     return this.jobPosts;
   }
 
