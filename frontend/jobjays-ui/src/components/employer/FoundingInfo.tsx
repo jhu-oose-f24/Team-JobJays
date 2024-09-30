@@ -13,7 +13,7 @@ interface FoundingInfoProps {
     onSubmit?: (data: FoundingInfoData) => void;
 }
 
-const FoundingInfo: React.FC<FoundingInfoProps> = ({ onSubmit }) => {
+const FoundingInfo: React.FC<FoundingInfoProps> = ({  }) => {
     const [organizationType, setOrganizationType] = useState<string>('');
     const [industryType, setIndustryType] = useState<string>('');
     const [teamSize, setTeamSize] = useState<string>('');

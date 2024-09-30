@@ -5,7 +5,7 @@ import styles from '@/styles/my-jobs.module.css';
 
 const MyJobs: React.FC = () => {
     const [jobStatusFilter, setJobStatusFilter] = useState('all');
-    const [jobs, setJobs] = useState([
+    const [jobs] = useState([
         {
             id: 1,
             title: 'UI/UX Designer',

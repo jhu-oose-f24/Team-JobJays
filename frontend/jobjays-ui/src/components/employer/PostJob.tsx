@@ -134,8 +134,8 @@ const PostJob: React.FC = () => {
                         <label>Education</label>
                         <select value={education} onChange={(e) => setEducation(e.target.value)}>
                             <option value="">Select...</option>
-                            <option value="bachelor">Bachelor's</option>
-                            <option value="master">Master's</option>
+                            <option value="bachelor">Bachelor&amp;apos;s</option>
+                            <option value="master">Master&amp;apos; s</option>
                             <option value="phd">PhD</option>
                         </select>
                     </div>
