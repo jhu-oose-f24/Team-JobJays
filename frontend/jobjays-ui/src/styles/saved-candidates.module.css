@@ -1,0 +1,181 @@
+/* General Layout */
+.container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f8f9fa;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    padding: 20px;
+}
+
+.sidebar nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar nav ul li {
+    padding: 15px 0;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.sidebar nav ul li:hover {
+    color: #007bff;
+}
+
+.active {
+    color: #007bff;
+}
+
+.main {
+    flex: 1;
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.notice {
+    font-size: 14px;
+    color: #999;
+}
+
+.notice i {
+    margin-right: 5px;
+}
+
+/* Candidates List */
+.candidatesList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Candidate Row */
+.candidateRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.candidateRow:hover {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.candidateProfile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profilePic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.candidateDetails h4 {
+    font-size: 18px;
+    margin: 0;
+    color: #333;
+}
+
+.candidateDetails p {
+    font-size: 14px;
+    color: #777;
+    margin-top: 5px;
+}
+
+/* Candidate Actions */
+.candidateActions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.viewProfileButton {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.viewProfileButton:hover {
+    background-color: #0056b3;
+}
+
+/* More Actions */
+.moreActions {
+    position: relative;
+}
+
+.moreActionsButton {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+}
+
+.moreActionsButton:hover {
+    color: #007bff;
+}
+
+.moreActionsMenu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    padding: 10px;
+}
+
+.moreActions:hover .moreActionsMenu {
+    display: flex;
+}
+
+.moreActionsMenu button {
+    background: none;
+    border: none;
+    padding: 8px 12px;
+    text-align: left;
+    color: #333;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.moreActionsMenu button:hover {
+    background-color: #f8f9fa;
+}

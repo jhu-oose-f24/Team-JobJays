@@ -5,7 +5,7 @@ import styles from '@/styles/postJob.module.css'; // Assuming you style it with 
 const PostJob = () => {
     return (
         <div className={styles.postJobContainer}>
-            <h2>Post a Job</h2>
+            <h1>Post a Job</h1>
 
             <form className={styles.postJobForm}>
                 {/* Job Title */}
@@ -33,11 +33,19 @@ const PostJob = () => {
                     {/* Add more options as needed */}
                 </select>
 
+                <label className={styles.formLabel} htmlFor="jobTiming">Job Timing</label>
+                <select id="jobTiming" className={styles.formSelect}>
+                    <option>Select...</option>
+                    <option>Full Time</option>
+                    <option>Part Time</option>
+                    {/* Add more options as needed */}
+                </select>
+
                 {/* Salary Inputs */}
                 <label className={styles.formLabel}>Salary</label>
                 <div className={styles.salaryInputs}>
-                    <input type="text" placeholder="Min Salary" className={styles.formInput} />
-                    <input type="text" placeholder="Max Salary" className={styles.formInput} />
+                    <input type="text" placeholder="Min Salary" className={styles.formInput}/>
+                    <input type="text" placeholder="Max Salary" className={styles.formInput}/>
                     <select className={styles.formSelect}>
                         <option>USD</option>
                         {/* Add more currency options */}
