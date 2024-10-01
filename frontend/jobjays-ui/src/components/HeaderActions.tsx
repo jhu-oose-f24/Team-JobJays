@@ -1,5 +1,6 @@
 import styles from '@/styles/headerActions.module.css';
 import Link from "next/link";
+import Image from 'next/image';
 
 const HeaderActions = () => {
     return (
@@ -10,7 +11,14 @@ const HeaderActions = () => {
                     <span>Job Jays</span>
                 </div>
                 <div className={styles.countrySelector}>
-                    <img src={"usa-flag.png"} alt="USA" className={styles.flag} /> {/* Placeholder for flag image */}
+                    {/* <img src={"usa-flag.png"} alt="USA" className={styles.flag} /> Placeholder for flag image */}
+                    <Image 
+                        src="/usa-flag.png" 
+                        alt="USA" 
+                        width={24} 
+                        height={24} 
+                        className={styles.flag} 
+                    />
                     <span>USA</span>
                     <i className="fas fa-chevron-down"></i>
                 </div>
