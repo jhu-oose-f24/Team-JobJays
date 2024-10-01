@@ -33,7 +33,7 @@ const HeaderActions = () => {
             <div className={styles.rightSection}>
                 <button className={styles.signIn}>Sign In</button>
                 <Link href="/employer/post-job" passHref>
-                    <a className={styles.postJob}>Post A Job</a>
+                    <p className={styles.postJob}>Post A Job</p>
                 </Link>
             </div>
         </div>
