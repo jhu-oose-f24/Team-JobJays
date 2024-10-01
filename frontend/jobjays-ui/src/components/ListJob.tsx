@@ -4,8 +4,7 @@ import styles from '@/styles/listJob.module.css'; // Assuming you style it with 
 import { 
     sampleJobListing, sampleJobListingB, sampleJobListingC
 } from "@/lib/data";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+
 
 
 

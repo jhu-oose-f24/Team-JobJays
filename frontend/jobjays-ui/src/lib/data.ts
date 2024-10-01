@@ -21,26 +21,26 @@ const samplePost: Post = {
 
 const sampleJobListing: JobListing = {
     jobID: 101,
-    title: "Software Engineer",
+    title: "Product Manager",
     type: "Full-time",
     location: "New York, NY",
-    salary: 120000
+    salary: 230000
 };
 
 const sampleJobListingB: JobListing = {
     jobID: 101,
-    title: "Software Engineer",
-    type: "Full-time",
+    title: "Marketing Manager",
+    type: "Part-time",
     location: "New York, NY",
-    salary: 120000
+    salary: 708000
 };
 
 const sampleJobListingC: JobListing = {
     jobID: 101,
     title: "Software Engineer",
-    type: "Full-time",
-    location: "New York, NY",
-    salary: 120000
+    type: "Internship",
+    location: "San Francisco, CA",
+    salary: 4000
 };
 
 
