@@ -87,7 +87,7 @@ export default function CreateAccount() {
             <div className="flex items-center gap-2">
               <input type="checkbox" id="terms" className="h-4 w-4" />
               <label htmlFor="terms" className="text-gray-500">
-                I've read and agree with your <a href="#" className="text-blue-600">Terms of Services</a>
+                I&apos;ve read and agree with your <a href="#" className="text-blue-600">Terms of Services</a>
               </label>
             </div>
             <button className="px-6 py-3 bg-blue-400 text-white rounded-md mt-4">
