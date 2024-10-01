@@ -28,7 +28,7 @@ export default function Login() {
         {/* Login Header */}
         <h2 className="text-3xl font-bold mb-4">Log In</h2>
         <p className="text-gray-500 mb-8">
-          Don't have an account? <a href="/signup" className="text-blue-600">Sign Up</a>
+          Don&apos;t have an account? <a href="/signup" className="text-blue-600">Sign Up</a>
         </p>
 
         {/* Tabs for Candidate and Employer */}
@@ -96,7 +96,7 @@ export default function Login() {
         />
         <div className="absolute text-white text-center px-8">
           <h3 className="text-3xl font-bold mb-4">
-            Welcome Back! Let's get you logged in.
+            Welcome Back! Let&apos;s get you logged in.
           </h3>
           <div className="flex gap-8 justify-center">
           </div>
