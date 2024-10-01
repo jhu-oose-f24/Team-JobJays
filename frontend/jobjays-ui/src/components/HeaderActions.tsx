@@ -1,9 +1,6 @@
 import styles from '@/styles/headerActions.module.css';
 import Link from "next/link";
 import Image from "next/image";
-import ImageUrls  from "../ImageUrls";
-import router from "next/router";
-
 const HeaderActions = () => {
     return (
         <div className={styles.headerActions}>

@@ -2,11 +2,7 @@ import Header from "@/components/ui/Header";
 import Hero from "@/components/ui/Hero";
 import HowItWorks from "@/components/ui/Instructions";
 import Statistics from "@/components/ui/Statistics";
-
-import Navbar from '@/components/Navbar';
-import HeaderActions from "@/components/HeaderActions";
 import AboutUs from "@/components/AboutUs";
-import { Contact } from "lucide-react";
 import Support from "@/components/Support";
 import ContactUs from "@/components/ContactUs";
 
