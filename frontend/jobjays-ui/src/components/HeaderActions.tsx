@@ -1,9 +1,6 @@
 import styles from '@/styles/headerActions.module.css';
 import Link from "next/link";
 import Image from "next/image";
-import ImageUrls  from "../ImageUrls";
-import router from "next/router";
-
 const HeaderActions = () => {
     return (
         <div className={styles.headerActions}>
@@ -33,7 +30,7 @@ const HeaderActions = () => {
             <div className={styles.rightSection}>
                 <button className={styles.signIn}>Sign In</button>
                 <Link href="/employer/post-job" passHref>
-                    <a className={styles.postJob}>Post A Job</a>
+                    <p className={styles.postJob}>Post A Job</p>
                 </Link>
             </div>
         </div>
