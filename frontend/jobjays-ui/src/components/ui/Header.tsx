@@ -14,7 +14,7 @@ export default function Header() {
           <Link href="/">Home</Link>
           <Link href="/find-job">Find Job</Link>
           <Link href="/employer/dashboard">Employers</Link>
-          <Link href="/candidates">Candidates</Link>
+          <Link href="/candidate/dashboard">Candidates</Link>
         </nav>
       </div>
 
