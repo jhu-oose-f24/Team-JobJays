@@ -1,0 +1,166 @@
+/* src/styles/aboutus.module.css */
+
+.container {
+    width: 85%;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+/* 简介部分 */
+.intro {
+    margin-bottom: 60px;
+    text-align: center;
+    color: #0056d2;
+}
+
+.intro h1 {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.intro p {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    color: #555;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* 团队理念 */
+.philosophy {
+    margin: 60px 0;
+    text-align: left;
+    font-size: 1.3rem;
+    padding: 20px;
+    background-color: #f5f7fa;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.philosophy h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.philosophy ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.philosophy ul li {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 1.1rem;
+}
+
+.philosophy ul li strong {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.philosophy ul li::before {
+    content: "🌟"; /* 图标可以根据需求更改 */
+    margin-right: 10px;
+    font-size: 1.5rem;
+}
+
+/* 照片墙 */
+.photoWall {
+    margin: 60px 0;
+    text-align: center;
+}
+
+.photoWall h2 {
+    font-size: 2.5rem;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.photos {
+    display: flex;
+    justify-content: center; /* 居中对齐 */
+    flex-wrap: wrap; /* 允许换行 */
+    gap: 30px; /* 设置每个方块之间的间距 */
+}
+
+.photo {
+    display: flex; /* 使用 flexbox 布局 */
+    flex-direction: column; /* 使内容垂直排列 */
+    justify-content: center; /* 使内容垂直居中 */
+    align-items: center; /* 使内容水平居中 */
+    margin: 20px;
+    text-align: center;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex-basis: 30%; /* 每个卡片占据三分之一的空间 */
+    max-width: 300px; /* 限制卡片的最大宽度 */
+    height: 350px; /* 固定高度 */
+}
+
+.photo:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.photo img {
+    border-radius: 50%;
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.photo p {
+    font-weight: bold;
+    font-size: 1.3rem;
+}
+t
+
+/* 愿景与使命 */
+.mission {
+    background-color: #f1f1f1;
+    padding: 40px;
+    margin: 60px 0;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mission h2 {
+    font-size: 2.2rem;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.mission p {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #333;
+}
+
+/* 联系方式 */
+.contact {
+    margin-top: 60px;
+    font-size: 1.3rem;
+}
+
+.contact a {
+    color: #0070f3;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.contact a:hover {
+    text-decoration: underline;
+    color: #0056d2;
+}

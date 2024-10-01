@@ -13,11 +13,12 @@ const HeaderActions = () => {
                     <span>Job Jays</span>
                 </div>
                 <div className={styles.countrySelector}>
+                    {/* <img src={"usa-flag.png"} alt="USA" className={styles.flag} /> Placeholder for flag image */}
                     <Image
-                        src={ImageUrls.usaFlag}
-                        width={10}
-                        height={10} // Add the height attribute here
+                        src="/usa-flag.png"
                         alt="USA"
+                        width={24}
+                        height={24}
                         className={styles.flag}
                     />
                     <span>USA</span>
@@ -27,7 +28,7 @@ const HeaderActions = () => {
 
             <div className={styles.searchBar}>
                 <i className="fas fa-search"></i> {/* Placeholder for search icon */}
-                <input type="text" placeholder="Job title, keyword, company"/>
+                <input type="text" placeholder="Job title, keyword, company" />
             </div>
             <div className={styles.rightSection}>
                 <button className={styles.signIn}>Sign In</button>
