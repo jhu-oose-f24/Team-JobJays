@@ -3,12 +3,16 @@ package com.example.jobjays.model;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 
-@JsonTypeName("jobPost")
+
+@Entity
 public class JobPost implements Post {
 
 
@@ -17,12 +21,19 @@ public class JobPost implements Post {
   private String location;
   private Double salary;
 
-  private final String jobID;
+  @Id
+  @GeneratedValue
+  private Long jobID;
   private LocalDateTime postedDate;
   private LocalDateTime closedDate;
-  public final Employer employer;
 
+  @ManyToMany
+  private List<Applicant> applicants;
 
+  @ManyToOne
+  public Employer employer;
+
+public JobPost() {}
 
   public JobPost(
       String title,
@@ -33,7 +44,7 @@ public class JobPost implements Post {
       Employer employer
       ) {
 
-    this.jobID = UUID.randomUUID().toString();
+    //this.jobID = UUID.randomUUID().toString();
     this.title = title;
     this.description = description;
     this.location = location;
@@ -41,6 +52,7 @@ public class JobPost implements Post {
     this.postedDate = LocalDateTime.now();
     this.closedDate = closedDate;
     this.employer = employer;
+    this.applicants = new ArrayList<>();
 
   }
 
@@ -81,7 +93,7 @@ public class JobPost implements Post {
   }
 
   //Should not change
-  public String getID() {
+  public Long getID() {
     return jobID;
   }
 
@@ -106,6 +118,18 @@ public class JobPost implements Post {
   //Should not change
   public Employer getEmployer() {
     return employer;
+  }
+
+  public void addApplicant(Applicant applicant) {
+    applicants.add(applicant);
+  }
+
+  public void removeApplicant(Applicant applicant) {
+    applicants.remove(applicant);
+  }
+
+  public List<Applicant> getApplicants() {
+    return applicants;
   }
 
   /*

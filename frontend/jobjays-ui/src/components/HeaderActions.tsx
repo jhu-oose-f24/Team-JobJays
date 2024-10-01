@@ -12,12 +12,12 @@ const HeaderActions = () => {
                 </div>
                 <div className={styles.countrySelector}>
                     {/* <img src={"usa-flag.png"} alt="USA" className={styles.flag} /> Placeholder for flag image */}
-                    <Image 
-                        src="/usa-flag.png" 
-                        alt="USA" 
-                        width={24} 
-                        height={24} 
-                        className={styles.flag} 
+                    <Image
+                        src="/usa-flag.png"
+                        alt="USA"
+                        width={24}
+                        height={24}
+                        className={styles.flag}
                     />
                     <span>USA</span>
                     <i className="fas fa-chevron-down"></i>
@@ -31,7 +31,7 @@ const HeaderActions = () => {
 
             <div className={styles.rightSection}>
                 <button className={styles.signIn}>Sign In</button>
-                <Link href="/post_job" passHref>
+                <Link href="/employer/post-job" passHref>
                     <button className={styles.postJob}>Post A Job</button>
                 </Link>
             </div>
