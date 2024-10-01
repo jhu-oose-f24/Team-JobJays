@@ -2,7 +2,6 @@ import Header from "@/components/ui/Header";
 import Hero from "@/components/ui/Hero";
 import HowItWorks from "@/components/ui/Instructions";
 import Statistics from "@/components/ui/Statistics";
-import Image from "next/image";
 
 export default function Home() {
   return (

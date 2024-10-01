@@ -2,6 +2,7 @@ import styles from '@/styles/headerActions.module.css';
 import Link from "next/link";
 import Image from "next/image";
 import ImageUrls  from "../ImageUrls";
+import router from "next/router";
 
 const HeaderActions = () => {
     return (
@@ -28,11 +29,10 @@ const HeaderActions = () => {
                 <i className="fas fa-search"></i> {/* Placeholder for search icon */}
                 <input type="text" placeholder="Job title, keyword, company"/>
             </div>
-
             <div className={styles.rightSection}>
                 <button className={styles.signIn}>Sign In</button>
                 <Link href="/employer/post-job" passHref>
-                    <button className={styles.postJob}>Post A Job</button>
+                    <a className={styles.postJob}>Post A Job</a>
                 </Link>
             </div>
         </div>
