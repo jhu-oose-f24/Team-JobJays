@@ -13,11 +13,15 @@ The proposed solution is to develop a web application that connects job seekers 
 
 ## Must Have
 - As a user looking for a job, I want to be able to create a user profile so that I can see opportunities that are tailored to me and my preferences. This would include user registration and authentication. 
+- As a user of this app, I want to be able to go through account registration, so that I can interact with the application.
+- As a user of this app, I want to be able to go through account authentication so that I can feel protected from other users. 
 - As a user looking for a job, I want to be able to edit my user profile so that I can freely update my preferences if they were to change in the future. (Update time could be a non-functional requirement.)
 - As an employer, I want to be able to view user profiles so that I can find qualified candidates for my company/role(s). 
 - As an employer, I want to be able to post jobs so that new roles from my company can be exposed to a wider audience.
 - As an employer, I want any jobs posted to be automatically removed after the application deadline has passed so that we don’t get any late applications. 
-- As an employer, I want to be able to edit jobs that have been posted so that any changes to the job requirements and/or description can be updated if needed. 
+- As an employer, I want to be able to edit jobs that have been posted so that any changes to the job requirements and/or description can be updated if needed.
+- As an employer, I want to be able to utilize a smart search so that I can search for ideal candidates for the roles that I have posted. 
+- As a jobseeker, I want to be able to utilize a smart search so that I can search for opportunities that best align with the information on my profile.
 - As a user looking for a job, I want to be able to view jobs from various employers with the option of using filters so that I can freely apply to new opportunities. 
 - As a user looking for a job, I want to receive notifications (via email potentially) from certain companies/jobs so that I can feel less overwhelmed when searching for opportunities that are right for me.
 - As an employer, I want to receive notifications (via email potentially) about users that can be a good fit for the non-expired, opportunities I’ve posted.
@@ -25,7 +29,7 @@ The proposed solution is to develop a web application that connects job seekers 
 - As a user looking for a job, I want to be able to upload files such as my resume, so employers can have a closer look at my skillsets and experience.
 
 ## Nice to Have
-- As a user looking for a job, I want to be able to research different companies (Company A, B, & C) and receive a suggestion as to which would be best for me so that I can narrow down the opportunities available to me. 
+- As a user looking for a job, I want to be able to research different companies (Company A, B, & C) and using artificial intelligence, receive a suggestion as to which would be best for me so that I can narrow down the opportunities available to me. 
 - As an employer, I want to be able to directly message users so that I can interact with those who are a good fit and encourage them to apply to the opportunities we have available. 
 - As an employer, I want to be able to see an activity log for jobseekers so I can learn more about things they do that won't necessarily be found on a resume. 
 - As a jobseeker, I want to be able to see who views my user profile so I can get a sense of which companies are interested in me. 
