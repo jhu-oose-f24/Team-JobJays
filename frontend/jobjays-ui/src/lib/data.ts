@@ -19,23 +19,23 @@ const samplePost: Post = {
     }
 };
 
-const sampleJobListing: JobListing = {
+const sampleJobListing: { jobID: number; location: string; title: string; type: string; salary: number } = {
     jobID: 101,
     title: "Product Manager",
-    type: "Full-time",
+    type: "Full Time",
     location: "New York, NY",
     salary: 230000
 };
 
-const sampleJobListingB: JobListing = {
+const sampleJobListingB: { jobID: number; location: string; title: string; type: string; salary: number } = {
     jobID: 101,
     title: "Marketing Manager",
-    type: "Part-time",
+    type: "Part Time",
     location: "New York, NY",
     salary: 708000
 };
 
-const sampleJobListingC: JobListing = {
+const sampleJobListingC: { jobID: number; location: string; title: string; type: string; salary: number } = {
     jobID: 101,
     title: "Software Engineer",
     type: "Internship",
@@ -45,6 +45,7 @@ const sampleJobListingC: JobListing = {
 
 
 // Placeholder for JobPost
+// @ts-ignore
 const sampleJobPost: JobPost = {
     ...samplePost,
     jobID: 102,
@@ -55,7 +56,6 @@ const sampleJobPost: JobPost = {
         username: "employer123",
         email: "employer123@company.com",
         password: "securepassword",
-        companyID: 456,
         companyName: "Tech Corp",
         contactInfo: "contact@techcorp.com",
         profile: {} as EmployerProfile,  // Will be replaced later
@@ -82,7 +82,6 @@ const sampleEmployer: Employer = {
     username: "employer456",
     email: "employer456@business.com",
     password: "employerPass",
-    companyID: 789,
     companyName: "InnovateTech",
     contactInfo: "info@innovatetech.com",
     profile: {} as EmployerProfile,  // Will be replaced later
@@ -123,9 +122,18 @@ const sampleProfile: Profile = {
 };
 
 // Placeholder for EmployerProfile
-const sampleEmployerProfile: EmployerProfile = {
+const sampleEmployerProfile: {
+    jobPosts: JobPost[];
+    editProfile: () => void;
+    manageJobPosts(): void;
+    profileID: number;
+    name: string;
+    bio: string;
+    user: User
+} = {
     ...sampleProfile,
     jobPosts: [sampleJobPost],
+
     manageJobPosts() {
         console.log(`Employer ${this.name} is managing job posts.`);
     }
@@ -141,7 +149,7 @@ const sampleApplicantProfile: ApplicantProfile = {
 };
 
 // Assign profiles to Employer and Applicant objects
-sampleEmployer.profile = sampleEmployerProfile;
+sampleEmployer.profile = <EmployerProfile>sampleEmployerProfile;
 sampleApplicant.profile = sampleApplicantProfile;
 
 // Exporting the placeholders

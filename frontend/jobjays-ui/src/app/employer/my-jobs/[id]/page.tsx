@@ -2,10 +2,12 @@
 
 import React from "react";
 import MyJobs from "@/components/employer/MyJobs";
+import {useParams} from "next/navigation";
 
 
 const MyJobsPage: React.FC = () => {
-    return <MyJobs />;
+    const {id} = useParams<{id: string}>();
+    return <MyJobs id={id}/>;
 };
 
 export default MyJobsPage;

@@ -8,20 +8,41 @@ export interface Post {
     close: () => void;
 }
 
-export interface JobListing {
+export interface JobListing extends Post {
     jobID: number;
+    companyName: string;
     title: string;
-    type: string;
+    description: string;
     location: string;
     salary: number;
+    type: "Full Time" | "Part Time" | "Internship";
+    status: "Active" | "Expired";
+    postedDate: Date;
+    closingDate: Date;
+    applications: number;
+    daysRemaining: number;
 }
 
 export interface JobPost extends Post {
     jobID: number;
+    title: string;
+    description: string;
+    location: string;
+    salary: number;
     postedDate: Date;
-    closingDate: Date;
-    employer: Employer;
+    closedDate: Date;
+    applications: number;
+    daysRemaining: number;
+    type: "Full Time" | "Part Time" | "Internship";
+    status: "Active" | "Expired";
+
 }
+ // export interface JobPost extends Post {
+ //     jobID: number;
+ //     postedDate: Date;
+ //     closingDate: Date;
+ //     employer: Employer;
+ // }
 
 export interface User {
     userID: number;
@@ -32,10 +53,11 @@ export interface User {
 }
 
 export interface Employer extends User {
-    companyID: number;
+    userID: number;
+    username: string;
     companyName: string;
     contactInfo: string;
-    profile: EmployerProfile
+    profile: EmployerProfile;
     postJob: () => void;
     viewApplications: () => void;
 
@@ -58,6 +80,7 @@ export interface Profile {
 }
 
 export interface EmployerProfile extends Profile {
+    jobPostsSize: number;
     jobPosts: JobPost[];
     manageJobPosts: () => void;
 }

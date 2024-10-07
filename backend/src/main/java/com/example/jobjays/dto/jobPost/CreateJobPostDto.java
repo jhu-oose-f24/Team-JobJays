@@ -24,7 +24,7 @@ public class CreateJobPostDto {
   @Future
   private LocalDateTime closedDate; // Needs to be converted to LocalDateTime on frontend before passed
 
-  @NotBlank
+  //@NotBlank
   private String username; // username of user is passed and used to find employer on backend (service)
 
   public String getTitle() {
