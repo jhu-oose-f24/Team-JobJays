@@ -1,4 +1,7 @@
+"use client";
 import React from 'react'
+import {useRouter} from "next/navigation";
+//mock users
 const user = {
     name: 'Esther Howard',
     appliedJobs: 589,
@@ -13,7 +16,7 @@ const user = {
             salary: '$50k-80k/month',
             dateApplied: 'Feb 2, 2019 19:28',
             status: 'Active',
-            logo: 'upwork.png',
+            logo: 'company_logo.png',
         },
         {
             id: 2,
@@ -23,7 +26,7 @@ const user = {
             salary: '$50k-80k/month',
             dateApplied: 'Dec 7, 2019 23:26',
             status: 'Active',
-            logo: 'dribbble.png',
+            logo: 'mg-job.png',
         },
         {
             id: 3,
@@ -33,7 +36,7 @@ const user = {
             salary: '$50k-80k/month',
             dateApplied: 'Feb 2, 2019 19:28',
             status: 'Active',
-            logo: 'apple.png',
+            logo: 'jobCreation.png',
         },
         {
             id: 4,
@@ -43,12 +46,12 @@ const user = {
             salary: '$50k-80k/month',
             dateApplied: 'Dec 7, 2019 23:26',
             status: 'Active',
-            logo: 'microsoft.png',
+            logo: 'mg-job.png',
         },
     ]
 };
 
-function StatCard ({ title, count }) {
+const StatCard =({ title, count }) =>{
     return(
         <div style={{
             flex: 1,
@@ -64,7 +67,7 @@ function StatCard ({ title, count }) {
     );
 }
 
-function JobRow({ job }){
+const JobRow = ({ job }) =>{
     return(
         <tr style={{ borderBottom: '1px solid #eee' }}>
             <td style={{ padding: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -87,6 +90,10 @@ function JobRow({ job }){
 }
 
 const DashboardPage: React.FC = () => {
+    const router = useRouter();
+    const handleProfileReminder = () => {
+        router.push('/candidate/settings'); // Navigate to the settings
+    };
     return (
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
             <h1>Hello, {user.name}</h1>
@@ -102,7 +109,9 @@ const DashboardPage: React.FC = () => {
             {/* Profile Reminder */}
             <div style={{ backgroundColor: '#ffdddd', padding: '15px', marginTop: '20px', borderRadius: '5px' }}>
                 <p>Your profile editing is not completed.</p>
-                <button style={{ padding: '10px', color: '#fff', backgroundColor: '#d9534f', border: 'none', borderRadius: '5px' }}>
+                <button
+                    onClick={handleProfileReminder}
+                    style={{ padding: '10px', color: '#fff', backgroundColor: '#d9534f', border: 'none', borderRadius: '5px' }}>
                     Edit Profile
                 </button>
             </div>
