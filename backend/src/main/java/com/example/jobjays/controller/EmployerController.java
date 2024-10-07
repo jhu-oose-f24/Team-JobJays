@@ -33,9 +33,9 @@ public class EmployerController {
   public ResponseEntity<ResponseEmployerDto> addEmployer(@RequestBody CreateEmployerDto createEmployerDto) {
     Employer employer = employerService.addEmployer(createEmployerDto);
     ResponseEmployerDto responseEmployerDto = mapToResponseEmployerDto(employer);
-    HttpHeaders headers = new HttpHeaders();
-    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employer.getID()));
-    return new ResponseEntity<>(responseEmployerDto, headers, HttpStatus.SEE_OTHER);
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employer.getID()));
+    return new ResponseEntity<>(responseEmployerDto, HttpStatus.CREATED);
   }
 
   @PutMapping("/profile/{id}")
@@ -100,9 +100,9 @@ public class EmployerController {
       return ResponseEntity.notFound().build();
     }
     ResponseEmployerProfileDto responseEmployerProfileDto = mapToResponseProfileDto(employerProfile);
-    HttpHeaders headers = new HttpHeaders();
-    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employerProfile.getUser().getID()));
-    return new ResponseEntity<>(responseEmployerProfileDto, headers, HttpStatus.SEE_OTHER);
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employerProfile.getUser().getID()));
+    return new ResponseEntity<>(responseEmployerProfileDto, HttpStatus.OK);
   }
 
 
@@ -122,6 +122,7 @@ public class EmployerController {
   private ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
     ResponseJobPostDto responseJobPostDto = new ResponseJobPostDto();
     responseJobPostDto.id = jobPost.getID();
+    responseJobPostDto.setCompanyName(jobPost.getEmployer().getProfile().getName());
     responseJobPostDto.title = jobPost.getTitle();
     responseJobPostDto.description = jobPost.getDescription();
     responseJobPostDto.location = jobPost.getLocation();

@@ -38,9 +38,9 @@ public class JobPostController {
     }
     JobPost jobPost = jobPostService.addJobPost(newJobPost, employer);
     ResponseJobPostDto responseJobPostDto = mapToResponseDto(jobPost);
-    HttpHeaders headers = new HttpHeaders();
-    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employerId + "/post/" + jobPost.getID()));
-    return new ResponseEntity<>(responseJobPostDto,headers, HttpStatus.SEE_OTHER);
+    //HttpHeaders headers = new HttpHeaders();
+    //headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employerId + "/post/" + jobPost.getID()));
+    return new ResponseEntity<>(responseJobPostDto, HttpStatus.CREATED);
   }
 
   @PutMapping("/companies/profile/{employerId}/post/{id}")
@@ -94,10 +94,10 @@ public class JobPostController {
       return ResponseEntity.notFound().build();
     }
     ResponseJobPostDto responseJobPostDto = mapToResponseDto(jobPost);
-    HttpHeaders headers = new HttpHeaders();
-    Long employerId = jobPost.getEmployer().getID();
-    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employerId + "/post/" + jobPost.getID()));
-    return new ResponseEntity<>(responseJobPostDto,headers, HttpStatus.SEE_OTHER);
+    //HttpHeaders headers = new HttpHeaders();
+    //Long employerId = jobPost.getEmployer().getID();
+    //headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employerId + "/post/" + jobPost.getID()));
+    return new ResponseEntity<>(responseJobPostDto, HttpStatus.OK);
   }
 
   @GetMapping("/search/posts/jobs/company")
@@ -107,12 +107,12 @@ public class JobPostController {
         .map(this::mapToResponseDto)
         .collect(Collectors.toList());
 
-    HttpHeaders headers = new HttpHeaders();
-    Employer employer = employerService.findEmployerByUsername(employerName);
-    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employer.getID()));
+//    HttpHeaders headers = new HttpHeaders();
+//    Employer employer = employerService.findEmployerByUsername(employerName);
+//    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employer.getID()));
 
     //return ResponseEntity.ok(responseJobPosts);
-    return new ResponseEntity<>(responseJobPosts, headers, HttpStatus.SEE_OTHER);
+    return new ResponseEntity<>(responseJobPosts, HttpStatus.OK);
   }
 
 //  @GetMapping("/search/posts/jobs/title")

@@ -2,8 +2,25 @@
 
 import React, { useState } from 'react';
 import styles from '@/styles/my-jobs.module.css';
+import useSWR from "swr";
+import {EmployerProfile} from "@/lib/types";
 
-const MyJobs: React.FC = () => {
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+function useUser(id: number) {
+    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${id}`, fetcher)
+
+    return {
+        EmployerProfile: data as EmployerProfile,
+        isLoading,
+        isError: error
+    }
+}
+function useEmployerJobs() {}
+interface MyJobsProps {
+    id: string;
+}
+const MyJobs: React.FC<MyJobsProps> = ({id}) => {
+    const { EmployerProfile, isLoading, isError} = useUser(Number(id));
     const [jobStatusFilter, setJobStatusFilter] = useState('all');
     const [jobs] = useState([
         {
@@ -49,6 +66,7 @@ const MyJobs: React.FC = () => {
         // Add more job objects as needed
     ]);
 
+
     const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setJobStatusFilter(event.target.value);
     };
@@ -60,6 +78,8 @@ const MyJobs: React.FC = () => {
     const handleActionClick = (jobId: number, action: string) => {
         console.log(`Job ${jobId} action: ${action}`);
     };
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Error loading data.</div>;
 
     return (
         <div className={styles.container}>
@@ -68,7 +88,7 @@ const MyJobs: React.FC = () => {
             <main className={styles.main}>
                 <div className={styles.header}>
                     <h2>My Jobs</h2>
-                    <span className={styles.jobCount}>(589)</span>
+                    <span className={styles.jobCount}>{EmployerProfile.jobPostsSize}</span>
                     <div className={styles.filter}>
                         <label htmlFor="jobStatus">Job status:</label>
                         <select

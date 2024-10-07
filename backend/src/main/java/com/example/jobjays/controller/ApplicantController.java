@@ -34,9 +34,9 @@ public class ApplicantController {
     Applicant applicant = applicantService.addApplicant(createApplicantDto);
     //return ResponseEntity.ok(mapToResponseApplicantDto(applicant));
     ResponseApplicantDto responseApplicantDto = mapToResponseApplicantDto(applicant);
-    HttpHeaders headers = new HttpHeaders();
-    headers.setLocation(URI.create("http://localhost:8080/api/applicants/profile/" + applicant.getID()));
-    return new ResponseEntity<>(responseApplicantDto, headers, HttpStatus.SEE_OTHER);
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.setLocation(URI.create("http://localhost:8080/api/applicants/profile/" + applicant.getID()));
+    return new ResponseEntity<>(responseApplicantDto, HttpStatus.CREATED);
   }
 
   @PutMapping("/profile/{id}")
@@ -89,9 +89,9 @@ public class ApplicantController {
     }
 
     ResponseApplicantProfileDto responseApplicantProfileDto = mapToResponseProfileDto(applicantProfile);
-    HttpHeaders headers = new HttpHeaders();
-    headers.setLocation(URI.create("http://localhost:8080/api/applicants/profile/" + applicantProfile.getUser().getID()));
-    return new ResponseEntity<>(responseApplicantProfileDto, headers, HttpStatus.SEE_OTHER);
+//    HttpHeaders headers = new HttpHeaders();
+//    headers.setLocation(URI.create("http://localhost:8080/api/applicants/profile/" + applicantProfile.getUser().getID()));
+    return new ResponseEntity<>(responseApplicantProfileDto, HttpStatus.OK);
   }
 
 //  @GetMapping("/profile/search/username")
