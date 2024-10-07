@@ -22,6 +22,7 @@ const ProfileData: React.FC<FoundingInfoProps> = ({  }) => {
     const [companyWebsite, setCompanyWebsite] = useState<string>('');
     const [companyVision, setCompanyVision] = useState<string>('');
 
+
     return (
         <div className="p-8">
             <h1 className="text-2xl font-bold mb-6">Profile Settings</h1>

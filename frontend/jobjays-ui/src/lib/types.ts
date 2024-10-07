@@ -30,19 +30,19 @@ export interface JobPost extends Post {
     location: string;
     salary: number;
     postedDate: Date;
-    closingDate: Date;
+    closedDate: Date;
     applications: number;
     daysRemaining: number;
     type: "Full Time" | "Part Time" | "Internship";
     status: "Active" | "Expired";
 
 }
- export interface JobPost extends Post {
-     jobID: number;
-     postedDate: Date;
-     closingDate: Date;
-     employer: Employer;
- }
+ // export interface JobPost extends Post {
+ //     jobID: number;
+ //     postedDate: Date;
+ //     closingDate: Date;
+ //     employer: Employer;
+ // }
 
 export interface User {
     userID: number;
