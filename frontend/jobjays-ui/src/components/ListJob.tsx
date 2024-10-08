@@ -4,6 +4,7 @@ import styles from '@/styles/listJob.module.css'; // Assuming you style it with 
 import { 
     sampleJobListing, sampleJobListingB, sampleJobListingC
 } from "@/lib/data";
+import { JobPost } from "@/lib/types";
 
 
 
@@ -17,6 +18,8 @@ const formatSalary = (salary: number) => {
 const jobListings = [sampleJobListing, sampleJobListingB, sampleJobListingC];
 
 const ListJob = () => {
+    // Assuming they are JOBPOSTS
+    //TODO: const activeJobListings = jobListings.filter(job => job.status === 'Active');
     return (
         <div className={styles.jobListGrid}> 
             {jobListings.map((jobListing) => (
