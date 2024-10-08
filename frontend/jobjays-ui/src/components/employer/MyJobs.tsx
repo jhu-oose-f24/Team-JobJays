@@ -121,9 +121,17 @@ const MyJobs: React.FC<MyJobsProps> = ({id}) => {
                                 <div className={styles.moreActions}>
                                     <button className={styles.moreActionsButton}>⋮</button>
                                     <div className={styles.moreActionsMenu}>
-                                        <button onClick={() => handleActionClick(job.jobID, 'promote')}>Promote Job</button>
+                                        {job.status === 'Active' && (
+                                            <button onClick={() => handleActionClick(job.jobID, 'promote')}>
+                                                Promote Job
+                                            </button>
+                                        )}
                                         <button onClick={() => handleActionClick(job.jobID, 'view')}>View Detail</button>
-                                        <button onClick={() => handleActionClick(job.jobID, 'expire')}>Make it Expire</button>
+                                        {job.status === 'Expired' && (
+                                            <button onClick={() => handleActionClick(job.jobID, 'expire')}>
+                                                Make it Expire
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>
