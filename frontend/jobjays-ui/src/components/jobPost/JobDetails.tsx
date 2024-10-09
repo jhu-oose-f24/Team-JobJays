@@ -29,18 +29,52 @@ import {
 import { format } from "date-fns"
 import { Calendar as CalendarIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import {toast, useToast} from "@/hooks/use-toast";
+
 import { cn } from "@/lib/utils"
-
-
-
 import styles from "@/styles/postJob.module.css";
+import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form"
 
-interface JobDetailsProps {
-    jobPost: {
-        id: number; // The ID of the job post
-        employerId: number; // The ID of the employer who posted the job
-    };
-}
+
+
+const formSchema = z.object({
+    jobTitle: z.string().min(2, {
+        message: "Title must be at least 2 characters.",
+    }),
+    jobDescription: z.string().min(10, {
+        message: "Description must be at least 10 characters.",
+    }),
+    location: z.string().min(2, {
+        message: "Location must be at least 2 characters.",
+    }),
+    jobType: z
+        .string({
+            required_error: "Please select a job type.",
+        }),
+    minSalary: z.number().min(10000, {
+        message: "Minimum salary must be at least $10,000.",
+    }),
+    // @ts-ignore
+    maxSalary: z.number().min(10000, {
+        message: "Maximum salary must be greater than the Minimum Salary.",
+    }),
+    closedDate: z.date({
+        required_error: "A date of birth is required.",
+    }),
+})
+
+
 const JobDetails = () => {
     //perhaps we can get User and check if they are logged in and if they are the employer of this post,
     //then we can show the edit button
@@ -52,6 +86,37 @@ const JobDetails = () => {
     //const [date, setDate] = React.useState<Date>();
     const [dateString, setDateString] = useState<string>('');
     const [dateObject, setDateObject] = useState<Date | null>(null);
+
+
+        // 1. Define your form.
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            jobTitle: "",
+            jobDescription: "",
+            location: "",
+            jobType: "",
+            minSalary: 10000,
+            maxSalary: 50000,
+        },
+    })
+
+        // 2. Define a submit handler.
+    function onSubmit(data: z.infer<typeof formSchema>) {
+        // Do something with the form values.
+        // ✅ This will be type-safe and validated.
+        console.log(data)
+        toast({
+            title: "You submitted the following values:",
+            description: (
+                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+            ),
+        })
+    }
+
+
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -109,81 +174,200 @@ const JobDetails = () => {
                                         Enter details below
                                     </DialogDescription>
                                 </DialogHeader>
-                                <Input
-                                    type="text"
-                                    id="jobTitle"
-                                    placeholder="Add job title, role, vacancies etc."
-                                />
-                                <Textarea
-                                    id="jobDescription"
-                                    placeholder="Add Job Description, Responsibilities, etc."
-                                    rows={6}
-                                />
-                                <Input
-                                    type="text"
-                                    id="location"
-                                    placeholder="Add job location"
-                                />
-                                <Select>
-                                    <SelectTrigger className="w-[180px]">
-                                        <SelectValue placeholder="Select a Job Type"/>
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="Full Time">Full Time</SelectItem>
-                                        <SelectItem value="Part Time">Part Time</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                {/* MinSlider with dynamically updating value */}
+                                <Form {...form}>
+                                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 overflow-y-auto max-h-[500px]">
+                                        <FormField
+                                            control={form.control}
+                                            name="jobTitle"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Edit Job Title</FormLabel>
+                                                    <FormControl>
+                                                        <Input type="text" id="jobTitle" placeholder="Edit job title, role, vacancies etc..." {...field} />
+                                                    </FormControl>
+                                                    <FormDescription>
+                                                        Edit your job title.
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="jobDescription"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Edit Job Description</FormLabel>
+                                                    <FormControl>
+                                                        <Textarea id="jobDescription" placeholder="Edit Job Description, Responsibilities, etc..." rows={6} {...field} />
+                                                    </FormControl>
+                                                    <FormDescription>
+                                                        Edit your job description.
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="location"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Edit Job Title</FormLabel>
+                                                    <FormControl>
+                                                        <Input type="text" id="location" placeholder="Edit job location..." {...field} />
+                                                    </FormControl>
+                                                    <FormDescription>
+                                                        Edit your job location.
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="jobType"
+                                            render={({ field }) => (
+                                                <FormItem>
+                                                    <FormLabel>Job Type</FormLabel>
+                                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                        <FormControl>
+                                                            <SelectTrigger className="w-[180px]">
+                                                                <SelectValue placeholder="Select a Job Type" />
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            <SelectItem value="Full Time">Full Time</SelectItem>
+                                                            <SelectItem value="Part Time">Part Time</SelectItem>
+                                                        </SelectContent>
+                                                    </Select>
+                                                    <FormDescription>
+                                                        Full or Part Time
+                                                    </FormDescription>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <h6>Set the Salary Range</h6>
+                                        {/* Min Salary with dynamic value */}
+                                        <FormField
+                                            control={form.control}
+                                            name="minSalary"
+                                            render={() => (
+                                                <FormItem>
+                                                    <FormLabel className="text-sm text-muted-foreground py-6">Minimum:</FormLabel>
+                                                    <FormControl>
+                                                        <div className="relative mt-4">
+                                                            <div
+                                                                className="absolute bg-blue-400 text-white text-xs px-2 py-1 rounded"
+                                                                style={{
+                                                                    left: `calc(${(minSliderValue[0] / 1000000) * 100}% - 10px)`,
+                                                                    bottom: "15px",
+                                                                }}
+                                                            >
+                                                                ${minSliderValue[0].toLocaleString()}
+                                                            </div>
+                                                            <Slider
+                                                                value={minSliderValue}
+                                                                min={10000}
+                                                                max={1000000}
+                                                                step={10000}
+                                                                onValueChange={handleSliderChange}
+                                                                className="mt-2"
+                                                            />
+                                                        </div>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        {/* Max Salary with dynamic value */}
+                                        <FormField
+                                            control={form.control}
+                                            name="maxSalary"
+                                            render={() => (
+                                                <FormItem>
+                                                    <FormLabel className="text-sm text-muted-foreground py-6">Maximum: </FormLabel>
+                                                    <FormControl>
+                                                        <div className="relative mt-4">
+                                                            <div
+                                                                className="absolute bg-blue-400 text-white text-xs px-2 py-1 rounded"
+                                                                style={{
+                                                                    left: `calc(${(maxSliderValue[0] / 1000000) * 100}% - 10px)`,
+                                                                    bottom: "15px",
+                                                                }}
+                                                            >
+                                                                ${maxSliderValue[0].toLocaleString()}
+                                                            </div>
+                                                            <Slider
+                                                                value={maxSliderValue}
+                                                                min={10000}
+                                                                max={1000000}
+                                                                step={10000}
+                                                                onValueChange={handleMaxSliderChange}
+                                                                className="mt-2"
+                                                            />
+                                                        </div>
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={form.control}
+                                            name="closedDate"
+                                            render={({ field }) => (
+                                                <FormItem className="flex flex-col">
+                                                    <FormLabel>Edit Deadline</FormLabel>
+                                                    <Popover>
+                                                        <PopoverTrigger asChild>
+                                                            <FormControl>
+                                                                <Button variant="outline" className="w-[240px] pl-3 text-left">
+                                                                    {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                                                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                                                </Button>
+                                                            </FormControl>
+                                                        </PopoverTrigger>
+                                                        <PopoverContent align="start">
+                                                            <Calendar
+                                                                mode="single"
+                                                                selected={field.value}
+                                                                onSelect={field.onChange}
+                                                                disabled={(date) => date > new Date() || date < new Date("1900-01-01")}
+                                                                initialFocus
+                                                            />
+                                                        </PopoverContent>
+                                                    </Popover>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        {/*<FormField*/}
+                                        {/*    control={form.control}*/}
+                                        {/*    name="closedDate"*/}
+                                        {/*    render={({ field }) => (*/}
+                                        {/*        <FormItem>*/}
+                                        {/*            <FormLabel>Edit Deadline</FormLabel>*/}
+                                        {/*            <FormControl>*/}
+                                        {/*                <Input*/}
+                                        {/*                    type="date"*/}
+                                        {/*                    value={field.value}*/}
+                                        {/*                    onChange={field.onChange}*/}
+                                        {/*                    placeholder="Select a date"*/}
+                                        {/*                />                                                    */}
+                                        {/*            </FormControl>*/}
+                                        {/*            <FormDescription>*/}
+                                        {/*                Edit your job title.*/}
+                                        {/*            </FormDescription>*/}
+                                        {/*            <FormMessage />*/}
+                                        {/*        </FormItem>*/}
+                                        {/*    )}*/}
+                                        {/*/>*/}
 
-                                <div>
-                                    <h6 className="text-sm text-muted-foreground py-1">Set the Minimum Salary</h6>
-                                </div>
-                                <div className="relative mt-4 ">
-                                    <div
-                                        className="absolute bg-blue-400 text-white text-xs px-2 py-1 rounded"
-                                        style={{
-                                            left: `calc(${(minSliderValue[0] / 1000000) * 100}% - 10px)`, // Dynamically position tooltip based on value
-                                            bottom: "15px",
-                                        }}
-                                    >
-                                        ${minSliderValue[0].toLocaleString()}
-                                    </div>
-                                    <Slider
-                                        value={minSliderValue}
-                                        min={10000}
-                                        max={1000000}
-                                        step={10000}
-                                        onValueChange={handleSliderChange}
-                                        className="mt-2 "
-                                    />
-                                </div>
-                                {/* MaxSlider with dynamically updating value */}
+                                        <Button type="submit">Submit</Button>
+                                    </form>
+                                </Form>
 
-                                <div>
-                                    <h6 className="text-sm text-muted-foreground py-1">Set the Maximum Salary</h6>
-                                </div>
-                                <div className="relative mt-4">
-                                    <div
-                                        className="absolute bg-blue-400 text-white text-xs px-2 py-1 rounded"
-                                        style={{
-                                            left: `calc(${(maxSliderValue[0] / 1000000) * 100}% - 10px)`, // Dynamically position tooltip based on value
-                                            bottom: "15px",
-                                        }}
-                                    >
-                                        ${maxSliderValue[0].toLocaleString()}
-                                    </div>
-                                    <Slider
-                                        value={maxSliderValue}
-                                        min={10000}
-                                        max={1000000}
-                                        step={10000}
-                                        onValueChange={handleMaxSliderChange}
-                                        className="mt-2"
-                                    />
-                                </div>
-                                <div>
-                                    <h6 className="text-sm text-muted-foreground py-1">Set Deadline</h6>
-                                </div>
                                 {/*TODO fix Popup calendar, not nested right. Need to put all in form anyway */}
                                 {/*<Popover >*/}
                                 {/*    <PopoverTrigger asChild>*/}
@@ -210,12 +394,7 @@ const JobDetails = () => {
                                 {/*        />*/}
                                 {/*    </PopoverContent>*/}
                                 {/*</Popover>*/}
-                                <Input
-                                    type="date"
-                                    value={dateString}
-                                    onChange={handleDateChange}
-                                    placeholder="Select a date"
-                                />
+
                             </DialogContent>
                         </Dialog>
                     </div>
