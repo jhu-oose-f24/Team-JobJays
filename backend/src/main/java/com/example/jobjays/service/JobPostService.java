@@ -23,15 +23,12 @@ public class JobPostService {
   }
 
   public JobPost addJobPost(CreateJobPostDto newJobPost, Employer employer) {
-
-
-
-
     JobPost jobPost = new JobPost(
       newJobPost.getTitle(),
       newJobPost.getDescription(),
       newJobPost.getLocation(),
-      newJobPost.getSalary(),
+      newJobPost.getMinSalary(),
+      newJobPost.getMaxSalary(),
       newJobPost.getClosedDate(),
       employer
     );
@@ -41,9 +38,6 @@ public class JobPostService {
   }
 
   public JobPost updateJobPost(UpdateJobPostDto jobPost, Long id) {
-
-
-
     JobPost jobPostToUpdate = jobPostRepository.findById(id).orElse(null);
 
     if (jobPostToUpdate == null) {
@@ -62,8 +56,11 @@ public class JobPostService {
       jobPostToUpdate.setLocation(jobPost.getLocation());
     }
 
-    if (jobPost.getSalary() != null) {
-      jobPostToUpdate.setSalary(jobPost.getSalary());
+    if (jobPost.getMinSalary() != null) {
+      jobPostToUpdate.setMinSalary(jobPost.getMinSalary());
+    }
+    if (jobPost.getMaxSalary() != null) {
+      jobPostToUpdate.setMaxSalary(jobPost.getMaxSalary());
     }
 
     if (jobPost.getClosedDate() != null) {
@@ -98,6 +95,21 @@ public class JobPostService {
 
   public List<JobPost> getJobPostsByTitleContaining(String title) {
     return jobPostRepository.findJobPostsByTitleContainingIgnoreCase(title);
+  }
+
+  public List<JobPost> getJobPostsByEmployerId(Long id) {
+    return jobPostRepository.findJobPostsByEmployer_id(id);
+  }
+
+  public List<JobPost> getJobPostsByMinSalary(Double minSalary) {
+    return jobPostRepository.findJobPostsByMinSalaryIsGreaterThanEqual(minSalary);
+  }
+  public List<JobPost> getJobPostsByMaxSalary(Double maxSalary) {
+    return jobPostRepository.findJobPostsByMaxSalaryIsLessThanEqual(maxSalary);
+  }
+
+  public List<JobPost> getJobPostsBySalaryRange(Double minSalary, Double maxSalary) {
+    return jobPostRepository.findJobPostsByMinSalaryIsGreaterThanEqualAndMaxSalaryIsLessThanEqual(minSalary, maxSalary);
   }
 
 }

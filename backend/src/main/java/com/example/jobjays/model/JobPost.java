@@ -2,14 +2,10 @@ package com.example.jobjays.model;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
-
 
 
 @Entity
@@ -19,7 +15,8 @@ public class JobPost implements Post {
   private String title ;
   private String description;
   private String location;
-  private Double salary;
+  private Double minSalary;
+  private Double maxSalary;
 
   @Id
   @GeneratedValue
@@ -39,7 +36,8 @@ public JobPost() {}
       String title,
       String description,
       String location,
-      Double salary,
+      Double minSalary,
+      Double maxSalary,
       LocalDateTime closedDate,
       Employer employer
       ) {
@@ -48,7 +46,8 @@ public JobPost() {}
     this.title = title;
     this.description = description;
     this.location = location;
-    this.salary = salary;
+    this.minSalary = minSalary;
+    this.maxSalary = maxSalary;
     this.postedDate = LocalDateTime.now();
     this.closedDate = closedDate;
     this.employer = employer;
@@ -83,13 +82,20 @@ public JobPost() {}
     return location;
   }
 
-  public Double getSalary() {
-    return salary;
+  public Double getMinSalary() {
+    return minSalary;
+  }
+  public Double getMaxSalary() {
+    return maxSalary;
   }
 
-  public Double setSalary(Double salary) {
-    this.salary = salary;
-    return salary;
+  public Double setMinSalary(Double minSalary) {
+    this.minSalary = minSalary;
+    return minSalary;
+  }
+  public Double setMaxSalary(Double maxSalary) {
+    this.maxSalary = maxSalary;
+    return maxSalary;
   }
 
   //Should not change

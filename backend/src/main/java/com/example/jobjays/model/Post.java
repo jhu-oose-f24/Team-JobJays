@@ -10,7 +10,7 @@ public interface Post {
   String getTitle();
   String getDescription();
   String getLocation();
-  Double getSalary();
+  //Double getSalary(); //Later implementations dont need a salary
   Long getID();
 
   void publish();

@@ -6,8 +6,7 @@ import {useParams} from "next/navigation";
 
 
 const MyJobsPage: React.FC = () => {
-    const {id} = useParams<{id: string}>();
-    return <MyJobs id={id}/>;
+    return <MyJobs />;
 };
 
 export default MyJobsPage;
