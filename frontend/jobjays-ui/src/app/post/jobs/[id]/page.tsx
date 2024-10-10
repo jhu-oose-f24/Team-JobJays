@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, {useState} from 'react';
 import { useParams } from "next/navigation";
 import { fetchJobPost } from '@/lib/api'; // Use your custom hook or fetch logic
 import styles from '@/styles/postJob.module.css';
@@ -9,8 +9,6 @@ import ContactUs from "@/components/ContactUs";
 
 const JobDetailPage: React.FC = () => {
 
-
-
     return (
         <div className="bg-gray-100">
             <header className="bg-white py-4 shadow">
@@ -18,7 +16,7 @@ const JobDetailPage: React.FC = () => {
                     <h1 className="text-3xl font-bold">JobJays</h1>
                 </div>
             </header>
-            <JobDetails/>
+            <JobDetails />
             <RelatedJobs/>
             <ContactUs/>
         </div>

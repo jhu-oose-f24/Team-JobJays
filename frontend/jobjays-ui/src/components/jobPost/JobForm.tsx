@@ -21,6 +21,7 @@ import {
 import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 
 
 // Job Form Schema using Zod
@@ -52,7 +53,7 @@ export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) =>
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
                 <FormField
                     control={form.control}
                     name="jobTitle"
@@ -89,16 +90,41 @@ export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) =>
                         </FormItem>
                     )}
                 />
+
                 {/* Job Type Field */}
+                {/*<FormField*/}
+                {/*    control={form.control}*/}
+                {/*    name="jobType"*/}
+                {/*    render={({ field }) => (*/}
+                {/*        <FormItem>*/}
+                {/*            <FormLabel>Job Type</FormLabel>*/}
+                {/*            <FormControl>*/}
+                {/*                <Input {...field} placeholder="Enter job type" />*/}
+                {/*            </FormControl>*/}
+                {/*            <FormMessage />*/}
+                {/*        </FormItem>*/}
+                {/*    )}*/}
+                {/*/>*/}
                 <FormField
                     control={form.control}
                     name="jobType"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Job Type</FormLabel>
-                            <FormControl>
-                                <Input {...field} placeholder="Enter job type" />
-                            </FormControl>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger className="w-[180px]">
+                                        <SelectValue placeholder="Select a Job Type" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    <SelectItem value="Full Time">Full Time</SelectItem>
+                                    <SelectItem value="Part Time">Part Time</SelectItem>
+                                </SelectContent>
+                            </Select>
+                            <FormDescription>
+                                Full or Part Time
+                            </FormDescription>
                             <FormMessage />
                         </FormItem>
                     )}
