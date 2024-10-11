@@ -39,6 +39,7 @@ export interface JobPost extends Post {
     status: "Active" | "Expired";
 
 }
+
  // export interface JobPost extends Post {
  //     jobID: number;
  //     postedDate: Date;

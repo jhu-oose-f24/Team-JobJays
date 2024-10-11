@@ -8,7 +8,6 @@ import RelatedJobs from "@/components/jobPost/RelatedJobs";
 import ContactUs from "@/components/ContactUs";
 
 const JobDetailPage: React.FC = () => {
-
     return (
         <div className="bg-gray-100">
             <header className="bg-white py-4 shadow">
@@ -20,7 +19,7 @@ const JobDetailPage: React.FC = () => {
             <RelatedJobs/>
             <ContactUs/>
         </div>
-)
+    )
 }
 
 export default JobDetailPage;

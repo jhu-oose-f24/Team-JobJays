@@ -1,7 +1,7 @@
 "use client";
 import React, {useState} from 'react';
 import {useParams} from "next/navigation";
-import {fetchJobPost, useUser} from "@/lib/api";
+import {fetchJobPost, updateJobPost, useUser} from "@/lib/api";
 import JobForm from "@/components/jobPost/JobForm";
 import {
     Dialog,
@@ -13,8 +13,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import { useToast} from "@/hooks/use-toast";
-
+import {toast, useToast} from "@/hooks/use-toast";
 
 
 import { Button } from "@/components/ui/button"
@@ -24,20 +23,40 @@ const JobDetails = () => {
     //then we can show the edit button
 
     const { id } = useParams<{ id: string }>(); // Get the job ID from the route
-    const { JobPost, isLoading, isError } = fetchJobPost(Number(id));
+    const { JobPost, isLoading, isError, mutate } = fetchJobPost(Number(id));
     const [open, setOpen] = useState(false);
 
 
 
-    const handleJobFormSubmit = (data: any) => {
-        console.log("Form submitted:", data);
+    const  handleJobFormSubmit = async (data: any) => {
 
-        setOpen(false); // Close the dialog after submission
-    };
+        //We need to send the filteredData with proper attributes to backend for now until we have type in backend
+        const {jobType, ...filteredData} = data;
+        JobPost.type = data.type;
+
+        const result = await updateJobPost(Number(id), filteredData, mutate, data);
+        if (result.success) {
+            setOpen(false);
+            //TODO does not show toast for some reason - not critical
+            toast({
+                title: "Success",
+                description: "Job details updated successfully!",
+                variant: "default",
+            });
+        } else {
+            toast({
+                title: "Error",
+                description: `Failed to update job. Message: ${result.error.message}, Code: ${result.error.status}`,
+                variant: "destructive",
+            });
+        }
+    }
 
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading job details.</div>;
     if (!JobPost) return <div>Job not found.</div>;
+
+
 
     return (
         <div className="container mx-auto px-4 py-6">

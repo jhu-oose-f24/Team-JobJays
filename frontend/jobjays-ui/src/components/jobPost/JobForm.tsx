@@ -26,10 +26,10 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 
 // Job Form Schema using Zod
 const jobFormSchema = z.object({
-    jobTitle: z.string(),
-    jobDescription: z.string(),
+    title: z.string(),
+    description: z.string(),
     location: z.string(),
-    jobType: z.string(),
+    type: z.string(),
     minSalary: z.string().transform((val) => Number(val)),
     maxSalary: z.string().transform((val) => Number(val)),
     closedDate: z.date().transform((val) => new Date(val).toISOString()),
@@ -39,10 +39,10 @@ export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) =>
   const form = useForm({
     resolver: zodResolver(jobFormSchema),
       defaultValues: {
-          jobTitle: "",
-          jobDescription: "",
+          title: "",
+          description: "",
           location: "",
-          jobType: "",
+          type: "",
           minSalary: "10000",
           maxSalary: "50000",
           closedDate: new Date(),
@@ -56,7 +56,7 @@ export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) =>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 ">
                 <FormField
                     control={form.control}
-                    name="jobTitle"
+                    name="title"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Job Title</FormLabel>
@@ -67,7 +67,7 @@ export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) =>
                 />
                 <FormField
                     control={form.control}
-                    name="jobDescription"
+                    name="description"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Job Description</FormLabel>
@@ -93,7 +93,7 @@ export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) =>
                 {/* Job Type Field */}
                 <FormField
                     control={form.control}
-                    name="jobType"
+                    name="type"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Job Type</FormLabel>
