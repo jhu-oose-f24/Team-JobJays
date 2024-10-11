@@ -32,7 +32,7 @@ const jobFormSchema = z.object({
     jobType: z.string(),
     minSalary: z.string().transform((val) => Number(val)),
     maxSalary: z.string().transform((val) => Number(val)),
-    closedDate: z.date(),
+    closedDate: z.date().transform((val) => new Date(val).toISOString()),
 });
 
 export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
@@ -90,21 +90,7 @@ export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) =>
                         </FormItem>
                     )}
                 />
-
                 {/* Job Type Field */}
-                {/*<FormField*/}
-                {/*    control={form.control}*/}
-                {/*    name="jobType"*/}
-                {/*    render={({ field }) => (*/}
-                {/*        <FormItem>*/}
-                {/*            <FormLabel>Job Type</FormLabel>*/}
-                {/*            <FormControl>*/}
-                {/*                <Input {...field} placeholder="Enter job type" />*/}
-                {/*            </FormControl>*/}
-                {/*            <FormMessage />*/}
-                {/*        </FormItem>*/}
-                {/*    )}*/}
-                {/*/>*/}
                 <FormField
                     control={form.control}
                     name="jobType"
