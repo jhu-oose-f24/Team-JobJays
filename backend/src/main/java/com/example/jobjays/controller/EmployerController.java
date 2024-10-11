@@ -119,15 +119,16 @@ public class EmployerController {
 
 
   //TODO can refactor into a class
-  private ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
+  public ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
     ResponseJobPostDto responseJobPostDto = new ResponseJobPostDto();
     responseJobPostDto.id = jobPost.getID();
     responseJobPostDto.setCompanyName(jobPost.getEmployer().getProfile().getName());
     responseJobPostDto.title = jobPost.getTitle();
     responseJobPostDto.description = jobPost.getDescription();
     responseJobPostDto.location = jobPost.getLocation();
-    responseJobPostDto.salary = jobPost.getSalary();
-    responseJobPostDto.postedDate = jobPost.getPostedDate(); // Assuming this exists in JobPost
+    responseJobPostDto.minSalary = jobPost.getMinSalary();
+    responseJobPostDto.maxSalary = jobPost.getMaxSalary();
+    responseJobPostDto.postedDate = jobPost.getPostedDate();
     responseJobPostDto.closedDate = jobPost.getClosedDate();
     responseJobPostDto.numApplicants = jobPost.getApplicants().size();
     return responseJobPostDto;

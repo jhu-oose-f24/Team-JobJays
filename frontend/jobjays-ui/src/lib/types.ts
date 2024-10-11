@@ -1,5 +1,5 @@
 export interface Post {
-    jobID: number;
+    id: number;
     title: string;
     description: string;
     location: string;
@@ -9,7 +9,7 @@ export interface Post {
 }
 
 export interface JobListing extends Post {
-    jobID: number;
+    id: number;
     companyName: string;
     title: string;
     description: string;
@@ -24,19 +24,22 @@ export interface JobListing extends Post {
 }
 
 export interface JobPost extends Post {
-    jobID: number;
+    id: number;
     title: string;
     description: string;
+    companyName: string
     location: string;
-    salary: number;
+    minSalary: number;
+    maxSalary: number;
     postedDate: Date;
     closedDate: Date;
-    applications: number;
+    numApplicants: number;
     daysRemaining: number;
     type: "Full Time" | "Part Time" | "Internship";
     status: "Active" | "Expired";
 
 }
+
  // export interface JobPost extends Post {
  //     jobID: number;
  //     postedDate: Date;
@@ -72,14 +75,15 @@ export interface Applicant extends User {
 }
 
 export interface Profile {
-    profileID: number;
-    user: User;
+    userId: number;
     name: string;
     bio: string;
     editProfile: () => void;
 }
 
 export interface EmployerProfile extends Profile {
+    userId: number;
+
     jobPostsSize: number;
     jobPosts: JobPost[];
     manageJobPosts: () => void;
