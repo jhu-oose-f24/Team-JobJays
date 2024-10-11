@@ -9,6 +9,7 @@ import com.example.jobjays.model.JobPost;
 import com.example.jobjays.service.EmployerService;
 import com.example.jobjays.service.JobPostService;
 import com.example.jobjays.service.ResponseMapperService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +34,7 @@ public class JobPostController {
 
 
   @PostMapping("/companies/profile/{employerId}/post")
-  public ResponseEntity<ResponseJobPostDto> addJobPost(@RequestBody CreateJobPostDto newJobPost, @PathVariable Long employerId) {
+  public ResponseEntity<ResponseJobPostDto> addJobPost(@Valid @RequestBody CreateJobPostDto newJobPost, @PathVariable Long employerId) {
     Employer employer = employerService.findEmployerById(employerId);
     if (employer == null) {
       return ResponseEntity.notFound().build();

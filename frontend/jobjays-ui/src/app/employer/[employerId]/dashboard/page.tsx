@@ -7,11 +7,11 @@ import { useUser } from '@/lib/api';
 
 interface DashboardPageProps {
     params: {
-        id: string;
+        employerId: string;
     };
 }
 const DashboardPage: React.FC<DashboardPageProps> = ({ params }) => {
-    const { EmployerProfile, isLoading, isError } = useUser(Number(params.id));
+    const { EmployerProfile, isLoading, isError } = useUser(Number(params.employerId));
 
     if (isLoading) return <p>Loading...</p>;
     if (isError) return <p>Error loading data</p>;

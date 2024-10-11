@@ -29,8 +29,8 @@ export function addJobAttributes(job: JobPost): JobPost {
 }
 
 // Hook to fetch the EmployerProfile and process job posts
-export function useUser(id: number) {
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${id}`, fetcher);
+export function useUser(employerId: number) {
+    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${employerId}`, fetcher);
 
     // Process job posts if data is available
     const processedEmployerProfile = data && data.jobPosts ? {
@@ -65,6 +65,26 @@ export function fetchJobPost(id:number) {
         mutate
     };
 
+}
+export const createJobPost = async (
+    employerId: number,
+    jobData: any,
+) => {
+
+    const response = await fetch(`http://localhost:8080/api/companies/profile/${employerId}/post`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(jobData),
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        // console.log(error);
+        return { success: false, error };
+    }
+    const data = await response.json();
+    return {success: true, data: data};
 }
 
 export const updateJobPost = async (

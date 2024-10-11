@@ -1,63 +1,58 @@
 // src/components/PostJob.tsx
-import styles from '@/styles/postJob.module.css'; // Assuming you style it with CSS Modules
+import styles from '@/styles/postJob.module.css';
+import {createJobPost, fetchJobPost, updateJobPost} from "@/lib/api";
+import {useParams} from "next/navigation";
+import {useState} from "react";
+import {useToast} from "@/hooks/use-toast";
+import JobForm from "@/components/employer/JobForm";
+import {useRouter } from "next/navigation";
 
 
 const PostJob = () => {
+    const { employerId } = useParams<{ employerId: string }>(); // Get the job ID from the route
+    const [open, setOpen] = useState(false);
+    const { toast } = useToast();
+    const router = useRouter();
+
+
+    const  handleJobFormSubmit = async (data: any) => {
+
+        //We need to send the filteredData with proper attributes to backend for now until we have type in backend
+        const {jobType, ...filteredData} = data;
+        //JobPost.type = data.type;
+
+        const result = await createJobPost(Number(employerId), filteredData);
+        if (result.success) {
+            setOpen(false);
+            console.log(result.data.id)
+            setTimeout(() => {
+                router.push(`http://localhost:3000/post/jobs/${result.data.id}`);
+            }, 2000);
+            toast({
+                title: "Success",
+                description: "Job created successfully! Redirecting you now to the Job Page",
+                variant: "default",
+                duration: 2000,
+            });
+
+        } else {
+            // Iterate through each error entry and create a separate toast for each
+            for (let i = 0; i < Object.keys(result.error).length; i++) {
+                const field = Object.keys(result.error)[i];
+                const message = Object.values(result.error)[i];
+                toast({
+                    title: `Error in ${field}`,
+                    description: `${message}`,
+                    variant: "destructive",
+                });
+            }
+        }
+    }
     return (
         <div className={styles.postJobContainer}>
-            <h1>Post a Job</h1>
-
-            <form className={styles.postJobForm}>
-                {/* Job Title */}
-                <label className={styles.formLabel} htmlFor="jobTitle">Job Title</label>
-                <input
-                    type="text"
-                    id="jobTitle"
-                    placeholder="Add job title, role, vacancies etc."
-                    className={styles.formInput}
-                />
-
-                {/* Job Description */}
-                <label className={styles.formLabel} htmlFor="jobDescription">Job Description</label>
-                <textarea
-                    id="jobDescription"
-                    placeholder="Add Job Description, Responsibilities, etc."
-                    className={styles.textAreaInput} // Using a different class for text area
-                    rows={6} // You can adjust rows for height
-                />
-
-                {/* Job Role */}
-                <label className={styles.formLabel} htmlFor="jobRole">Job Role</label>
-                <select id="jobRole" className={styles.formSelect}>
-                    <option>Select...</option>
-                    {/* Add more options as needed */}
-                </select>
-
-                <label className={styles.formLabel} htmlFor="jobTiming">Job Timing</label>
-                <select id="jobTiming" className={styles.formSelect}>
-                    <option>Select...</option>
-                    <option>Full Time</option>
-                    <option>Part Time</option>
-                    {/* Add more options as needed */}
-                </select>
-
-                {/* Salary Inputs */}
-                <label className={styles.formLabel}>Salary</label>
-                <div className={styles.salaryInputs}>
-                    <input type="text" placeholder="Min Salary" className={styles.formInput}/>
-                    <input type="text" placeholder="Max Salary" className={styles.formInput}/>
-                    <select className={styles.formSelect}>
-                        <option>USD</option>
-                        {/* Add more currency options */}
-                    </select>
-                </div>
-
-                {/* Submit Button */}
-                <button type="submit" className={styles.postJobButton}>
-                    Post Job
-                </button>
-            </form>
+            <JobForm onSubmit={handleJobFormSubmit} />
         </div>
+
     );
 };
 export default PostJob;

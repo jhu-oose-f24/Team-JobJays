@@ -6,12 +6,15 @@ import {EmployerProfile, JobPost} from "@/lib/types";
 import {addJobAttributes, useUser} from '@/lib/api';
 import { useParams } from 'next/navigation';
 import Link from "next/link";
+import {useRouter} from "next/navigation";
+import SkeletonMyJobs from "@/components/employer/SkeletonMyJobs";
 
 
 const MyJobs: React.FC = () => {
-    const { id, jobPostId } = useParams<{id:string; jobPostId:string}>();
-    const { EmployerProfile, isLoading, isError} = useUser(Number(id));
+    const { employerId, jobPostId } = useParams<{employerId:string; jobPostId:string}>();
+    const { EmployerProfile, isLoading, isError} = useUser(Number(employerId));
     const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
+    const router = useRouter();
 
     useEffect(() => {
         if (EmployerProfile && EmployerProfile.jobPosts) {
@@ -36,10 +39,15 @@ const MyJobs: React.FC = () => {
 
     const handleActionClick = (jobId: number, action: string) => {
         console.log(`Job ${jobId} action: ${action}`);
+
     };
 
+    const handleViewJobDetail = (jobId: number) => {
+        router.push(`/post/jobs/${jobId}`);
+    }
 
-    if (isLoading) return <div>Loading...</div>;
+
+    if (isLoading) return <SkeletonMyJobs />;
     if (isError) return <div>Error loading data.</div>;
 
     return (
@@ -92,8 +100,7 @@ const MyJobs: React.FC = () => {
                                                 Promote Job
                                             </button>
                                         )}
-                                        <Link href={`/post/jobs/${job.id}`}>View Detail</Link>
-                                        <button onClick={() => handleActionClick(job.id, 'view')}>View Detail</button>
+                                        <button onClick={() => handleViewJobDetail(job.id)}>View Detail</button>
                                         {job.status === 'Active' && (
                                             <button onClick={() => handleActionClick(job.id, 'expire')}>
                                                 Make it Expire
