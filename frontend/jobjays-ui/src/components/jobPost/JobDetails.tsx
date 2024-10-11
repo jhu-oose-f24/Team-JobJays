@@ -2,18 +2,17 @@
 import React, {useState} from 'react';
 import {useParams} from "next/navigation";
 import {fetchJobPost, updateJobPost, useUser} from "@/lib/api";
-import JobForm from "@/components/jobPost/JobForm";
+import JobForm from "@/components/employer/JobForm";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
-    DialogFooter,
     DialogDescription,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
 import {toast, useToast} from "@/hooks/use-toast";
+import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
 
 
 import { Button } from "@/components/ui/button"
@@ -21,12 +20,10 @@ import { Button } from "@/components/ui/button"
 const JobDetails = () => {
     //perhaps we can get User and check if they are logged in and if they are the employer of this post,
     //then we can show the edit button
-
     const { id } = useParams<{ id: string }>(); // Get the job ID from the route
     const { JobPost, isLoading, isError, mutate } = fetchJobPost(Number(id));
     const [open, setOpen] = useState(false);
-
-
+    const { toast } = useToast();
 
     const  handleJobFormSubmit = async (data: any) => {
 
@@ -37,7 +34,6 @@ const JobDetails = () => {
         const result = await updateJobPost(Number(id), filteredData, mutate, data);
         if (result.success) {
             setOpen(false);
-            //TODO does not show toast for some reason - not critical
             toast({
                 title: "Success",
                 description: "Job details updated successfully!",
@@ -52,7 +48,7 @@ const JobDetails = () => {
         }
     }
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <SkeletonJobDetails/>;
     if (isError) return <div>Error loading job details.</div>;
     if (!JobPost) return <div>Job not found.</div>;
 

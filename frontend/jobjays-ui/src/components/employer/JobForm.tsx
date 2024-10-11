@@ -12,7 +12,7 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form"
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Popover,
     PopoverContent,
@@ -22,7 +22,9 @@ import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import { format } from "date-fns";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-
+import {usePathname} from "next/navigation";
+import {fetchJobPost} from "@/lib/api";
+import {JobPost} from "@/lib/types";
 
 // Job Form Schema using Zod
 const jobFormSchema = z.object({
@@ -35,20 +37,61 @@ const jobFormSchema = z.object({
     closedDate: z.date().transform((val) => new Date(val).toISOString()),
 });
 
-export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
-  const form = useForm({
-    resolver: zodResolver(jobFormSchema),
-      defaultValues: {
-          title: "",
-          description: "",
-          location: "",
-          type: "",
-          minSalary: "10000",
-          maxSalary: "50000",
-          closedDate: new Date(),
-      },
-  });
+export const JobForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
+    const pathname = usePathname();
+    const [defaultValues, setDefaultValues] = useState({
+        title: "",
+        description: "",
+        location: "",
+        type: "",
+        minSalary: "10000",
+        maxSalary: "50000",
+        closedDate: new Date(),
+    });
 
+    let jobPost: JobPost;
+    if (pathname.startsWith("/post/jobs/")) {
+        const jobId = pathname.split("/jobs/")[1];
+        const{JobPost} = fetchJobPost(Number(jobId));
+        jobPost = JobPost;
+    }
+
+    useEffect(() => {
+        const isJobEdit = pathname.startsWith("/post/jobs/");
+        const isEmployerNewPost = pathname.startsWith("/employer/");
+
+
+        // If we're editing a job, fetch the existing job data
+        if (isJobEdit) {
+            if (jobPost) {
+                form.reset({
+                    title: jobPost.title,
+                    description: jobPost.description,
+                    location: jobPost.location,
+                    type: jobPost.type,
+                    minSalary: jobPost.minSalary.toString(),
+                    maxSalary: jobPost.maxSalary.toString(),
+                    closedDate: new Date(jobPost.closedDate),
+                });
+            }
+        } else if (isEmployerNewPost) {
+            // For new job post (in employer subdirectory), use default empty values
+            setDefaultValues({
+                title: "",
+                description: "",
+                location: "",
+                type: "",
+                minSalary: "10000",
+                maxSalary: "50000",
+                closedDate: new Date(),
+            });
+        }
+    }, [pathname]);
+
+    const form = useForm({
+        resolver: zodResolver(jobFormSchema),
+        defaultValues: defaultValues,
+    });
     const [datePopoverOpen, setDatePopoverOpen] = useState(false);
 
     return (
@@ -149,7 +192,7 @@ export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) =>
                     name="closedDate"
                     render={({ field }) => (
                         <FormItem>
-                            <FormLabel>Deadline</FormLabel>
+                            <FormLabel>Deadline:  </FormLabel>
                             <Popover open={datePopoverOpen} onOpenChange={setDatePopoverOpen}>
                                 <PopoverTrigger asChild>
                                     <Button variant="outline">
@@ -173,11 +216,10 @@ export const JobTitleForm = ({ onSubmit }: { onSubmit: (data: any) => void }) =>
                         </FormItem>
                     )}
                 />
-                <Button type="submit">Submit</Button>
+                <Button className="px-4 py-2 bg-blue-400 text-white rounded-md" type="submit">Submit</Button>
             </form>
         </Form>
-
     );
 };
-export default JobTitleForm;
+export default JobForm;
 
