@@ -1,5 +1,5 @@
 // src/components/PostJob.tsx
-
+"use client";
 import styles from '@/styles/listJob.module.css'; // Assuming you style it with CSS Modules
 import { 
     sampleJobListing, sampleJobListingB, sampleJobListingC
@@ -9,18 +9,8 @@ import { fetchAllJobPosts } from "@/lib/api";
 import { useState } from 'react';
 
 
-
-
-
-
-const formatSalary = (salary: number) => {
-    return new Intl.NumberFormat('en-US').format(salary);
-}
-
-
 const ListJob = () => {
     const { JobPosts, isLoading, isError, mutate} = fetchAllJobPosts();
-    // const [jobListings, setJobListings] = useState<JobPost[]>(JobPosts);
 
     // Assuming they are JOBPOSTS
     if (isLoading) 
@@ -37,9 +27,12 @@ const ListJob = () => {
                     <div className = {styles.flexContainer}>
                         <div className={styles.typeBox}>
                             <span className={styles.typeText}>{jobListing.type}</span>
-                        </div> 
+                        </div>
+                        <div className="justify-between">
                         <p>{jobListing.location}</p>
-                        <p>{"Salary: $" + formatSalary(jobListing.salary)}</p>
+                        <p>Salary: ${jobListing.minSalary.toLocaleString()} -
+                            ${jobListing.maxSalary.toLocaleString()}</p>
+                        </div>
                     </div>
                 </div>
             ))}
