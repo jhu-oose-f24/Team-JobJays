@@ -5,6 +5,8 @@ import {
     sampleJobListing, sampleJobListingB, sampleJobListingC
 } from "@/lib/data";
 import { JobPost } from "@/lib/types";
+import { fetchAllJobPosts } from "@/lib/api";
+import { useState } from 'react';
 
 
 
@@ -15,15 +17,22 @@ const formatSalary = (salary: number) => {
     return new Intl.NumberFormat('en-US').format(salary);
 }
 
-const jobListings = [sampleJobListing, sampleJobListingB, sampleJobListingC];
 
 const ListJob = () => {
+    const { JobPosts, isLoading, isError, mutate} = fetchAllJobPosts();
+    // const [jobListings, setJobListings] = useState<JobPost[]>(JobPosts);
+
     // Assuming they are JOBPOSTS
-    //TODO: const activeJobListings = jobListings.filter(job => job.status === 'Active');
+    if (isLoading) 
+        return <div> Loading... </div>;
+    if (isError) return <div>Error loading all job details.</div>;
+    if (!JobPosts) return <div>Jobs not found.</div>;
+
+    const activeJobListings = JobPosts.filter(job => job.status === 'Active');
     return (
         <div className={styles.jobListGrid}> 
-            {jobListings.map((jobListing) => (
-                <div key={jobListing.jobID} className={styles.jobBox}>
+            {activeJobListings.map((jobListing) => (
+                <div key={jobListing.id} className={styles.jobBox}>
                     <h1>{jobListing.title}</h1>
                     <div className = {styles.flexContainer}>
                         <div className={styles.typeBox}>
@@ -56,6 +65,9 @@ const ListJob = () => {
         // </div>
 
 };
+
+
+
 
 
 export default ListJob;
