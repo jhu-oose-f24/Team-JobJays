@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, {useEffect, useState} from "react";
 import {Employer, EmployerProfile, JobPost} from "@/lib/types";
-import useSWR from "swr";
 
 export default function Header() {
     const router = useRouter()
@@ -20,13 +19,20 @@ export default function Header() {
         }
         const response = await fetch(`http://localhost:8080/api/companies/profile/search/name?name=${query}`);
         if (!response.ok) {
-            console.error("Failed to fetch search results");
+            console.error("Failed to fetch Employer search results");
             return;
         }
+
+        const jobPostResponse = await fetch(`http://localhost:8080/api/search/posts/jobs/title?title=${query}`);
+        if (!jobPostResponse.ok) {
+            console.error("Failed to fetch Job Post search results");
+            return;
+        }
+        const jobPosts = await jobPostResponse.json();
         const Employers = await response.json();
+        const combinedResults = [...jobPosts, ...Employers];
+        setResults(combinedResults);
 
-
-        setResults(Employers);
 
     };
 
@@ -48,7 +54,7 @@ export default function Header() {
     // Handle selection of a search result
     const handleSelect = (result: any) => {
         setShowDropdown(false);
-        if ('description' in result) {
+        if ('title' in result) {
             router.push(`post/jobs/${result.id}`); // Redirect to job detail page
         } else if ('employer_id' in result) {
             console.log((result as Employer).employer_id);
@@ -111,7 +117,7 @@ export default function Header() {
                               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                               onClick={() => handleSelect(result)}
                           >
-                              {"description" in result ? (
+                              {"title" in result ? (
                                   // It's a JobPost
                                   <div>
                                       <p className="font-bold">{(result as JobPost).title}</p>
@@ -129,13 +135,6 @@ export default function Header() {
                   </div>
               )}
           </div>
-          {/*<div className="flex-1 max-w-md mx-8">*/}
-          {/*  <input*/}
-          {/*    type="text"*/}
-          {/*    placeholder="Search jobs, companies, etc."*/}
-          {/*    className="w-full px-4 py-2 border rounded-md"*/}
-          {/*  />*/}
-          {/*</div>*/}
 
           <div className="flex gap-4 font-[family-name:var(--font-geist-sans)]">
               <button className="px-4 py-2 border rounded-md" onClick={() => router.push('/signup')}>Sign Up</button>

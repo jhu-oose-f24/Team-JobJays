@@ -45,6 +45,9 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
         <div className={styles.dashboardContainer}>
             {/* Sidebar */}
             <aside className={styles.sidebar}>
+                <Link href="/">
+                    <img src="/JobJays_logo.png" alt="JobJays Logo" width={80}/>
+                </Link>
                 <Link href={`/`}><h2>Job Jays</h2></Link>
                 <nav className={styles.navMenu}>
                     <Link href={`/employer/${employerId}/dashboard`} className={styles.navItem}> Overview
