@@ -1,6 +1,6 @@
 
 import useSWR from 'swr';
-import { EmployerProfile, JobPost } from './types'; // Ensure you have the correct types for your data
+import {Employer, EmployerProfile, JobPost} from './types'; // Ensure you have the correct types for your data
 
 // Fetcher function
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -81,6 +81,19 @@ export function fetchAllJobPosts() {
 }
 
 
+export function fetchAllCompanies() {
+    const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/companies`, fetcher);
+
+    return {
+        Employers: data as Employer[],
+        isLoading,
+        isError: error,
+        mutate
+    };
+}
+
+
+
 export const createJobPost = async (
     employerId: number,
     jobData: any,
@@ -131,5 +144,68 @@ export const updateJobPost = async (
         return {success: false, error};
     }
 }
+
+
+// export function fetchEmployersByName(name:string) {
+//
+//     const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/companies/profile/search/name?name=${name}`, fetcher);
+//     // console.log(data)
+//     const processedEmployers = data && Array.isArray(data) ? data.map((employer: {employerProfile: EmployerProfile}) => {
+//         // Add job attributes to each jobPost within this employer profile
+//         const { employerProfile } = employer;
+//         // console.log(employer)
+//         const enhancedJobPosts = employerProfile.jobPosts.map((job: JobPost) => addJobAttributes(job));
+//
+//         return {
+//             ...employer,
+//             jobPosts: enhancedJobPosts  // Replace jobPosts with the enhanced ones
+//         };
+//     }) : data;
+//     console.log(processedEmployers);
+//
+//     return {
+//         Employers: processedEmployers as Employer[],
+//         isLoading,
+//         isError: error,
+//         mutate
+//     };
+// }
+
+// export function fetchEmployersByName(name:string) {
+//     const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/companies/profile/search/name?name=${name}`, fetcher);
+//
+//     console.log(data);
+//
+//     const processedEmployerProfiles = data && Array.isArray(data) ? data.map((employer: EmployerProfile) => {
+//         // Add job attributes to each jobPost within this employer profile
+//         const enhancedJobPosts = employer.jobPosts.map((job: JobPost) => addJobAttributes(job));
+//
+//         return {
+//             ...employer,
+//             jobPosts: enhancedJobPosts  // Replace jobPosts with the enhanced ones
+//         };
+//     }) : data;
+//     console.log(processedEmployerProfiles);
+//
+//     return {
+//         EmployerProfiles: processedEmployerProfiles as EmployerProfile[],
+//         isLoading,
+//         isError: error,
+//         mutate
+//     };
+// }
+
+// export function fetchJobPostsByTitle(title:string) {
+//     const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/search/posts/jobs/title?title=${title}`, fetcher); //   /search/posts/jobs/title
+//
+//     const processedJobPosts = data ? (data as JobPost[]).map(addJobAttributes) : null;
+//
+//     return {
+//         JobPosts: processedJobPosts as JobPost[],
+//         isLoading,
+//         isError: error,
+//         mutate
+//     };
+// }
 
 
