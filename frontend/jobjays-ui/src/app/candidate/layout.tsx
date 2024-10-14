@@ -33,7 +33,6 @@
 //
 // export default DashboardLayout;
 // app/employer/layout.tsx
-"use client";
 import React from 'react';
 import styles from '@/styles/dashboard.module.css';
 import Link from "next/link";
@@ -53,6 +52,7 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
                     <Link href={`/candidate/${candidate_id}/favoriteJobs`} className={styles.navItem}>Favorite Jobs</Link>
                     <Link href={`/candidate/${candidate_id}/jobAlerts`} className={styles.navItem}>Jobs Alerts</Link>
                     <Link href={`/candidate/${candidate_id}/settings`} className={styles.navItem}> Settings</Link>
+                    <Link href={"/candidate/preference"} className={styles.navItem}> Preferences</Link>
                 </nav>
             </aside>
 
