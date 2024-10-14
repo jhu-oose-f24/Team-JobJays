@@ -1,4 +1,4 @@
-import ListJob from "@/components/ListJob";
+import ListJob from "@/components/jobPost/ListJob";
 import Navbar from '@/components/Navbar';
 import HeaderActions from "@/components/HeaderActions";
 import AboutUs from "@/components/AboutUs";

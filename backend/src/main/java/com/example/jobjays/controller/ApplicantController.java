@@ -11,12 +11,10 @@ import com.example.jobjays.model.ApplicantProfile;
 import com.example.jobjays.model.JobPost;
 import com.example.jobjays.service.ApplicantService;
 import com.example.jobjays.service.ResponseMapperService;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,8 +35,6 @@ public class ApplicantController {
     Applicant applicant = applicantService.addApplicant(createApplicantDto);
     //return ResponseEntity.ok(mapToResponseApplicantDto(applicant));
     ResponseApplicantDto responseApplicantDto = mapToResponseApplicantDto(applicant);
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setLocation(URI.create("http://localhost:8080/api/applicants/profile/" + applicant.getID()));
     return new ResponseEntity<>(responseApplicantDto, HttpStatus.CREATED);
   }
 
@@ -92,8 +88,6 @@ public class ApplicantController {
     }
 
     ResponseApplicantProfileDto responseApplicantProfileDto = mapToResponseProfileDto(applicantProfile);
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setLocation(URI.create("http://localhost:8080/api/applicants/profile/" + applicantProfile.getUser().getID()));
     return new ResponseEntity<>(responseApplicantProfileDto, HttpStatus.OK);
   }
 
