@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +20,15 @@ public class JobPost implements Post {
 
   private String title ;
   private String description;
-  private String location;
+  private Location location;
   private Double salary;
 
+  @Getter
+  @Setter
+  @ElementCollection
+  @CollectionTable(name = "job_tags", joinColumns = @JoinColumn(name = "job_id"))
+  @Column(name = "tag")
+  private List<String> tags;
   @Id
   @GeneratedValue
   private Long jobID;
@@ -38,10 +46,11 @@ public JobPost() {}
   public JobPost(
       String title,
       String description,
-      String location,
+      Location location,
       Double salary,
       LocalDateTime closedDate,
-      Employer employer
+      Employer employer,
+      List<String> tags
       ) {
 
     //this.jobID = UUID.randomUUID().toString();
@@ -53,9 +62,21 @@ public JobPost() {}
     this.closedDate = closedDate;
     this.employer = employer;
     this.applicants = new ArrayList<>();
+    this.tags =tags;
+    buildTags();
 
   }
 
+
+  private void buildTags() {
+     this.tags.add(title);
+     this.tags.add(location.getCity());
+        this.tags.add(location.getState());
+        this.tags.add(location.getCountry());
+        this.tags.add(employer.getProfile().getName());
+        this.tags.add(employer.getProfile().getIndustry());
+
+  }
   public String getTitle() {
     return title;
   }
@@ -74,11 +95,11 @@ public JobPost() {}
     return description;
   }
 
-  public String getLocation() {
+  public Location getLocation() {
     return location;
   }
 
-  public String setLocation(String location) {
+  public Location setLocation(Location location) {
     this.location = location;
     return location;
   }

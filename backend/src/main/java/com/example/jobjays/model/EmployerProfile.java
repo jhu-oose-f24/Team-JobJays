@@ -2,6 +2,8 @@ package com.example.jobjays.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,9 @@ import java.util.List;
 @Embeddable
 public class EmployerProfile implements Profile {
 
+  @Setter
+  @Getter
+  private String industry;
   private String name;
   private String bio;
 
