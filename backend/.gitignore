@@ -77,8 +77,6 @@ build/
 
 ### Gradle ###
 .gradle/
-**/gradle-wrapper.jar
-**/.gradle/
 
 ### Logs ###
 *.log
