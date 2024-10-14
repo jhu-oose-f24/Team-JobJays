@@ -1,14 +1,27 @@
+"use client";
 import React from 'react';
 import styles from '@/styles/dashboard.module.css';
+import { useUser } from '@/lib/api';
 
-const DashboardPage: React.FC = () => {
+
+
+interface DashboardPageProps {
+    params: {
+        employerId: string;
+    };
+}
+const DashboardPage: React.FC<DashboardPageProps> = ({ params }) => {
+    const { EmployerProfile, isLoading, isError } = useUser(Number(params.employerId));
+
+    if (isLoading) return <p>Loading...</p>;
+    if (isError) return <p>Error loading data</p>;
     return (
         <div>
             <header className={styles.dashboardHeader}>
-                <h3>Hello, Test Company</h3>
+                <h3>Hello, {EmployerProfile.name}</h3>
                 <div className={styles.statsOverview}>
                     <div className={styles.statBox}>
-                        <p>94</p>
+                        <p>{EmployerProfile.jobPostsSize}</p>
                         <span>Open Jobs</span>
                     </div>
                     <div className={styles.statBox}>

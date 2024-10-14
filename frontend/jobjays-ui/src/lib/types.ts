@@ -1,5 +1,5 @@
 export interface Post {
-    jobID: number;
+    id: number;
     title: string;
     description: string;
     location: string;
@@ -8,63 +8,92 @@ export interface Post {
     close: () => void;
 }
 
-export interface JobListing {
-    jobID: number;
+export interface JobListing extends Post {
+    id: number;
+    companyName: string;
     title: string;
-    type: string;
+    description: string;
     location: string;
     salary: number;
+    type: "Full Time" | "Part Time" | "Internship";
+    status: "Active" | "Expired";
+    postedDate: Date;
+    closingDate: Date;
+    applications: number;
+    daysRemaining: number;
 }
 
 export interface JobPost extends Post {
-    jobID: number;
+    id: number;
+    title: string;
+    description: string;
+    companyName: string
+    location: string;
+    minSalary: number;
+    maxSalary: number;
     postedDate: Date;
-    closingDate: Date;
-    employer: Employer;
+    closedDate: Date;
+    numApplicants: number;
+    daysRemaining: number;
+    type: "Full Time" | "Part Time" | "Internship";
+    status: "Active" | "Expired";
+
 }
+
+ // export interface JobPost extends Post {
+ //     jobID: number;
+ //     postedDate: Date;
+ //     closingDate: Date;
+ //     employer: Employer;
+ // }
 
 export interface User {
     userID: number;
     username: string;
-    email: string;
-    password: string;
+    //email: string;
+    //password: string;
 
 }
 
 export interface Employer extends User {
-    companyID: number;
-    companyName: string;
-    contactInfo: string;
-    profile: EmployerProfile
-    postJob: () => void;
-    viewApplications: () => void;
+    //TODO commented out fields are not implemented
+    employer_id: number;
+    username: string;
+    employerProfile: EmployerProfile;
+    //postJob: () => void;
+    //viewApplications: () => void;
 
 }
 
 export interface Applicant extends User {
     applicantId: number;
-    resume: string;
-    profile: ApplicantProfile;
-    applyToJob: () => void;
-    viewAppliedJobs: () => void;
+    username: string;
+    applicantProfile: ApplicantProfile;
+    //applyToJob: () => void;
+    //viewAppliedJobs: () => void;
 }
 
 export interface Profile {
-    profileID: number;
-    user: User;
+    //userId:number;
     name: string;
     bio: string;
-    editProfile: () => void;
+    //editProfile: () => void;
 }
 
 export interface EmployerProfile extends Profile {
+    name: string;
+    bio: string;
+    jobPostsSize: number;
     jobPosts: JobPost[];
-    manageJobPosts: () => void;
+    //manageJobPosts: () => void;
 }
 
 export interface ApplicantProfile extends Profile {
+    //userId:number;
+    name:string;
+    bio: string;
     appliedJobs: JobPost[];
-    trackApplications: () => void;
+    //trackApplications: () => void;
 }
 
 

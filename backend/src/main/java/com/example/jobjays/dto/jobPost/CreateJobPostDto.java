@@ -18,13 +18,17 @@ public class CreateJobPostDto {
 
   @NotNull
   @Positive
-  @Min(10000) // Minimum salary is 10,000
-  private Double salary;
+  private Double minSalary;
+
+  @NotNull
+  @Positive
+  private Double maxSalary;
+
 
   @Future
   private LocalDateTime closedDate; // Needs to be converted to LocalDateTime on frontend before passed
 
-  @NotBlank
+  //@NotBlank
   private String username; // username of user is passed and used to find employer on backend (service)
 
   public String getTitle() {
@@ -39,8 +43,12 @@ public class CreateJobPostDto {
     return location;
   }
 
-  public Double getSalary() {
-    return salary;
+  public Double getMinSalary() {
+    return minSalary;
+  }
+
+  public Double getMaxSalary() {
+    return maxSalary;
   }
 
   public LocalDateTime getClosedDate() {
