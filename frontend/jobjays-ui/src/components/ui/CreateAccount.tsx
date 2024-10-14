@@ -2,11 +2,123 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CreateAccount() {
   const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
     "Employer"
   );
+
+  const router = useRouter()
+
+  const [formData, setFormData] = useState({
+    employerName: "",
+    employerInfo: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const [candForm, setCandForm] = useState({
+    username: "",
+    password: "",
+    email: "",
+    resume: "",
+    applicantName: "",
+    applicantInfo: "",
+  });
+
+  // Handle input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    console.log(formData);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/companies", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password,
+          email: formData.email,
+          employerName: formData.employerName,
+          employerInfo: formData.employerInfo,
+        }),
+      });
+
+
+      if (response.ok) {
+        console.log(response);
+        const employerData = await response.json();
+        console.log(employerData);
+        const employerId = employerData.employer_id;
+        alert("Employer account created successfully!"); // could change to toast to look cleaner
+        router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
+      } else {
+        const errorData = await response.json();
+        alert(`Error: ${errorData.message}`);
+      }
+    } catch (error) {
+      alert(`An error occurred: ${error}`);
+    }
+  };
+
+    // Handle input changes
+    const handleCandInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = e.target;
+      setCandForm((prev) => ({ ...prev, [name]: value }));
+    };
+  
+    // Handle form submission
+    const handleCandSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+
+  
+      try {
+        const response = await fetch("http://localhost:8080/api/applicants", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: candForm.username,
+            password: candForm.password,
+            email: candForm.email,
+            resume: candForm.resume,
+            applicantName: candForm.applicantName,
+            applicantInfo: candForm.applicantInfo,
+          }),
+        });
+  
+  
+        if (response.ok) {
+          const candidateData = await response.json();
+          console.log(candidateData);
+          const candidateId = candidateData.applicantId;
+          alert("Candidate account created successfully!");
+          router.push(`candidate/${candidateId}/dashboard`);
+        } else {
+          const errorData = await response.json();
+          alert(`Error: ${errorData.message}`);
+        }
+      } catch (error) {
+        alert(`An error occurred: ${error}`);
+      }
+    };
 
   return (
     <section className="flex flex-row h-screen">
@@ -49,38 +161,57 @@ export default function CreateAccount() {
           >
             <h2 className="font-bold">Employer</h2>
           </button>
+          
         </div>
 
         {/* Content based on selected tab */}
         {selectedTab === "Employer" ? (
-          <form className="flex flex-col gap-4">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <input
               type="text"
+              name="employerName"
+              value={formData.employerName}
+              onChange={handleInputChange}
               placeholder="Employer Name"
               className="px-4 py-2 border rounded-md"
             />
             <input
               type="text"
+              name="employerInfo"
+              value={formData.employerInfo}
+              onChange={handleInputChange}
               placeholder="Employer Info"
               className="px-4 py-2 border rounded-md"
             />
             <input
               type="text"
+              name="username"
+              value={formData.username}
+              onChange={handleInputChange}
               placeholder="Username"
               className="px-4 py-2 border rounded-md"
             />
             <input
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
               placeholder="Email address"
               className="px-4 py-2 border rounded-md"
             />
             <input
               type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
               placeholder="Password"
               className="px-4 py-2 border rounded-md"
             />
             <input
               type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
               placeholder="Confirm Password"
               className="px-4 py-2 border rounded-md"
             />
@@ -95,18 +226,65 @@ export default function CreateAccount() {
             </button>
           </form>
         ) : (
-          <div className="flex flex-col gap-4">
-            <p>Sign up using one of the following options:</p>
-            <button className="px-6 py-3 flex items-center gap-2 border rounded-md">
-              <Image
-                src="/jhucrest.png"
-                alt="Facebook"
-                width={65}
-                height={20}
-              />
-              JHU SSO
+          <form className="flex flex-col gap-4" onSubmit={handleCandSubmit}>
+            <input
+              type="text"
+              name="username"
+              value={candForm.username}
+              onChange={handleCandInputChange}
+              placeholder="Username"
+              className="px-4 py-2 border rounded-md"
+            />
+            <input
+              type="password"
+              name="password"
+              value={candForm.password}
+              onChange={handleCandInputChange}
+              placeholder="Password"
+              className="px-4 py-2 border rounded-md"
+            />
+            <input
+              type="email"
+              name="email"
+              value={candForm.email}
+              onChange={handleCandInputChange}
+              placeholder="Email Address"
+              className="px-4 py-2 border rounded-md"
+            />
+            <input
+              type="text"
+              name="resume"
+              value={candForm.resume}
+              onChange={handleCandInputChange}
+              placeholder="Resume (will be fleshed out)"
+              className="px-4 py-2 border rounded-md"
+            />
+            <input
+              type="text"
+              name="applicantName"
+              value={candForm.applicantName}
+              onChange={handleCandInputChange}
+              placeholder="Applicant Name"
+              className="px-4 py-2 border rounded-md"
+            />
+            <input
+              type="text"
+              name="applicantInfo"
+              value={candForm.applicantInfo}
+              onChange={handleCandInputChange}
+              placeholder="Applicant Info"
+              className="px-4 py-2 border rounded-md"
+            />
+            <div className="flex items-center gap-2">
+              <input type="checkbox" id="terms" className="h-4 w-4" />
+              <label htmlFor="terms" className="text-gray-500">
+                I&apos;ve read and agree with your <a href="#" className="text-blue-600">Terms of Services</a>
+              </label>
+            </div>
+            <button className="px-6 py-3 bg-blue-400 text-white rounded-md mt-4">
+              <h2 className="font-bold">Create Account</h2>
             </button>
-          </div>
+          </form>
         )}
       </div>
 
