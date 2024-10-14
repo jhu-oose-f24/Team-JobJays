@@ -55,10 +55,9 @@ export default function Header() {
     const handleSelect = (result: any) => {
         setShowDropdown(false);
         if ('title' in result) {
-            router.push(`post/jobs/${result.id}`); // Redirect to job detail page
+            router.push(`http://localhost:3000/post/jobs/${result.id}`); // Redirect to job detail page
         } else if ('employer_id' in result) {
-            console.log((result as Employer).employer_id);
-            router.push(`/employer/${(result as Employer).employer_id}/my-jobs`); // Redirect to employer detail page
+            router.push(`http://localhost:3000/employer/${(result as Employer).employer_id}/my-jobs`); // Redirect to employer detail page
         }
     };
 
@@ -66,19 +65,8 @@ export default function Header() {
     // Handle form submission (redirect to search results page)
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        //setShowDropdown(false);
-        // fetchSearchResults(query);
-        setShowDropdown(true);
-        // fetchSearchResults(query);
-        // router.push(`/search?query=${query}`);
-        // router.push({
-        //         pathname: '/search',
-        //         query: { query: query }, // You can still pass the query in the URL
-        //      },
-        //    undefined,
-        //     { shallow: true, state: { results }
-        //     });
-
+        setShowDropdown(false);
+        router.push(`http://localhost:3000/post/jobs/all?query=${query}`);
     };
 
 
@@ -91,7 +79,7 @@ export default function Header() {
               </Link>
               <nav className="flex gap-9">
                   <Link href="/">Home</Link>
-                  <Link href="/find-job">Find Job</Link>
+                  <Link href="http://localhost:3000/post/jobs/all">Find Job</Link>
                   <Link href="/employer/dashboard">Employers</Link>
                   <Link href="/candidate/dashboard">Candidates</Link>
               </nav>
@@ -139,7 +127,7 @@ export default function Header() {
           <div className="flex gap-4 font-[family-name:var(--font-geist-sans)]">
               <button className="px-4 py-2 border rounded-md" onClick={() => router.push('/signup')}>Sign Up</button>
               <button className="px-4 py-2 bg-blue-400 text-white rounded-md"
-                      onClick={() => router.push('/employer/post-job')}>Post A Job
+                      onClick={() => router.push('http://localhost:3000/employer/post-job')}>Post A Job
               </button>
           </div>
       </header>

@@ -1,25 +1,21 @@
+"use client";
 import ListJob from "@/components/jobPost/ListJob";
-import Navbar from '@/components/Navbar';
-import HeaderActions from "@/components/HeaderActions";
-import AboutUs from "@/components/AboutUs";
+import Header from "@/components/ui/Header";
+import RelatedJobs from "@/components/jobPost/RelatedJobs";
+import {useSearchParams} from "next/navigation";
+import ListCompany from "@/components/employer/ListCompany";
 
     const ListJobPage = () => {
+        const searchParams = useSearchParams();
+        const query = searchParams.get("query") || "";
         return (
         <>
-            <Navbar />
-            <HeaderActions />
-            <div>
-                <h1>List a Job</h1>
-                <ListJob />
-                
+            <Header />
+            <div className={"py-4"}>
+                <ListCompany query={query} />
+                <ListJob query={query} />
+                <RelatedJobs/>
             </div>
-            <AboutUs />
-            {/*<HeroSection />*/}
-            {/*<JobStats />*/}
-            {/*<PopularCategories />*/}
-            {/*<FeaturedJobs />*/}
-            {/*<Testimonials />*/}
-            {/*<Footer />*/}
         </>
         );
     };

@@ -7,55 +7,54 @@ import {
 import { JobPost } from "@/lib/types";
 import { fetchAllJobPosts } from "@/lib/api";
 import { useState } from 'react';
+import Link from "next/link";
 
+interface ListJobProps {
+    query: string;  // Accept the query as a prop
+}
 
-const ListJob = () => {
-    const { JobPosts, isLoading, isError, mutate} = fetchAllJobPosts();
+const ListJob = ({query}: ListJobProps) => {
+    const { JobPosts, isLoading, isError} = fetchAllJobPosts();
 
-    // Assuming they are JOBPOSTS
     if (isLoading) 
         return <div> Loading... </div>;
     if (isError) return <div>Error loading all job details.</div>;
     if (!JobPosts) return <div>Jobs not found.</div>;
 
     const activeJobListings = JobPosts.filter(job => job.status === 'Active');
+    const filteredJobListings = query
+        ? activeJobListings.filter(job =>
+            job.title.toLowerCase().includes(query.toLowerCase()) ||
+            job.description.toLowerCase().includes(query.toLowerCase()) ||
+            job.location.toLowerCase().includes(query.toLowerCase()) ||
+            job.companyName.toLowerCase().includes(query.toLowerCase())
+
+        )
+        : activeJobListings;
     return (
         <div className={styles.jobListGrid}> 
-            {activeJobListings.map((jobListing) => (
-                <div key={jobListing.id} className={styles.jobBox}>
-                    <h1>{jobListing.title}</h1>
-                    <div className = {styles.flexContainer}>
-                        <div className={styles.typeBox}>
-                            <span className={styles.typeText}>{jobListing.type}</span>
-                        </div>
-                        <div className="justify-between">
-                        <p>{jobListing.location}</p>
-                        <p>Salary: ${jobListing.minSalary.toLocaleString()} -
-                            ${jobListing.maxSalary.toLocaleString()}</p>
+            {filteredJobListings.map((jobListing) => (
+                <Link
+                    key={jobListing.id}
+                    href={`http://localhost:3000/post/jobs/${jobListing.id}`}
+                    className={styles.jobBox} // This applies styling to the entire box
+                >
+                    <div>
+                        <h1>{jobListing.title}</h1>
+                        <div className={styles.flexContainer}>
+                            <div className={styles.typeBox}>
+                                <span className={styles.typeText}>{jobListing.type}</span>
+                            </div>
+                            <div className="justify-between">
+                                <p>{jobListing.location}</p>
+                                <p>Salary: ${jobListing.minSalary.toLocaleString()} - ${jobListing.maxSalary.toLocaleString()}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </Link>
             ))}
         </div>
-            
-        );
-        
-        // <div>
-        //     {/* <h1>List Job Page</h1> */}
-        //     <div key={sampleJobListing.jobID} className={styles.jobBox}>
-        //         <h1>{sampleJobListing.title}</h1>
-        //         <div className = {styles.flexContainer}>
-        //             <div className={styles.typeBox}>
-        //                 <span className={styles.typeText}>{sampleJobListing.type}</span>
-        //             </div>
-                    
-        //             <p>{sampleJobListing.location}</p>
-        //             <p>{"Salary: $" + formatSalary(sampleJobListing.salary)}</p>
-        //         </div>
-        //     </div>
-            
-                
-        // </div>
+    );
 
 };
 

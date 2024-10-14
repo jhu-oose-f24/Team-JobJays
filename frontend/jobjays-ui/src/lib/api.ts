@@ -81,6 +81,18 @@ export function fetchAllJobPosts() {
 }
 
 
+export function fetchAllCompanies() {
+    const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/companies`, fetcher);
+
+    return {
+        Employers: data as Employer[],
+        isLoading,
+        isError: error,
+        mutate
+    };
+}
+
+
 
 export const createJobPost = async (
     employerId: number,
