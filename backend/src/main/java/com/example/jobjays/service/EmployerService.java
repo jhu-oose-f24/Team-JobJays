@@ -30,8 +30,9 @@ public class EmployerService {
       employer.getUsername(),
       employer.getPassword(), employer.getEmail(),
       employer.getEmployerName(),
-      employer.getEmployerInfo()
-
+      employer.getEmployerInfo(),
+            employer.getEnabled(),
+            employer.getVerificationToken()
     );
 
     assert newEmployer.getProfile() != null;

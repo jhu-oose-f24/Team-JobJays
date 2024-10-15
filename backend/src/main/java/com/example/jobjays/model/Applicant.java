@@ -15,11 +15,13 @@ public class Applicant implements User {
   private String username;
   private String password;
   private String email;
-
+  private Boolean enabled;
+  private String token;
   @Id
   @GeneratedValue
   private Long applicantId;
   private String resume;
+
 
   @Embedded
   private ApplicantProfile profile;
@@ -29,14 +31,17 @@ public class Applicant implements User {
       String username,
       String password,
       String email,
-      String resume
+      Boolean enabled,
+      String resume,
+      String token
   ) {
     this.username = username;
     this.password = password;
     this.email = email;
+    this.enabled = enabled;
     this.resume = resume;
     this.profile = new ApplicantProfile(this, "", "");
-
+    this.token = token;
   }
   public Applicant(){}
 
@@ -51,6 +56,25 @@ public class Applicant implements User {
   public String setUsername(String username) {
     this.username = username;
     return username;
+  }
+
+  public Boolean getEnabled() {
+    return this.enabled;
+  }
+
+  public Boolean setEnabled(Boolean enabled) {
+    this.enabled = enabled;
+    return enabled;
+  }
+
+
+  public String getToken() {
+    return this.token;
+  }
+
+  public String setToken(String token) {
+    this.token = token;
+    return token;
   }
 
   public String getPassword() {

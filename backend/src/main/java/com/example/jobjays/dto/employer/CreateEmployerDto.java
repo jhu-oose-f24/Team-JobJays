@@ -2,7 +2,9 @@ package com.example.jobjays.dto.employer;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
+@Data
 public class CreateEmployerDto {
 
   @NotBlank
@@ -19,6 +21,11 @@ public class CreateEmployerDto {
 
   @NotBlank
   String employerInfo;
+
+
+  Boolean enabled;
+
+  String verificationToken;
 
 
   public String getUsername() {

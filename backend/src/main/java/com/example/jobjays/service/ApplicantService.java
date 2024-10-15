@@ -23,7 +23,9 @@ public class ApplicantService {
       applicant.getUsername(),
       applicant.getPassword(),
       applicant.getEmail(),
-      applicant.getResume()
+      applicant.getEnabled(),
+      applicant.getResume(),
+      applicant.getVerificationToken()
     );
     assert newApplicant.getProfile() != null;
     ApplicantProfile profile = newApplicant.getProfile();
@@ -32,6 +34,11 @@ public class ApplicantService {
 
     return applicantRepository.save(newApplicant);
   }
+
+//  public findByVerificationToken(String token){
+//    applicantRepository.
+//
+//  }
 
   //TODO CREATE A JOB APPLICATION SERVICE
 

@@ -6,8 +6,16 @@ import SocialMediaInfo from "@/components/employer/SocialMediaInfo";
 import AccountSettings from "@/components/candidate/AccountSettings";
 import ProfileData from "@/components/candidate/Profile";
 import PersonalSettings from "@/components/candidate/PersonalSettings";
+import {useApplicant} from "@/lib/api";
 
-const ProfilePage: React.FC = () => {
+
+interface DashboardPageProps {
+    params: {
+        candidate_id: string;
+    };
+}
+
+const ProfilePage: React.FC<DashboardPageProps> = ({ params }) => {
     const [tab, setTab] = useState<'personal' | 'profile' | 'social-media' | 'account-setting'>('personal');
 
     const handleTabClick = (selectedTab: 'personal' | 'profile' | 'social-media' | 'account-setting') => {
@@ -37,7 +45,7 @@ const ProfilePage: React.FC = () => {
                 {tab === 'personal' && (
                     <div className={styles.tabContent}>
                         <h3>Profile</h3>
-                        <PersonalSettings /> {/* No submit button here */}
+                        <PersonalSettings  params={params}/> {/* No submit button here */}
                     </div>
                 )}
 

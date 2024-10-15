@@ -4,40 +4,160 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ea11febc-5bc8-44ab-97c3-53913a6564eb" name="Changes" comment="">
+    <list default="true" id="ea11febc-5bc8-44ab-97c3-53913a6564eb" name="Changes" comment="merge">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/sqlDataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/authentication/LoginAspect.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/authentication/LoginRequired.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/authentication/TokenGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/AuthController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/wrapper/AmazonS3Wrapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/wrapper/EmailSendWrapper.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/wrapper/beans/RpcBeansFactory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/backend/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/ApplicantController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/ApplicantController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/applicant/CreateApplicantDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/applicant/CreateApplicantDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/CreateEmployerDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/CreateEmployerDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/model/Applicant.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/model/Applicant.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/model/Employer.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/model/Employer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/service/ApplicantService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/service/ApplicantService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/service/EmployerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/service/EmployerService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/JobJaysApiApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/JobJaysApiApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/controller/ApplicantController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/controller/ApplicantController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/controller/EmployerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/controller/EmployerController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/controller/JobPostController.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/controller/JobPostController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/applicant/CreateApplicantDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/applicant/CreateApplicantDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/applicant/ResponseApplicantDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/applicant/UpdateApplicantDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/employer/CreateEmployerDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/employer/CreateEmployerDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/employer/ResponseEmployerDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/employer/UpdateEmployerDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/jobPost/CreateJobPostDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/jobPost/CreateJobPostDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/jobPost/ResponseJobPostDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/jobPost/ResponseJobPostDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/jobPost/UpdateJobPostDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/jobPost/UpdateJobPostDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/profile/ResponseApplicantProfileDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/profile/ResponseEmployerProfileDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/dto/profile/ResponseProfileDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/exception/PostNotFoundException.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/Applicant.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/Applicant.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/ApplicantProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/Employer.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/Employer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/EmployerProfile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/JobPost.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/JobPost.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/Post.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/Post.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/Profile.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/repository/ApplicantRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/repository/EmployerRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/repository/JobPostRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/repository/JobPostRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/service/ApplicantService.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/service/ApplicantService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/service/EmployerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/service/EmployerService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/service/JobPostService.class" beforeDir="false" afterPath="$PROJECT_DIR$/backend/target/classes/com/example/jobjays/service/JobPostService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/target/test-classes/com/example/jobjays/JobJaysApplicationTests.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/jobjays-ui/src/app/candidate/settings/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/jobjays-ui/src/app/candidate/[candidate_id]/settings/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/candidate/PersonalSettings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/candidate/PersonalSettings.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/CreateAccount.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/CreateAccount.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;luojiaxuan&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/jhu-oose-f24/Team-JobJays.git&quot;,
+    &quot;accountId&quot;: &quot;b1bf94b1-1866-4a7c-9e82-d2392765814e&quot;
+  }
+}</component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/frontend/jobjays-ui/package.json" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2mRXnng3olVeMI2rGgYH0gXsoZx" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/enochappiah/school-tings/JHU/senior-year/fall/OOSE/Team-JobJays",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;HTTP Request.generated-requests | #1.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.JobJays [clean].executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;Spring Boot.JobJaysApiApplication.executor&quot;: &quot;Run&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/enochappiah/school-tings/JHU/senior-year/fall/OOSE/Team-JobJays&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/luojiaxuan/IdeaProjects/Team-JobJays/frontend/jobjays-ui/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/jobjays-ui/src/app/candidate/[candidate_id]" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.example.jobjays.dto.applicant" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.JobJaysApiApplication">
+    <configuration name="generated-requests | #1" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" requestIdentifier="#1" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="JobJaysApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <module name="JobJays" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.jobjays.JobJaysApiApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="HTTP Request.generated-requests | #1" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -57,9 +177,45 @@
       <workItem from="1727040533601" duration="997000" />
       <workItem from="1727896863829" duration="663000" />
     </task>
+    <task id="LOCAL-00001" summary="merge">
+      <option name="closed" value="true" />
+      <created>1728946808787</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1728946808787</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="origin/main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="merge" />
+    <option name="LAST_COMMIT_MESSAGE" value="merge" />
   </component>
 </project>

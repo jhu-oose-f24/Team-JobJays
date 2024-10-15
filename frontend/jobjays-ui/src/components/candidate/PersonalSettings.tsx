@@ -2,8 +2,15 @@ import React, { useState } from 'react';
 import styles from '@/styles/account-settings.module.css';
 
 
+interface DashboardPageProps {
+    params: {
+        candidate_id: string;
+    };
+}
 
-const PersonalSettings: React.FC = () => {
+const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
+    const candidateId = Number(params.candidate_id);
+    console.log(candidateId);
     const [profilePicture, setProfilePicture] = useState(null);
     const [resumeFiles, setResumeFiles] = useState([
         { id: 1, name: 'Professional Resume', size: '3.5 MB' },

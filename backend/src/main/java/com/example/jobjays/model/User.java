@@ -9,6 +9,8 @@ public interface User {
   String getPassword();
   String getEmail();
 
+  Boolean getEnabled();
+  String getToken();
   Profile getProfile();
   Long getID();
 }
