@@ -16,6 +16,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
   Applicant findByUsernameIsIgnoreCase(String username);
 
+  Applicant findByToken(String token);
   //TODO CREATE A JOB APPLICATION REPOSITORY
 
 

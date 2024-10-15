@@ -36,11 +36,10 @@ public class ApplicantService {
     return applicantRepository.save(newApplicant);
   }
 
-//  public findByVerificationToken(String token){
-//    applicantRepository.
-//
-//  }
+  public Applicant findByVerificationToken(String token){
+    return applicantRepository.findByToken(token);
 
+  }
   //TODO CREATE A JOB APPLICATION SERVICE
 
   public Applicant updateApplicant(UpdateApplicantDto newApplicant, Long id) {

@@ -55,15 +55,16 @@ public class ApplicantController {
 
   @GetMapping("/verify")
   public String verifyUser(@RequestParam("token") String token) {
-    //User user = applicantService.findByVerificationToken(token);
-//
-//    if (user == null) {
-//      return "Invalid token!";
-//    }
-//
-//    user.setEnabled(true); // Enable the user
-//    user.setVerificationToken(null); // Clear the token
-//    userRepository.save(user);
+    Applicant applicant = applicantService.findByVerificationToken(token);
+    UpdateApplicantDto user = new UpdateApplicantDto();
+
+    if (applicant == null) {
+      return "Invalid token!";
+    }
+
+    user.setEnabled(true); // Enable the user
+    user.setToken(null); // Clear the token
+    applicantService.updateApplicant(user,applicant.getID());
 
     return "Email verified successfully! You can now log in.";
   }
