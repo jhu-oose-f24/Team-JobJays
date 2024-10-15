@@ -41,7 +41,9 @@ This basic setup ensures that relevant job matches are pushed to users in near r
 Finally we started the implementation of our chatbot. Since the bot is still in the development process it hasn't been fully integreated but can be accessed through localhost:3000/advice. The user is able to speak to the bot where they recieve a response in real time. 
 For the following iteration we plan to make sure the applicant and the employer/company users have different levels of access to prevent companies and users from accessing each others' data. 
 
-#TODO: Add more for user authentication
+User authentication:
+When user registered an account, they will receive an mail to validate their account. Once they click the link in the email ,they can log in to the job system.
+Besides, after login, we will store the login info in the session, so that users can do some thing like editing their own profile and uploading their resumes, while other applicants cannot have permission.
 
 
 # Running the JobJays Backend(KAFKA Server) with Docker
