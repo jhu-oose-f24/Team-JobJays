@@ -43,6 +43,50 @@ For the following iteration we plan to make sure the applicant and the employer/
 
 #TODO: Add more for user authentication
 
+
+# Running the JobJays Backend(KAFKA Server) with Docker
+
+Follow the instructions below to quickly set up and run the backend services for the JobJays application using Docker Compose.
+
+## Steps to Run
+
+1. **Navigate to the backend directory**  
+   Open your terminal and change the current directory to the backend folder where `docker-compose.yml` is located.
+
+   ```bash
+   cd backend
+
+
+2. **Run Docker Compose**  
+   Start the services by running the following command:
+
+   ```bash
+   docker-compose up
+   ```
+
+   This command will build and start all necessary containers (Kafka, Zookeeper, microservices, etc.).
+
+3. **Access Kafka UI**  
+   Once the services are running, you can monitor Kafka using Kafdrop by navigating to:
+
+   ```text
+   http://localhost:9000
+   ```
+
+   This will open a web interface where you can view Kafka topics, messages, brokers, and more.
+
+## Stopping the Services
+
+To stop the running containers, use:
+
+```bash
+docker-compose down
+```
+
+This will stop and remove the containers but keep the images and data intact.
+
+```
+
 # Running the Application
 
 ## Backend
