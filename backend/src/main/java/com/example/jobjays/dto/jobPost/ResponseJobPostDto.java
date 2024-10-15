@@ -11,9 +11,12 @@ public class ResponseJobPostDto {
   public String description;
   public Location location;
   public Double salary;
+  public Double minSalary;
+    public Double maxSalary;
   public LocalDateTime postedDate;
   public LocalDateTime closedDate;
   public Integer numApplicants;
+
   //public ResponseEmployerDto employer;
 
   public String setCompanyName(String companyName) {

@@ -99,11 +99,16 @@ public JobPost() {}
     return description;
   }
 
-  public String getLocation() {
+  public Location getLocation() {
     return location;
   }
 
-  public String setLocation(String location) {
+  @Override
+  public Double getSalary() {
+    return salary;
+  }
+
+  public Location setLocation(Location location) {
     this.location = location;
     return location;
   }

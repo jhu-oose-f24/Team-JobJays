@@ -15,13 +15,11 @@ import java.util.Objects;
 @Service
 public class JobPostService {
   private final JobPostRepository jobPostRepository;
-  private final EmployerService employerService;
   private final JobPostPublisherService jobPostPublisherService;
 
 
-  public JobPostService(JobPostRepository jobPostRepository, EmployerService employerService, JobPostPublisherService jobPostPublisherService) {
+  public JobPostService(JobPostRepository jobPostRepository, JobPostPublisherService jobPostPublisherService) {
     this.jobPostRepository = jobPostRepository;
-    this.employerService = employerService;
       this.jobPostPublisherService = jobPostPublisherService;
   }
 

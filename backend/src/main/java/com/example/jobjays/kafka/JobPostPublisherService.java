@@ -34,10 +34,6 @@ public class JobPostPublisherService {
 
     private JobPostDTO convertToDTO(JobPost jobPost) {
         String employerName = jobPost.getEmployer() != null ?  jobPost.getEmployer().getName() : "Unknown";
-//        Location location = jobPost.getLocation();
-//        location.getCountry() != null ? location.getCountry() : "Unknown";
-//        String state = location != null ? location.getState() : "Unknown";
-//        String city = location != null ? location.getCity() : "Unknown";
 
         return new JobPostDTO(
                 jobPost.getID(),
