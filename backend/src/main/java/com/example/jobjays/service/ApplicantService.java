@@ -21,6 +21,7 @@ public class ApplicantService {
 
     Applicant newApplicant = new Applicant(
       applicant.getUsername(),
+      applicant.getApplicantName(),
       applicant.getPassword(),
       applicant.getEmail(),
       applicant.getEnabled(),
