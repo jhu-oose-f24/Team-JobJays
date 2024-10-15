@@ -1,14 +1,12 @@
 package com.example.jobjays.controller;
 
-import com.example.jobjays.dto.profile.ResponseEmployerProfileDto;
-import com.example.jobjays.dto.profile.ResponseProfileDto;
 import com.example.jobjays.dto.employer.CreateEmployerDto;
 import com.example.jobjays.dto.employer.ResponseEmployerDto;
 import com.example.jobjays.dto.employer.UpdateEmployerDto;
-import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
+import com.example.jobjays.dto.profile.ResponseEmployerProfileDto;
+import com.example.jobjays.dto.profile.ResponseProfileDto;
 import com.example.jobjays.model.Employer;
 import com.example.jobjays.model.EmployerProfile;
-import com.example.jobjays.model.JobPost;
 import com.example.jobjays.service.EmployerService;
 import com.example.jobjays.service.ResponseMapperService;
 import org.springframework.http.HttpStatus;

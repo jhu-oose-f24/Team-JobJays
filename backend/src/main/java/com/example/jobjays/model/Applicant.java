@@ -1,8 +1,6 @@
 package com.example.jobjays.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 
 
 @Entity
@@ -26,13 +24,13 @@ public class Applicant implements User {
 
 
   public Applicant(
-          String username,
-          String name,
-          String password,
-          String email,
-          Boolean enabled,
-          String resume,
-          String token
+      String username,
+      String name,
+      String password,
+      String email,
+      Boolean enabled,
+      String resume,
+      String token
   ) {
     this.name = name;
     this.username = username;

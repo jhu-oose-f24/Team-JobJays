@@ -1,7 +1,8 @@
 package com.example.jobjays.dto.jobPost;
 
 import com.example.jobjays.model.Location;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDateTime;
 

@@ -2,7 +2,10 @@ package com.example.jobjays.service;
 
 import com.example.jobjays.dto.employer.CreateEmployerDto;
 import com.example.jobjays.dto.employer.UpdateEmployerDto;
-import com.example.jobjays.model.*;
+import com.example.jobjays.model.Applicant;
+import com.example.jobjays.model.Employer;
+import com.example.jobjays.model.EmployerProfile;
+import com.example.jobjays.model.JobPost;
 import com.example.jobjays.repository.ApplicantRepository;
 import com.example.jobjays.repository.EmployerRepository;
 import com.example.jobjays.repository.JobPostRepository;

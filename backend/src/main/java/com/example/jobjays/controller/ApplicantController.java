@@ -1,12 +1,12 @@
 package com.example.jobjays.controller;
 
 import com.example.jobjays.authentication.TokenGenerator;
-import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
-import com.example.jobjays.dto.profile.ResponseApplicantProfileDto;
-import com.example.jobjays.dto.profile.ResponseProfileDto;
 import com.example.jobjays.dto.applicant.CreateApplicantDto;
 import com.example.jobjays.dto.applicant.ResponseApplicantDto;
 import com.example.jobjays.dto.applicant.UpdateApplicantDto;
+import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
+import com.example.jobjays.dto.profile.ResponseApplicantProfileDto;
+import com.example.jobjays.dto.profile.ResponseProfileDto;
 import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
 import com.example.jobjays.model.JobPost;

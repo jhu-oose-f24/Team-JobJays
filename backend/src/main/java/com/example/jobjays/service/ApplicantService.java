@@ -6,6 +6,7 @@ import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
 import com.example.jobjays.repository.ApplicantRepository;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -20,13 +21,13 @@ public class ApplicantService {
   public Applicant addApplicant(CreateApplicantDto applicant) {
 
     Applicant newApplicant = new Applicant(
-            applicant.getUsername(),
-            applicant.getApplicantName(),
-            applicant.getPassword(),
-            applicant.getEmail(),
-            applicant.getEnabled(),
-            applicant.getResume(),
-            applicant.getVerificationToken()
+      applicant.getUsername(),
+      applicant.getApplicantName(),
+      applicant.getPassword(),
+      applicant.getEmail(),
+      applicant.getEnabled(),
+      applicant.getResume(),
+      applicant.getVerificationToken()
     );
     assert newApplicant.getProfile() != null;
     ApplicantProfile profile = newApplicant.getProfile();

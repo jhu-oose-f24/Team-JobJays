@@ -1,6 +1,5 @@
 package com.example.jobjays.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
 
 
@@ -25,13 +24,13 @@ public class Employer implements User {
   public Employer() {}
 
   public Employer(
-          String username,
-          String password,
-          String email,
-          String employerName,
-          String employerInfo,
-          Boolean enabled,
-          String token
+      String username,
+      String password,
+      String email,
+      String employerName,
+      String employerInfo,
+      Boolean enabled,
+      String token
 
   ) {
     this.username = username;
@@ -71,7 +70,7 @@ public class Employer implements User {
   }
 
 
-  String setPassword(String password) {
+   String setPassword(String password) {
     this.password = password;
     return password;
   }

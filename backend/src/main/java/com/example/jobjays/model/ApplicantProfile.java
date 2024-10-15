@@ -1,8 +1,8 @@
 package com.example.jobjays.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import jakarta.persistence.*;
-
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Transient;
 
 import java.util.ArrayList;
 import java.util.List;

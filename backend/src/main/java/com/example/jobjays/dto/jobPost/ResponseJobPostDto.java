@@ -12,7 +12,7 @@ public class ResponseJobPostDto {
   public Location location;
   public Double salary;
   public Double minSalary;
-  public Double maxSalary;
+    public Double maxSalary;
   public LocalDateTime postedDate;
   public LocalDateTime closedDate;
   public Integer numApplicants;

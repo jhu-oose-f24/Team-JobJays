@@ -1,12 +1,12 @@
 package com.example.jobjays.service;
 
+import com.example.jobjays.dto.jobPost.CreateJobPostDto;
+import com.example.jobjays.dto.jobPost.UpdateJobPostDto;
 import com.example.jobjays.kafka.JobPostPublisherService;
 import com.example.jobjays.model.Employer;
 import com.example.jobjays.model.EmployerProfile;
 import com.example.jobjays.model.JobPost;
-import com.example.jobjays.dto.jobPost.*;
 import com.example.jobjays.repository.JobPostRepository;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,19 +20,19 @@ public class JobPostService {
 
   public JobPostService(JobPostRepository jobPostRepository, JobPostPublisherService jobPostPublisherService) {
     this.jobPostRepository = jobPostRepository;
-    this.jobPostPublisherService = jobPostPublisherService;
+      this.jobPostPublisherService = jobPostPublisherService;
   }
 
   public JobPost addJobPost(CreateJobPostDto newJobPost, Employer employer) {
 
     JobPost jobPost = new JobPost(
-            newJobPost.getTitle(),
-            newJobPost.getDescription(),
-            newJobPost.getLocation(),
-            newJobPost.getMinSalary(),
-            newJobPost.getMaxSalary(),
-            newJobPost.getClosedDate(),
-            employer, newJobPost.getTags()
+      newJobPost.getTitle(),
+      newJobPost.getDescription(),
+      newJobPost.getLocation(),
+      newJobPost.getMinSalary(),
+      newJobPost.getMaxSalary(),
+      newJobPost.getClosedDate(),
+      employer, newJobPost.getTags()
     );
     employer.postJob(jobPost); //Adding jobPost to employer's list of jobPosts
 
