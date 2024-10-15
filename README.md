@@ -69,13 +69,9 @@ Follow the instructions below to quickly set up and run the backend services for
    This command will build and start all necessary containers (Kafka, Zookeeper, microservices, etc.).
 
 3. **Access Kafka UI**  
-   Once the services are running, you can monitor Kafka using Kafdrop by navigating to:
-
-   ```text
-   http://localhost:9000
-   ```
-
-   This will open a web interface where you can view Kafka topics, messages, brokers, and more.
+   Once the services are running, you can monitor Kafka using Kadeck
+   You can install it at https://www.kadeck.com/get-kadeck then with connecting to localhost:9092,
+   you will able to see topics, messages, clusters here.
 
 ## Stopping the Services
 

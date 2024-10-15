@@ -29,21 +29,33 @@ services:
       - zookeeper
     networks:
       - kafka-network
-
-  kafdrop:
-    image: obsidiandynamics/kafdrop
-    container_name: kafdrop
-    depends_on:
-      - kafka
-    ports:
-      - "9000:9000"
-    environment:
-      KAFKA_BROKERCONNECT: 'kafka:9092'
-      JVM_OPTS: '-Xms32M -Xmx256M -Dfetch.max.bytes=200000000 -Dmax.partition.fetch.bytes=200000000'
-    networks:
-      - kafka-network
-
-
-networks:
-  kafka-network:
-    driver: bridge
+#  kafka-ui:
+#    image: provectuslabs/kafka-ui:latest
+#    container_name: kafka-ui
+#    ports:
+#      - "9000:8080"  # Expose Kafka UI on port 9000
+#    environment:
+#      KAFKA_CLUSTERS_0_NAME: "local"
+#      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
+#      KAFKA_CLUSTERS_0_ZOOKEEPER: "zookeeper:2181"
+#    depends_on:
+#      - kafka
+#    networks:
+#      - kafka-network
+#  kafbat-ui:
+#    container_name: kafbat-ui
+#    image: ghcr.io/kafbat/kafka-ui:latest
+#    ports:
+#      - "9090:9090"
+#    environment:
+#      DYNAMIC_CONFIG_ENABLED: 'true'
+#      KAFKA_CLUSTERS_0_NAME: "local"
+#      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "localhost:9092"
+#      KAFKA_CLUSTERS_0_ZOOKEEPER: "localhost:2181"
+#    depends_on:
+#      - kafka
+#    networks:
+#      - kafka-network
+#networks:
+#  kafka-network:
+#    driver: bridge

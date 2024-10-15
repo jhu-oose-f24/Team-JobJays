@@ -32,3 +32,75 @@ Open your browser and go to:http://localhost:8080/
 
 The final result like the image below:
 ![img_1.png](img_1.png)
+
+### Running Backend Microservices Services on Windows, Mac, and Linux
+
+This project contains multiple microservices that need to be run simultaneously. We've provided simple batch and shell scripts to streamline this process for both Windows and Mac/Linux environments.
+
+#### Prerequisites:
+- **Java** and **Gradle** installed and configured.
+- Ensure `gradlew.bat` (Windows) and `gradlew` (Mac/Linux) are available in each service directory.
+
+#### Services to be run:
+- `applicant_job_matcher`
+- `employer_applicant_recommendation`
+- `notification_logger`
+- `notification_sender`
+- `preference_updater`
+
+---
+
+### For **Windows** Users
+
+#### Steps to Run All Services:
+
+1. **Navigate to the Backend Folder**  
+   Open **Command Prompt** and navigate to the `backend` directory:
+   ```batch
+   cd path\to\your\backend
+   ```
+
+2. **Run the Windows Script**  
+   Run the provided `run-services.bat` script to start all services:
+   ```batch
+   run-services.bat
+   ```
+
+   The script will:
+    - Change directory into each service folder.
+    - Execute `gradlew.bat run` to start the service.
+
+3. **Verify the Services**  
+   After running, check the logs to verify that all services have started successfully.
+
+---
+
+### For **Mac/Linux** Users
+
+#### Steps to Run All Services:
+
+1. **Open Terminal**  
+   Navigate to the `backend` directory:
+   ```bash
+   cd /backend (ignore this step if you are already in the backend directory)
+   ```
+
+2. **Run the Mac/Linux Script**  
+   Run the provided `run-services.sh` script to start all services:
+   ```bash
+   ./run-services.sh
+   ```
+
+   The script will:
+    - Change directory into each service folder.
+    - Execute `./gradlew run` to start the service.
+
+3. **Verify the Services**  
+   After running, check the logs to verify that all services have started successfully.
+
+---
+
+#### Additional Notes:
+- Ensure each service has its `gradlew.bat` or `gradlew` file depending on the operating system.
+- If any service fails to start, the script will stop, and an error message will be displayed.
+
