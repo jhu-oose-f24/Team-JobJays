@@ -129,7 +129,7 @@ const Preference: React.FC = () => {
                             setPreferences({
                                 ...preferences!,
                                 notificationPreference: {
-                                    ...preferences.notificationPreference,
+                                    ...preferences?.notificationPreference,
                                     notificationFrequency: e.target.value,
                                 },
                             })

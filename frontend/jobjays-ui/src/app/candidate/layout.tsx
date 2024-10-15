@@ -33,10 +33,12 @@
 //
 // export default DashboardLayout;
 // app/employer/layout.tsx
+"use client"
 import React from 'react';
 import styles from '@/styles/dashboard.module.css';
 import Link from "next/link";
 import { useParams } from "next/navigation";
+
 
 const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
     const { candidate_id } = useParams();
