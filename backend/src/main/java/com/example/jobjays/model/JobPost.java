@@ -2,10 +2,16 @@ package com.example.jobjays.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 
 @Entity
@@ -14,10 +20,17 @@ public class JobPost implements Post {
 
   private String title ;
   private String description;
-  private String location;
+  private Location location;
+  private Double salary;
   private Double minSalary;
   private Double maxSalary;
 
+  @Getter
+  @Setter
+  @ElementCollection
+  @CollectionTable(name = "job_tags", joinColumns = @JoinColumn(name = "job_id"))
+  @Column(name = "tag")
+  private List<String> tags;
   @Id
   @GeneratedValue
   private Long jobID;
@@ -30,17 +43,18 @@ public class JobPost implements Post {
   @ManyToOne
   public Employer employer;
 
-public JobPost() {}
+  public JobPost() {}
 
   public JobPost(
-      String title,
-      String description,
-      String location,
-      Double minSalary,
-      Double maxSalary,
-      LocalDateTime closedDate,
-      Employer employer
-      ) {
+          String title,
+          String description,
+          Location location,
+          Double minSalary,
+          Double maxSalary,
+          LocalDateTime closedDate,
+          Employer employer,
+          List<String> tags
+  ) {
 
     //this.jobID = UUID.randomUUID().toString();
     this.title = title;
@@ -52,9 +66,21 @@ public JobPost() {}
     this.closedDate = closedDate;
     this.employer = employer;
     this.applicants = new ArrayList<>();
+    this.tags =tags;
+    buildTags();
 
   }
 
+
+  private void buildTags() {
+    this.tags.add(title);
+    this.tags.add(location.getCity());
+    this.tags.add(location.getState());
+    this.tags.add(location.getCountry());
+    this.tags.add(employer.getProfile().getName());
+    this.tags.add(employer.getProfile().getIndustry());
+
+  }
   public String getTitle() {
     return title;
   }
@@ -73,11 +99,16 @@ public JobPost() {}
     return description;
   }
 
-  public String getLocation() {
+  public Location getLocation() {
     return location;
   }
 
-  public String setLocation(String location) {
+  @Override
+  public Double getSalary() {
+    return salary;
+  }
+
+  public Location setLocation(Location location) {
     this.location = location;
     return location;
   }
@@ -139,14 +170,14 @@ public JobPost() {}
   }
 
   /*
-    * Publish the job post, done by the Employer
+   * Publish the job post, done by the Employer
    */
   public void publish() {
     System.out.println("Job post published");
   }
 
   /*
-    * Close the job post, done by the Employer that published the job post
+   * Close the job post, done by the Employer that published the job post
    */
   public void close() {
     System.out.println("Job post closed");

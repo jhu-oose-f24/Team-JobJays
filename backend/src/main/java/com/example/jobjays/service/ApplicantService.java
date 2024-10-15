@@ -20,12 +20,13 @@ public class ApplicantService {
   public Applicant addApplicant(CreateApplicantDto applicant) {
 
     Applicant newApplicant = new Applicant(
-      applicant.getUsername(),
-      applicant.getPassword(),
-      applicant.getEmail(),
-      applicant.getEnabled(),
-      applicant.getResume(),
-      applicant.getVerificationToken()
+            applicant.getUsername(),
+            applicant.getApplicantName(),
+            applicant.getPassword(),
+            applicant.getEmail(),
+            applicant.getEnabled(),
+            applicant.getResume(),
+            applicant.getVerificationToken()
     );
     assert newApplicant.getProfile() != null;
     ApplicantProfile profile = newApplicant.getProfile();
@@ -35,10 +36,10 @@ public class ApplicantService {
     return applicantRepository.save(newApplicant);
   }
 
-//  public findByVerificationToken(String token){
-//    applicantRepository.
-//
-//  }
+  public Applicant findByVerificationToken(String token){
+    return applicantRepository.findByToken(token);
+
+  }
 
   //TODO CREATE A JOB APPLICATION SERVICE
 

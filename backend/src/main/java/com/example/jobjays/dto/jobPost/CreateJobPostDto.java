@@ -1,8 +1,12 @@
 package com.example.jobjays.dto.jobPost;
 
+import com.example.jobjays.model.Location;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CreateJobPostDto {
 
@@ -14,7 +18,11 @@ public class CreateJobPostDto {
   private String description;
 
   @NotBlank
-  private String location;
+  private Location location;
+
+  @Getter
+  @Setter
+  List<String> tags;
 
   @NotNull
   @Positive
@@ -29,7 +37,7 @@ public class CreateJobPostDto {
   private LocalDateTime closedDate; // Needs to be converted to LocalDateTime on frontend before passed
 
   //@NotBlank
-  private String username; // username of user is passed and used to find employer on backend (service)
+//  private String username; // username of user is passed and used to find employer on backend (service)
 
   public String getTitle() {
     return title;
@@ -39,7 +47,7 @@ public class CreateJobPostDto {
     return description;
   }
 
-  public String getLocation() {
+  public Location getLocation() {
     return location;
   }
 
@@ -55,7 +63,4 @@ public class CreateJobPostDto {
     return closedDate;
   }
 
-  public String getUsername() {
-    return username;
-  }
 }

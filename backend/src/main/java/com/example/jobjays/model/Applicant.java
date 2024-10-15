@@ -1,18 +1,16 @@
 package com.example.jobjays.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-
-import java.util.ArrayList;
-import java.util.UUID;
 
 @Entity
 public class Applicant implements User {
+
   private String username;
+  @Column(insertable=false, updatable=false)
+  private String name;
   private String password;
   private String email;
   private Boolean enabled;
@@ -28,13 +26,15 @@ public class Applicant implements User {
 
 
   public Applicant(
-      String username,
-      String password,
-      String email,
-      Boolean enabled,
-      String resume,
-      String token
+          String username,
+          String name,
+          String password,
+          String email,
+          Boolean enabled,
+          String resume,
+          String token
   ) {
+    this.name = name;
     this.username = username;
     this.password = password;
     this.email = email;
@@ -47,6 +47,11 @@ public class Applicant implements User {
 
   public Long getID() {
     return this.applicantId;
+  }
+
+  @Override
+  public String getName() {
+    return this.name;
   }
 
   public String getUsername() {

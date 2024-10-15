@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 
 public interface User {
+  String getName();
   String getUsername();
   String getPassword();
   String getEmail();
