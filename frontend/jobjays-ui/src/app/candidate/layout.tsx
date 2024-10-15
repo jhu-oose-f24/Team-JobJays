@@ -33,23 +33,26 @@
 //
 // export default DashboardLayout;
 // app/employer/layout.tsx
+"use client";
 import React from 'react';
 import styles from '@/styles/dashboard.module.css';
 import Link from "next/link";
+import { useParams } from "next/navigation";
 
 const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
+    const { candidate_id } = useParams();
     return (
         <div className={styles.dashboardContainer}>
             {/* Sidebar */}
             <aside className={styles.sidebar}>
                 <h2>Job Jays</h2>
                 <nav className={styles.navMenu}>
-                    <Link href={"/candidate/dashboard"} className={styles.navItem}> Overview</Link>
-                    <Link href={"/candidate/appliedJobs"} className={styles.navItem}> Applied Jobs</Link>
+                    <Link href={`/candidate/${candidate_id}/dashboard`} className={styles.navItem}> Overview</Link>
+                    <Link href={`/candidate/${candidate_id}/appliedJobs`} className={styles.navItem}> Applied Jobs</Link>
 
-                    <Link href={"/candidate/favoriteJobs"} className={styles.navItem}>Favorite Jobs</Link>
-                    <Link href="/candidate/jobAlerts" className={styles.navItem}>Jobs Alerts</Link>
-                    <Link href={"/candidate/settings"} className={styles.navItem}> Settings</Link>
+                    <Link href={`/candidate/${candidate_id}/favoriteJobs`} className={styles.navItem}>Favorite Jobs</Link>
+                    <Link href={`/candidate/${candidate_id}/jobAlerts`} className={styles.navItem}>Jobs Alerts</Link>
+                    <Link href={`/candidate/${candidate_id}/settings`} className={styles.navItem}> Settings</Link>
                 </nav>
             </aside>
 

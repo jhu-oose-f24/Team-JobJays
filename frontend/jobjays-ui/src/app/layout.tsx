@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Footer from "@/components/Footer";
+import {Toaster} from "@/components/ui/toaster";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,6 +39,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer /> {/* Footer 在页面内容之后 */}
+        <Toaster />
       </body>
     </html>
   );

@@ -10,12 +10,11 @@ import com.example.jobjays.model.Employer;
 import com.example.jobjays.model.EmployerProfile;
 import com.example.jobjays.model.JobPost;
 import com.example.jobjays.service.EmployerService;
-import org.springframework.http.HttpHeaders;
+import com.example.jobjays.service.ResponseMapperService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,9 +23,11 @@ import java.util.stream.Collectors;
 public class EmployerController {
 
   private final EmployerService employerService;
+  private final ResponseMapperService responseMapperService;
 
-  public EmployerController(EmployerService employerService) {
+  public EmployerController(EmployerService employerService, ResponseMapperService responseMapperService) {
     this.employerService = employerService;
+    this.responseMapperService = responseMapperService;
   }
 
   @PostMapping
@@ -72,14 +73,14 @@ public class EmployerController {
   }
 
 
-//  @GetMapping("/profile/all")
-//  public ResponseEntity<List<ResponseProfileDto>> getAllEmployerProfiles() {
-//    List<EmployerProfile> employerProfiles = employerService.findAllEmployerProfiles();
-//    List<ResponseProfileDto> responseList = employerProfiles.stream()
-//        .map(this::mapToResponseProfileDto)
-//        .collect(Collectors.toList());
-//    return ResponseEntity.ok(responseList);
-//  }
+  @GetMapping("/profile/all")
+  public ResponseEntity<List<ResponseProfileDto>> getAllEmployerProfiles() {
+    List<EmployerProfile> employerProfiles = employerService.findAllEmployerProfiles();
+    List<ResponseProfileDto> responseList = employerProfiles.stream()
+        .map(this::mapToResponseProfileDto)
+        .collect(Collectors.toList());
+    return ResponseEntity.ok(responseList);
+  }
 
   @GetMapping
   public ResponseEntity<List<ResponseEmployerDto>> getAllEmployers() {
@@ -100,46 +101,38 @@ public class EmployerController {
       return ResponseEntity.notFound().build();
     }
     ResponseEmployerProfileDto responseEmployerProfileDto = mapToResponseProfileDto(employerProfile);
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employerProfile.getUser().getID()));
     return new ResponseEntity<>(responseEmployerProfileDto, HttpStatus.OK);
   }
 
 
 
+//  @GetMapping("/profile/search/name")
+//  public ResponseEntity<List<ResponseProfileDto>> getEmployersByName(@RequestParam("name") String name) {
+//    List<EmployerProfile> employerProfiles = employerService.findEmployerProfilesByName(name);
+//    List<ResponseProfileDto> responseList = employerProfiles.stream()
+//        .map(this::mapToResponseProfileDto)
+//        .collect(Collectors.toList());
+//    return ResponseEntity.ok(responseList);
+//  }
+
   @GetMapping("/profile/search/name")
-  public ResponseEntity<List<ResponseProfileDto>> getEmployersByName(@RequestParam("name") String name) {
-    List<EmployerProfile> employerProfiles = employerService.findEmployerProfilesByName(name);
-    List<ResponseProfileDto> responseList = employerProfiles.stream()
-        .map(this::mapToResponseProfileDto)
+  public ResponseEntity<List<ResponseEmployerDto>> getEmployersByName(@RequestParam("name") String name) {
+    List<Employer> employers = employerService.findEmployersByName(name);
+    List<ResponseEmployerDto> responseList = employers.stream()
+        .map(this::mapToResponseEmployerDto)
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
 
 
 
-  //TODO can refactor into a class
-  private ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
-    ResponseJobPostDto responseJobPostDto = new ResponseJobPostDto();
-    responseJobPostDto.id = jobPost.getID();
-    responseJobPostDto.setCompanyName(jobPost.getEmployer().getProfile().getName());
-    responseJobPostDto.title = jobPost.getTitle();
-    responseJobPostDto.description = jobPost.getDescription();
-    responseJobPostDto.location = jobPost.getLocation();
-    responseJobPostDto.salary = jobPost.getSalary();
-    responseJobPostDto.postedDate = jobPost.getPostedDate(); // Assuming this exists in JobPost
-    responseJobPostDto.closedDate = jobPost.getClosedDate();
-    responseJobPostDto.numApplicants = jobPost.getApplicants().size();
-    return responseJobPostDto;
-  }
 
   private ResponseEmployerProfileDto mapToResponseProfileDto(EmployerProfile profile) {
     ResponseEmployerProfileDto responseProfileDto = new ResponseEmployerProfileDto();
     responseProfileDto.name = profile.getName();
     responseProfileDto.bio = profile.getBio();
     responseProfileDto.jobPostsSize = profile.getJobPosts().size();
-    responseProfileDto.jobPosts = profile.getJobPosts().stream().map(this::mapToResponseJobPostDto).collect(Collectors.toList());
-
+    responseProfileDto.jobPosts = profile.getJobPosts().stream().map(responseMapperService::mapToResponseJobPostDto).collect(Collectors.toList());
     return responseProfileDto;
   }
 

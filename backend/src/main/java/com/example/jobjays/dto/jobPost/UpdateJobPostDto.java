@@ -15,8 +15,10 @@ public class UpdateJobPostDto {
   Location location;
 
   @Positive
-  @Min(10000) // Minimum salary is 10,000
-  Double salary;
+  Double minSalary;
+
+  @Positive
+  Double maxSalary;
 
   @Future
   LocalDateTime closedDate; // Needs to be converted to LocalDateTime on frontend before passed
@@ -34,8 +36,12 @@ public class UpdateJobPostDto {
     return location;
   }
 
-  public Double getSalary() {
-    return salary;
+  public Double getMinSalary() {
+    return minSalary;
+  }
+
+  public Double getMaxSalary() {
+    return maxSalary;
   }
 
   public LocalDateTime getClosedDate() {

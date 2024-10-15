@@ -2,78 +2,52 @@
 
 import React, {useEffect, useState } from 'react';
 import styles from '@/styles/my-jobs.module.css';
-import useSWR from "swr";
 import {EmployerProfile, JobPost} from "@/lib/types";
-
-const fetcher = (url: string) => fetch(url).then((res) => res.json());
-function useUser(id: number) {
-    {/* Makes a call to get an EmployerProfile and render jobPosts from there */}
-    {/* Other calls from the JobPost Controller will be for applicants to see all jobs */}
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${id}`, fetcher)
-
-    return {
-        EmployerProfile: data as EmployerProfile,
-        isLoading,
-        isError: error
-    }
-}
-function calculateDaysRemaining(endDate: string): number {
-    const today = new Date();
-    const end = new Date(endDate);
-    const diffTime = end.getTime() - today.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
-}
-
-function addJobAttributes(job: JobPost): JobPost {
-    // Assuming job has a `postingEndDate` attribute, calculate days remaining
-    //console.log(typeof new Date(job.closedDate));
-    const daysRemaining = calculateDaysRemaining(new Date(job.closedDate).toISOString());
-
-    // Assign values for type and status as examples
-    const jobType = job.type || 'Full Time'; // Default to Full Time if not available
-    const jobStatus = daysRemaining > 0 ? 'Active' : 'Expired';
-
-    return {
-        ...job,
-        daysRemaining,
-        type: jobType,
-        status: jobStatus
-    };
-}
-interface MyJobsProps {
-    id: string;
-}
-const MyJobs: React.FC<MyJobsProps> = ({id}) => {
-    const { EmployerProfile, isLoading, isError} = useUser(Number(id));
+import {addJobAttributes, useUser} from '@/lib/api';
+import { useParams } from 'next/navigation';
+import Link from "next/link";
+import {useRouter} from "next/navigation";
+import SkeletonMyJobs from "@/components/employer/SkeletonMyJobs";
 
 
+const MyJobs: React.FC = () => {
+    const { employerId, jobPostId } = useParams<{employerId:string; jobPostId:string}>();
+    const { EmployerProfile, isLoading, isError} = useUser(Number(employerId));
     const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
+    const router = useRouter();
+
     useEffect(() => {
-        // Ensure EmployerProfile is not undefined or null
         if (EmployerProfile && EmployerProfile.jobPosts) {
-            // Add additional attributes to each job post
-
+            // Add additional attributes to each job post using the addJobAttributes function
             const updatedJobs = EmployerProfile.jobPosts.map(addJobAttributes);
-            setJobPosts(updatedJobs);
+            if (JSON.stringify(updatedJobs) !== JSON.stringify(jobPosts)) {
+                setJobPosts(updatedJobs);
+            }
 
-            //setJobPosts(EmployerProfile.jobPosts);
         }
     }, [EmployerProfile]);
+
     const [jobStatusFilter, setJobStatusFilter] = useState('all');
-
-
     const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setJobStatusFilter(event.target.value);
     };
-
     const filteredJobs: JobPost[] = jobPosts.filter((job) =>
         jobStatusFilter === 'all' ? true : job.status.toLowerCase() === jobStatusFilter
+
     );
+
 
     const handleActionClick = (jobId: number, action: string) => {
         console.log(`Job ${jobId} action: ${action}`);
+
     };
-    if (isLoading) return <div>Loading...</div>;
+
+    const handleViewJobDetail = (jobId: number) => {
+        router.push(`/post/jobs/${jobId}`);
+    }
+
+
+    if (isLoading) return <SkeletonMyJobs />;
     if (isError) return <div>Error loading data.</div>;
 
     return (
@@ -101,7 +75,7 @@ const MyJobs: React.FC<MyJobsProps> = ({id}) => {
                 {/* Job List */}
                 <div className={styles.jobList}>
                     {filteredJobs.map((job) => (
-                        <div key={job.jobID} className={styles.jobRow}>
+                        <div key={job.id} className={styles.jobRow}>
                             <div className={styles.jobDetails}>
                                 <h4>{job.title}</h4>
                                 <p>{job.type} &bull; {job.daysRemaining > 0 ? `${job.daysRemaining} days remaining` : 'Expired'}</p>
@@ -112,7 +86,7 @@ const MyJobs: React.FC<MyJobsProps> = ({id}) => {
                                 ) : (
                                     <span className={styles.expiredStatus}>Expired</span>
                                 )}
-                                <p>{job.applications} Applications</p>
+                                <p>{job.numApplicants} Applications</p>
                             </div>
                             <div className={styles.jobActions}>
                                 <button className={styles.viewApplicationsButton}>
@@ -122,13 +96,13 @@ const MyJobs: React.FC<MyJobsProps> = ({id}) => {
                                     <button className={styles.moreActionsButton}>⋮</button>
                                     <div className={styles.moreActionsMenu}>
                                         {job.status === 'Active' && (
-                                            <button onClick={() => handleActionClick(job.jobID, 'promote')}>
+                                            <button onClick={() => handleActionClick(job.id, 'promote')}>
                                                 Promote Job
                                             </button>
                                         )}
-                                        <button onClick={() => handleActionClick(job.jobID, 'view')}>View Detail</button>
-                                        {job.status === 'Expired' && (
-                                            <button onClick={() => handleActionClick(job.jobID, 'expire')}>
+                                        <button onClick={() => handleViewJobDetail(job.id)}>View Detail</button>
+                                        {job.status === 'Active' && (
+                                            <button onClick={() => handleActionClick(job.id, 'expire')}>
                                                 Make it Expire
                                             </button>
                                         )}

@@ -10,12 +10,11 @@ import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
 import com.example.jobjays.model.JobPost;
 import com.example.jobjays.service.ApplicantService;
-import org.springframework.http.HttpHeaders;
+import com.example.jobjays.service.ResponseMapperService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,9 +23,11 @@ import java.util.stream.Collectors;
 public class ApplicantController {
 
   private final ApplicantService applicantService;
+  private final ResponseMapperService responseMapperService;
 
-  public ApplicantController(ApplicantService applicantService) {
+  public ApplicantController(ApplicantService applicantService, ResponseMapperService responseMapperService) {
     this.applicantService = applicantService;
+    this.responseMapperService = responseMapperService;
   }
 
   @PostMapping
@@ -34,8 +35,6 @@ public class ApplicantController {
     Applicant applicant = applicantService.addApplicant(createApplicantDto);
     //return ResponseEntity.ok(mapToResponseApplicantDto(applicant));
     ResponseApplicantDto responseApplicantDto = mapToResponseApplicantDto(applicant);
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setLocation(URI.create("http://localhost:8080/api/applicants/profile/" + applicant.getID()));
     return new ResponseEntity<>(responseApplicantDto, HttpStatus.CREATED);
   }
 
@@ -89,8 +88,6 @@ public class ApplicantController {
     }
 
     ResponseApplicantProfileDto responseApplicantProfileDto = mapToResponseProfileDto(applicantProfile);
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setLocation(URI.create("http://localhost:8080/api/applicants/profile/" + applicantProfile.getUser().getID()));
     return new ResponseEntity<>(responseApplicantProfileDto, HttpStatus.OK);
   }
 
@@ -117,20 +114,22 @@ public class ApplicantController {
   //TODO: create a job application endpoint
 
   //TODO: refactor into class
-  private ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
+  public ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
     ResponseJobPostDto responseJobPostDto = new ResponseJobPostDto();
     responseJobPostDto.id = jobPost.getID();
+    responseJobPostDto.setCompanyName(jobPost.getEmployer().getProfile().getName());
     responseJobPostDto.title = jobPost.getTitle();
     responseJobPostDto.description = jobPost.getDescription();
     responseJobPostDto.location = jobPost.getLocation();
-    responseJobPostDto.salary = jobPost.getSalary();
-    responseJobPostDto.postedDate = jobPost.getPostedDate(); // Assuming this exists in JobPost
+    responseJobPostDto.minSalary = jobPost.getMinSalary();
+    responseJobPostDto.maxSalary = jobPost.getMaxSalary();
+    responseJobPostDto.postedDate = jobPost.getPostedDate();
     responseJobPostDto.closedDate = jobPost.getClosedDate();
     responseJobPostDto.numApplicants = jobPost.getApplicants().size();
     return responseJobPostDto;
   }
 
-  private ResponseApplicantProfileDto mapToResponseProfileDto(ApplicantProfile profile) {
+   ResponseApplicantProfileDto mapToResponseProfileDto(ApplicantProfile profile) {
     ResponseApplicantProfileDto responseProfileDto = new ResponseApplicantProfileDto();
     responseProfileDto.name = profile.getName();
     responseProfileDto.bio = profile.getBio();
