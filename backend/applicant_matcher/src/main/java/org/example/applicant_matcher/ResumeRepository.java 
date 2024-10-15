@@ -1,0 +1,7 @@
+package org.example.applicant_matcher;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ResumeRepository extends JpaRepository<Resume, Long> {
+    // 定义一些数据库查询方法
+}
