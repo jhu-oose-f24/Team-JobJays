@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 
 @Entity
 public class Employer implements User {
+  @Column(insertable=false, updatable=false)
+  private String name;
   private String username;
   private String password;
   private String email;
@@ -39,6 +41,15 @@ public class Employer implements User {
 
   public Long getID() {
     return this.employer_id;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public String getName() {
+    return name;
   }
 
   public String getUsername() {

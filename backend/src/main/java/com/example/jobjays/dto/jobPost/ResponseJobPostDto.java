@@ -1,6 +1,6 @@
 package com.example.jobjays.dto.jobPost;
 
-import com.example.jobjays.model.JobPost;
+import com.example.jobjays.model.Location;
 
 import java.time.LocalDateTime;
 
@@ -9,9 +9,8 @@ public class ResponseJobPostDto {
   public String companyName;
   public String title;
   public String description;
-  public String location;
-  public Double minSalary;
-  public Double maxSalary;
+  public Location location;
+  public Double salary;
   public LocalDateTime postedDate;
   public LocalDateTime closedDate;
   public Integer numApplicants;
@@ -21,6 +20,4 @@ public class ResponseJobPostDto {
     this.companyName = companyName;
     return companyName;
   }
-
-
 }
