@@ -1,4 +1,5 @@
 // src/components/PostJob.tsx
+"use client";
 import styles from '@/styles/postJob.module.css';
 import {createJobPost, fetchJobPost, updateJobPost} from "@/lib/api";
 import {useParams} from "next/navigation";

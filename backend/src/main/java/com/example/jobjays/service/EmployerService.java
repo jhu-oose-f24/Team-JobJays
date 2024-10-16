@@ -60,6 +60,10 @@ public class EmployerService {
       profile.setName(newEmployer.getEmployerInfo());
     }
 
+    if (newEmployer.getEnabled() != null) {
+      employerToUpdate.setEnabled(newEmployer.getEnabled());
+    }
+
 
     return employerRepository.save(employerToUpdate);
   }

@@ -2,6 +2,8 @@ package com.example.jobjays.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
@@ -11,6 +13,8 @@ public class Employer implements User {
   private String username;
   private String password;
   private String email;
+  @Setter
+  @Getter
   private Boolean enabled;
   private String token;
   @Id

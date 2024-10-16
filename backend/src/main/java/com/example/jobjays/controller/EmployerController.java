@@ -14,6 +14,8 @@ import com.example.jobjays.model.EmployerProfile;
 import com.example.jobjays.model.JobPost;
 import com.example.jobjays.service.EmployerService;
 import com.example.jobjays.service.ResponseMapperService;
+import com.example.jobjays.wrapper.EmailSendWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +29,10 @@ public class EmployerController {
 
   private final EmployerService employerService;
   private final ResponseMapperService responseMapperService;
+
+
+  @Autowired
+  private EmailSendWrapper emailSendWrapper;
 
   public EmployerController(EmployerService employerService, ResponseMapperService responseMapperService) {
     this.employerService = employerService;
@@ -58,6 +64,7 @@ public class EmployerController {
     createEmployerDto.setEnabled(false); // User is disabled until they verify
 
     Employer employer = employerService.addEmployer(createEmployerDto);
+    emailSendWrapper.sendVerificationEmail(employer.getEmail(), token);
     ResponseEmployerDto responseEmployerDto = mapToResponseEmployerDto(employer);
 //    HttpHeaders headers = new HttpHeaders();
 //    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employer.getID()));

@@ -5,19 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ea11febc-5bc8-44ab-97c3-53913a6564eb" name="Changes" comment="fix">
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/AuthController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/EmployerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/EmployerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/JobPostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/JobPostController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/applicant/LoginApplicationDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/applicant/LoginApplicationDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/ResponseEmployerDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/ResponseEmployerDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/UpdateEmployerDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/UpdateEmployerDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/kafka/BulkPreferencePublisherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/kafka/BulkPreferencePublisherService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/repository/EmployerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/repository/EmployerRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/model/Employer.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/model/Employer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/service/EmployerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/service/EmployerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/CreateAccount.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/CreateAccount.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/Login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/PostJob.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/PostJob.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +36,18 @@
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "luojiaxuan"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/jhu-oose-f24/Team-JobJays.git",
+    "accountId": "b1bf94b1-1866-4a7c-9e82-d2392765814e"
+  }
+}]]></component>
   <component name="KubernetesApiPersistence">{}</component>
   <component name="KubernetesApiProvider">{
   &quot;isMigrated&quot;: true
@@ -73,7 +77,7 @@
     "Spring Boot.JobJaysApiApplication.executor": "Run",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/enochappiah/school-tings/JHU/senior-year/fall/OOSE/Team-JobJays",
+    "last_opened_file_path": "/Users/luojiaxuan/IdeaProjects/Team-JobJays",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -87,7 +91,7 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager" selected="HTTP Request.generated-requests | #4">
+  <component name="RunManager" selected="Spring Boot.JobJaysApiApplication">
     <configuration name="generated-requests | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="3" requestIdentifier="#3" runType="Run single request">
       <method v="2" />
     </configuration>
@@ -129,8 +133,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="HTTP Request.generated-requests | #4" />
         <item itemvalue="Spring Boot.JobJaysApiApplication" />
+        <item itemvalue="HTTP Request.generated-requests | #4" />
         <item itemvalue="HTTP Request.generated-requests | #3" />
         <item itemvalue="Docker.backend: Compose Deployment" />
       </list>
@@ -155,6 +159,7 @@
       <workItem from="1727040533601" duration="997000" />
       <workItem from="1727896863829" duration="663000" />
       <workItem from="1728446894063" duration="2311000" />
+      <workItem from="1729106396111" duration="2757000" />
     </task>
     <servers />
   </component>
