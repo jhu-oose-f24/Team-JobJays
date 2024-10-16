@@ -32,7 +32,8 @@ The proposed solution is to develop a web application that connects job seekers 
 - As a user looking for a job, I want to be able to research different companies (Company A, B, & C) and using artificial intelligence, receive a suggestion as to which would be best for me so that I can narrow down the opportunities available to me. 
 - As an employer, I want to be able to directly message users so that I can interact with those who are a good fit and encourage them to apply to the opportunities we have available. 
 - As an employer, I want to be able to see an activity log for jobseekers so I can learn more about things they do that won't necessarily be found on a resume. 
-- As a jobseeker, I want to be able to see who views my user profile so I can get a sense of which companies are interested in me. 
+- As a jobseeker, I want to be able to see who views my user profile so I can get a sense of which companies are interested in me.
+- As an employer I want to see insights on the posts I make such as how many users have viewed the job posts/company profile, so I can identify room for improvements on my posts/profile to encourage more user traffic and entice more candidates 
 
 ## Non-functional Requirements
 - The app interface should be user-friendly and only require a maximum of 5 minutes for a new user to fully adjust and navigate. This includes completing essential tasks such as registering, editing their profile, and searching for jobs without confusion.
