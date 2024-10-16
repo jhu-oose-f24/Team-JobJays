@@ -24,6 +24,11 @@ public class EmployerService {
     this.applicantRepository = applicantRepository;
   }
 
+
+  public Employer findByVerificationToken(String token){
+    return employerRepository.findByToken(token);
+
+  }
   public Employer addEmployer(CreateEmployerDto employer) {
 
     Employer newEmployer = new Employer(

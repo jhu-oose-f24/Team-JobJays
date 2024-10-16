@@ -1,5 +1,6 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.authentication.LoginRequired;
 import com.example.jobjays.dto.jobPost.CreateJobPostDto;
 import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
 import com.example.jobjays.dto.jobPost.UpdateJobPostDto;
@@ -34,6 +35,7 @@ public class JobPostController {
 
 
   @PostMapping("/companies/profile/{employerId}/post")
+  @LoginRequired
   public ResponseEntity<ResponseJobPostDto> addJobPost(@Valid @RequestBody CreateJobPostDto newJobPost, @PathVariable Long employerId) {
     Employer employer = employerService.findEmployerById(employerId);
     if (employer == null) {

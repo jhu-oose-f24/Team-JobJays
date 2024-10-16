@@ -1,11 +1,14 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.authentication.TokenGenerator;
+import com.example.jobjays.dto.applicant.UpdateApplicantDto;
 import com.example.jobjays.dto.profile.ResponseEmployerProfileDto;
 import com.example.jobjays.dto.profile.ResponseProfileDto;
 import com.example.jobjays.dto.employer.CreateEmployerDto;
 import com.example.jobjays.dto.employer.ResponseEmployerDto;
 import com.example.jobjays.dto.employer.UpdateEmployerDto;
 import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
+import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.Employer;
 import com.example.jobjays.model.EmployerProfile;
 import com.example.jobjays.model.JobPost;
@@ -30,8 +33,30 @@ public class EmployerController {
     this.responseMapperService = responseMapperService;
   }
 
+
+  @GetMapping("/verify")
+  public String verifyUser(@RequestParam("token") String token) {
+    Employer employer = employerService.findByVerificationToken(token);
+    UpdateEmployerDto user = new UpdateEmployerDto();
+
+    if (employer == null) {
+      return "Invalid token!";
+    }
+
+    user.setEnabled(true); // Enable the user
+    user.setToken(null); // Clear the token
+    employerService.updateEmployer(user,employer.getID());
+
+    return "Email verified successfully! You can now log in.";
+  }
+
   @PostMapping
   public ResponseEntity<ResponseEmployerDto> addEmployer(@RequestBody CreateEmployerDto createEmployerDto) {
+    createEmployerDto.setEnabled(false);
+    String token = TokenGenerator.generateToken();
+    createEmployerDto.setVerificationToken(token);
+    createEmployerDto.setEnabled(false); // User is disabled until they verify
+
     Employer employer = employerService.addEmployer(createEmployerDto);
     ResponseEmployerDto responseEmployerDto = mapToResponseEmployerDto(employer);
 //    HttpHeaders headers = new HttpHeaders();

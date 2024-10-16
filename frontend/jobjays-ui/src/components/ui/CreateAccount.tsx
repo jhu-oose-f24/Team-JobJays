@@ -67,8 +67,9 @@ export default function CreateAccount() {
         const employerData = await response.json();
         console.log(employerData);
         const employerId = employerData.employer_id;
-        alert("Employer account created successfully!"); // could change to toast to look cleaner
-        router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
+        alert("Signup successful! Check your email for verification.");
+        router.push(`signin`);
+        //router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
@@ -114,7 +115,7 @@ export default function CreateAccount() {
           console.log(candidateData);
           const candidateId = candidateData.applicantId;
           alert("Signup successful! Check your email for verification.");
-
+          router.push(`signin`);
           //router.push(`candidate/${candidateId}/dashboard`);
         } else {
           const errorData = await response.json();

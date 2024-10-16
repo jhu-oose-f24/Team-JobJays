@@ -22,12 +22,4 @@ public class LoginApplicationDto {
 
   String resume;
 
-
-
-  @NotBlank
-  String applicantName;
-
-  @NotBlank
-  String applicantInfo;
-
 }

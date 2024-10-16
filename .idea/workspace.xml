@@ -4,26 +4,57 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ea11febc-5bc8-44ab-97c3-53913a6564eb" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/docker-compose.yml" afterDir="false" />
+    <list default="true" id="ea11febc-5bc8-44ab-97c3-53913a6564eb" name="Changes" comment="fix">
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/EmployerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/EmployerController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/JobPostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/controller/JobPostController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/applicant/LoginApplicationDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/applicant/LoginApplicationDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/ResponseEmployerDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/ResponseEmployerDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/UpdateEmployerDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/dto/employer/UpdateEmployerDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/kafka/BulkPreferencePublisherService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/kafka/BulkPreferencePublisherService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/repository/EmployerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/repository/EmployerRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/service/EmployerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/backend/src/main/java/com/example/jobjays/service/EmployerService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/CreateAccount.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/CreateAccount.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/Login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/jobjays-ui/src/components/ui/Login.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand />
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="KubernetesApiPersistence"><![CDATA[{}]]></component>
-  <component name="KubernetesApiProvider"><![CDATA[{
-  "isMigrated": true
-}]]></component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
   <component name="ProjectId" id="2mRXnng3olVeMI2rGgYH0gXsoZx" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -32,8 +63,15 @@
   "keyToString": {
     "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "Docker.backend: Compose Deployment.executor": "Run",
+    "HTTP Request.generated-requests | #3.executor": "Run",
+    "HTTP Request.generated-requests | #4.executor": "Run",
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "applicant-notification-service",
+    "Spring Boot.JobJaysApiApplication.executor": "Run",
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/enochappiah/school-tings/JHU/senior-year/fall/OOSE/Team-JobJays",
     "node.js.detected.package.eslint": "true",
@@ -45,12 +83,34 @@
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.52068967",
     "settings.editor.selected.configurable": "preferences.lookFeel",
+    "ts.external.directory.path": "/Users/luojiaxuan/IdeaProjects/Team-JobJays/frontend/jobjays-ui/node_modules/typescript/lib",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="HTTP Request.generated-requests | #4">
+    <configuration name="generated-requests | #3" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="3" requestIdentifier="#3" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="generated-requests | #4" type="HttpClient.HttpRequestRunConfigurationType" factoryName="HTTP Request" temporary="true" nameIsGenerated="true" path="$APPLICATION_CONFIG_DIR$/scratches/generated-requests.http" index="4" requestIdentifier="#4" runType="Run single request">
+      <method v="2" />
+    </configuration>
+    <configuration name="JobJaysApiApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="JobJays" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.example.jobjays.JobJaysApiApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.example.jobjays.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
-      <deployment type="docker-compose.yml" />
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
       <method v="2" />
     </configuration>
     <configuration name="backend: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
@@ -61,8 +121,17 @@
       </deployment>
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Docker.backend: Compose Deployment" />
+      <item itemvalue="HTTP Request.generated-requests | #3" />
+      <item itemvalue="HTTP Request.generated-requests | #4" />
+      <item itemvalue="Spring Boot.JobJaysApiApplication" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="HTTP Request.generated-requests | #4" />
+        <item itemvalue="Spring Boot.JobJaysApiApplication" />
+        <item itemvalue="HTTP Request.generated-requests | #3" />
         <item itemvalue="Docker.backend: Compose Deployment" />
       </list>
     </recent_temporary>
@@ -91,5 +160,33 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="CUSTOM_BOOLEAN_PROPERTIES">
+                <map>
+                  <entry key="Show.Git.Branches" value="true" />
+                </map>
+              </option>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
