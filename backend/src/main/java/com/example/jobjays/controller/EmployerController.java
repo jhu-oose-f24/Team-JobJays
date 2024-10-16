@@ -64,7 +64,7 @@ public class EmployerController {
     createEmployerDto.setEnabled(false); // User is disabled until they verify
 
     Employer employer = employerService.addEmployer(createEmployerDto);
-    emailSendWrapper.sendVerificationEmail(employer.getEmail(), token);
+    emailSendWrapper.sendVerificationEmailForEmployer(employer.getEmail(), token);
     ResponseEmployerDto responseEmployerDto = mapToResponseEmployerDto(employer);
 //    HttpHeaders headers = new HttpHeaders();
 //    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employer.getID()));
