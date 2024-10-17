@@ -1,12 +1,12 @@
 "use client";
 import React, { useState } from 'react';
 import styles from '@/styles/profile.module.css';
-import Image from "next/image";
+// import Image from "next/image";
 import SocialMediaInfo from "@/components/employer/SocialMediaInfo";
 import AccountSettings from "@/components/candidate/AccountSettings";
 import ProfileData from "@/components/candidate/Profile";
 import PersonalSettings from "@/components/candidate/PersonalSettings";
-import {useApplicant} from "@/lib/api";
+// import {useApplicant} from "@/lib/api";
 
 
 interface DashboardPageProps {

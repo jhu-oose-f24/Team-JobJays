@@ -7,8 +7,8 @@ import {NextRequest} from "next/server";
 
 const MySearchPage = (request:NextRequest) => {
 
-    const searchParams = request.nextUrl.searchParams;
-    const query = searchParams.get("query");
+    // const searchParams = request.nextUrl.searchParams;
+    // const query = searchParams.get("query");
 
     return <SearchResults searchResults={[]}/>;
 };
