@@ -1,11 +1,11 @@
 "use client";
-import React, {useState} from 'react';
-import { useParams } from "next/navigation";
-import { fetchJobPost } from '@/lib/api'; // Use your custom hook or fetch logic
-import styles from '@/styles/postJob.module.css';
+import React from 'react';
+// import { useParams } from "next/navigation";
+// import { fetchJobPost } from '@/lib/api'; // Use your custom hook or fetch logic
+// import styles from '@/styles/postJob.module.css';
 import JobDetails from "@/components/jobPost/JobDetails";
 import RelatedJobs from "@/components/jobPost/RelatedJobs";
-import ContactUs from "@/components/ContactUs";
+// import ContactUs from "@/components/ContactUs";
 import Link from "next/link";
 
 const JobDetailPage: React.FC = () => {

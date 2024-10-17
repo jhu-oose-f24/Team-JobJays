@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from '@/styles/account-settings.module.css';
+// import styles from '@/styles/account-settings.module.css';
 
 
 interface DashboardPageProps {
@@ -18,7 +18,7 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
         { id: 3, name: 'Visual Designer', size: '1.3 MB' },
     ]);
 
-    const handleFileChange = (event) => {
+    const handleFileChange = (event: any) => {
         const file = event.target.files[0];
         if (file) {
             setProfilePicture(URL.createObjectURL(file));
