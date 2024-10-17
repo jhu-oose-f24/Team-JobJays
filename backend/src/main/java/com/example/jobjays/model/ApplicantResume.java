@@ -18,7 +18,6 @@ public class ApplicantResume {
     private Long resume_id;
     private String resumeName;
     @Lob
-    @Column(name = "file_data", nullable = false)
     private byte[] fileData;
     private String userName;
     private Long userId;
