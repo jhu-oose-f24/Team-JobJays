@@ -128,6 +128,8 @@ public class JobPostService {
   public JobPost addApplicantToJobPost(JobPost jobPost, Applicant applicant) {
 
     jobPost.addApplicant(applicant);
+    ApplicantProfile profile = applicant.getProfile();
+    profile.getAppliedJobs().add(jobPost);
     return jobPostRepository.save(jobPost);
 
   }
