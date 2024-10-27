@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Embeddable
 public class ApplicantProfile implements Profile {
@@ -16,14 +18,14 @@ public class ApplicantProfile implements Profile {
 
   @Transient
   private Applicant applicant;
-  @ManyToMany
-  private List<JobPost> appliedJobs;
+  @ManyToMany(mappedBy = "applicants")
+  private Set<JobPost> appliedJobs;
 
   public ApplicantProfile() {}
 
   public ApplicantProfile(Applicant applicant, String name, String bio) {
     this.applicant = applicant;
-    this.appliedJobs = new ArrayList<>();
+    this.appliedJobs = new HashSet<>();
     this.name = name;
     this.bio = bio;
   }
@@ -52,7 +54,7 @@ public class ApplicantProfile implements Profile {
     return bio;
   }
 
-  public List<JobPost> getAppliedJobs() {
+  public Set<JobPost> getAppliedJobs() {
     return this.appliedJobs;
   }
 

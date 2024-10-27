@@ -1,7 +1,7 @@
 // src/components/PostJob.tsx
 "use client";
 import styles from '@/styles/postJob.module.css';
-import {createJobPost, fetchJobPost, updateJobPost} from "@/lib/api";
+import {createJobPost} from "@/lib/api";
 import {useParams} from "next/navigation";
 import {useState} from "react";
 import {useToast} from "@/hooks/use-toast";

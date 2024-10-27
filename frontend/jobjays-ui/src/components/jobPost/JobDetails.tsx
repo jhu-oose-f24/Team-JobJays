@@ -1,7 +1,7 @@
 "use client";
 import React, {useState} from 'react';
 import {useParams} from "next/navigation";
-import {fetchJobPost, updateJobPost, useUser} from "@/lib/api";
+import {applyToJob, fetchJobPost, updateJobPost} from "@/lib/api";
 import JobForm from "@/components/employer/JobForm";
 import {
     Dialog,
@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {toast, useToast} from "@/hooks/use-toast";
+import {useToast} from "@/hooks/use-toast";
 import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
 
 
@@ -30,8 +30,8 @@ const JobDetails = () => {
         //We need to send the filteredData with proper attributes to backend for now until we have type in backend
         const {jobType, ...filteredData} = data;
         JobPost.type = data.type;
-
-        const result = await updateJobPost(Number(id), filteredData, mutate, data);
+        const employer_id = 1; //TODO replace hardcoded 1 with employer id from state managed employer
+        const result = await updateJobPost(Number(id), employer_id, filteredData, mutate, data);
         if (result.success) {
             setOpen(false);
             toast({
@@ -43,6 +43,24 @@ const JobDetails = () => {
             toast({
                 title: "Error",
                 description: `Failed to update job. Message: ${result.error.message}, Code: ${result.error.status}`,
+                variant: "destructive",
+            });
+        }
+    }
+
+    const handleApply = async () => {
+        const applicantId = 1; //TODO replace hardcoded 1 with actual applicant id
+        const result = await applyToJob(Number(id), applicantId);
+        if (result.success) {
+            toast({
+                title: "Success",
+                description: "Application submitted successfully!",
+                variant: "default",
+            });
+        } else {
+            toast({
+                title: "Error",
+                description: `Failed to apply for job. Message: ${result.error.message}, Code: ${result.error.status}`,
                 variant: "destructive",
             });
         }
@@ -73,7 +91,8 @@ const JobDetails = () => {
                     {/*    <button>Apply</button>*/}
                     {/*)}*/}
                     <div className="flex flex-col space-y-2">
-                        <button className="px-4 py-2 bg-blue-400 text-white rounded-md">Apply Now</button>
+                        <button onClick={handleApply}
+                            className="px-4 py-2 bg-blue-400 text-white rounded-md">Apply Now</button>
                         <Dialog modal={false} open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
                                 <Button onClick={() => setOpen(true)}
@@ -120,7 +139,7 @@ const JobDetails = () => {
                         <li>Date posted: {(new Date(JobPost.postedDate)).toDateString()}</li>
                         <li>Experience: $50k-$60k/month</li>
                         <li>Job level: Entry Level</li>
-                        <li>Location: {JobPost.location}</li>
+                        <li>Location: {JobPost.location.city},{JobPost.location.state},{JobPost.location.country} </li>
                     </ul>
                 </div>
 

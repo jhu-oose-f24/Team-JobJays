@@ -2,7 +2,7 @@ export interface Post {
     id: number;
     title: string;
     description: string;
-    location: string;
+    location: Location;
     salary: number;
     publish: () => void;
     close: () => void;
@@ -13,7 +13,7 @@ export interface JobListing extends Post {
     companyName: string;
     title: string;
     description: string;
-    location: string;
+    location: Location;
     salary: number;
     type: "Full Time" | "Part Time" | "Internship";
     status: "Active" | "Expired";
@@ -28,7 +28,7 @@ export interface JobPost extends Post {
     title: string;
     description: string;
     companyName: string
-    location: string;
+    location: Location;
     minSalary: number;
     maxSalary: number;
     postedDate: Date;
@@ -38,6 +38,12 @@ export interface JobPost extends Post {
     type: "Full Time" | "Part Time" | "Internship";
     status: "Active" | "Expired";
 
+}
+
+export interface Location {
+    country: string;
+    state: string;
+    city: string;
 }
 
  // export interface JobPost extends Post {

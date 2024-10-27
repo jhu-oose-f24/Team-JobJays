@@ -157,10 +157,8 @@ public class ApplicantController {
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
-  
 
-  //@GetMapping("/profile/apply/{jobId}")
-  //TODO: create a job application endpoint
+
 
   //TODO: refactor into class
   public ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
