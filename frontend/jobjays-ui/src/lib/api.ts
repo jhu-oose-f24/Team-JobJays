@@ -1,5 +1,5 @@
 
-import useSWR from 'swr';
+import useSWR from 'swr' ;
 import { ApplicantProfile, EmployerProfile, JobPost } from './types'; // Ensure you have the correct types for your data
 
 // Fetcher function
@@ -65,6 +65,7 @@ export function fetchUserData(id:number) {
 }
 
 export function fetchJobPost(id:number) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/posts/jobs/${id}`, fetcher);
 
     // Data should already be processed
@@ -79,6 +80,7 @@ export function fetchJobPost(id:number) {
 }
 
 export function fetchAllJobPosts() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/posts/jobs`, fetcher);
 
     const processedJobPosts = data ? (data as JobPost[]).map(addJobAttributes) : null;

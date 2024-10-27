@@ -7,9 +7,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 
@@ -21,7 +19,6 @@ public class JobPost implements Post {
   private String title ;
   private String description;
   private Location location;
-  private Double salary;
   private Double minSalary;
   private Double maxSalary;
 
@@ -38,7 +35,12 @@ public class JobPost implements Post {
   private LocalDateTime closedDate;
 
   @ManyToMany
-  private List<Applicant> applicants;
+  @JoinTable(
+      name = "job_post_applicants",
+      joinColumns = @JoinColumn(name = "job_post_jobid"),
+      inverseJoinColumns = @JoinColumn(name = "applicant_id")
+  )
+  private Set<Applicant> applicants;
 
   @ManyToOne
   public Employer employer;
@@ -65,7 +67,7 @@ public JobPost() {}
     this.postedDate = LocalDateTime.now();
     this.closedDate = closedDate;
     this.employer = employer;
-    this.applicants = new ArrayList<>();
+    this.applicants = new HashSet<>();
     this.tags =tags;
     buildTags();
 
@@ -103,10 +105,6 @@ public JobPost() {}
     return location;
   }
 
-  @Override
-  public Double getSalary() {
-    return salary;
-  }
 
   public Location setLocation(Location location) {
     this.location = location;
@@ -165,7 +163,7 @@ public JobPost() {}
     applicants.remove(applicant);
   }
 
-  public List<Applicant> getApplicants() {
+  public Set<Applicant> getApplicants() {
     return applicants;
   }
 
