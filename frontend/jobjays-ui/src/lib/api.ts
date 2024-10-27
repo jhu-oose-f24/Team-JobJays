@@ -1,6 +1,6 @@
 
 import useSWR from 'swr' ;
-import { ApplicantProfile, EmployerProfile, JobPost } from './types'; // Ensure you have the correct types for your data
+import {Applicant, ApplicantProfile, EmployerProfile, JobPost} from './types'; // Ensure you have the correct types for your data
 
 // Fetcher function
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -60,8 +60,16 @@ export function fetchUserProfile(id: number) {
     console.log(id);
 }
 
-export function fetchUserData(id:number) {
+export function fetchJobApplicants(id:number) {
     console.log(id);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { data, error, isLoading} = useSWR(`http://localhost:8080/api/${id}/applicants`, fetcher);
+    console.log(data);
+    return {
+        applicants: data as Applicant,
+        isLoading,
+        isError: error
+    };
 }
 
 export function fetchJobPost(id:number) {
@@ -117,12 +125,13 @@ export const createJobPost = async (
 
 export const updateJobPost = async (
     id: number,
+    employer_id: number,
     updatedData: any,
     mutate:any,
     jobPost:JobPost
 ) => {
     try {
-        const response = await fetch(`http://localhost:8080/api/companies/profile/1/post/${id}`, { //TODO replace hardcoded 1 with employer id from satte managed employer
+        const response = await fetch(`http://localhost:8080/api/companies/profile/${employer_id}/post/${id}`, { //TODO replace hardcoded 1 with employer id from state managed employer
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -144,5 +153,29 @@ export const updateJobPost = async (
         return {success: false, error};
     }
 }
+
+export const applyToJob = async (
+    applicantId: number,
+    id: number,
+) => {
+
+    const response = await fetch(`http://localhost:8080/api/apply/${id}/${applicantId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        console.log(error);
+        return { success: false, error };
+    }
+    // api does not return anything on success
+    return { success: true };
+}
+
+
+
+
 
 
