@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-// import styles from '@/styles/account-settings.module.css';
+import React, {useEffect, useState} from 'react';
 
 
 interface DashboardPageProps {
@@ -12,28 +11,95 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
     const candidateId = Number(params.candidate_id);
     console.log(candidateId);
     const [profilePicture, setProfilePicture] = useState(null);
-    const [resumeFiles, setResumeFiles] = useState([
-        { id: 1, name: 'Professional Resume', size: '3.5 MB' },
-        { id: 2, name: 'Product Designer', size: '4.7 MB' },
-        { id: 3, name: 'Visual Designer', size: '1.3 MB' },
-    ]);
+    const [resumeFiles, setResumeFiles] = useState([]);
+
+    // Fetch all PDFs from the server
+    const fetchPdfFiles = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/applicants/resume/fetch?applicantId=${candidateId}`,{
+                method: "GET"
+            });
+            const data = await response.json();
+            const files = data.resumes;
+            console.log(files)
+            setResumeFiles(files);
+        } catch (error) {
+            console.error("Error fetching PDF files:", error);
+        }
+    };
+
+    // Call fetchPdfFiles initially to load PDFs on component mount
+    useEffect(() => {
+        fetchPdfFiles();
+    }, []);
 
     const handleFileChange = (event: any) => {
         const file = event.target.files[0];
         if (file) {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
             setProfilePicture(URL.createObjectURL(file));
         }
     };
 
-    const handleResumeUpload = (event) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const handleResumeUpload = async (event) => {
         const file = event.target.files[0];
-        if (file) {
-            setResumeFiles([...resumeFiles, { id: Date.now(), name: file.name, size: `${(file.size / (1024 * 1024)).toFixed(1)} MB` }]);
+        const formData = new FormData();
+        formData.append("applicantId", candidateId);
+        formData.append("resume", file);
+        console.log(file.name);
+        try {
+            const response = await fetch("http://localhost:8080/api/applicants/resume", {
+                method: "POST",
+                body: formData
+            });
+
+
+            if (response.ok) {
+                console.log(response);
+                const applicantData = await response.json();
+                console.log(applicantData);
+                alert("Upload Successful!");
+                fetchPdfFiles();
+                //router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
+            } else {
+                const errorData = await response.json();
+                alert(`Error: ${errorData.failReason}`);
+            }
+        } catch (error) {
+            alert(`An error occurred: ${error}`);
         }
+
     };
 
-    const handleDeleteResume = (id) => {
-        setResumeFiles(resumeFiles.filter((resume) => resume.id !== id));
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    const handleDeleteResume = async (id) => {
+        const formData = new FormData();
+        formData.append("resumeId", id);
+        try {
+            const response = await fetch("http://localhost:8080/api/applicants/resume/delete", {
+                method: "POST",
+                body: formData
+            });
+
+
+            if (response.ok) {
+                console.log(response);
+                const applicantData = await response.json();
+                console.log(applicantData);
+                alert("Delete Successful!");
+                fetchPdfFiles();
+            } else {
+                const errorData = await response.json();
+                alert(`Error: ${errorData.failReason}`);
+            }
+        } catch (error) {
+            alert(`An error occurred: ${error}`);
+        }
+        //setResumeFiles(resumeFiles.filter((resume) => resume["resume_id"] !== id));
     };
 
     return (
@@ -102,16 +168,16 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
                 <h3>Your CV/Resume</h3>
                 <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
                     {resumeFiles.map((resume) => (
-                        <div key={resume.id} style={{
+                        <div key={resume["resume_id"]} style={{
                             border: '1px solid #ddd',
                             padding: '15px',
                             borderRadius: '5px',
                             position: 'relative'
                         }}>
-                            <p>{resume.name}</p>
-                            <p style={{color: '#888'}}>{resume.size}</p>
+                            <p>{resume["resumeName"]}</p>
+                            <p style={{color: '#888'}}>{resume["uploadedAt"]}</p>
                             <div style={{position: 'relative', top: '10px', right: '10px', cursor: 'pointer'}}>
-                                <button onClick={() => handleDeleteResume(resume.id)}
+                                <button onClick={() => handleDeleteResume(resume["resume_id"])}
                                         style={{color: 'red', border: 'none', background: 'none'}}>Delete
                                 </button>
                             </div>

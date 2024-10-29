@@ -55,16 +55,23 @@ public class AuthController {
         ResponseEmployerDto employerDto = new ResponseEmployerDto();
         employerDto.setUsername(employer.getUsername());
         employerDto.setEmployer_id(employer.getID());
-        employerDto.setFailReason("Password is not correct!");
+
         if(!employer.getPassword().equals(loginRequest.getPassword())) {
+            employerDto.setFailReason("Password is not correct!");
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(employerDto);
         }
 
-        employerDto.setFailReason("The account is not enabled! Please verify your email.");
+
         if(employer.getEnabled()==null || !employer.getEnabled()) {
+            employerDto.setFailReason("The account is not enabled! Please verify your email.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(employerDto);
+        }
+
+        //temporary ways to complete iteration 3
+        if(true){
+            return ResponseEntity.ok(employerDto);
         }
 
         String token = TokenGenerator.generateToken(employer);
@@ -73,13 +80,35 @@ public class AuthController {
 
 
     @PostMapping("/applicant")
-    public ResponseEntity<TokenResponseDto> loginApplicant(@RequestBody LoginApplicationDto loginRequest) {
+    public ResponseEntity<?> loginApplicant(@RequestBody LoginApplicationDto loginRequest) {
         {
             Applicant applicant = applicantService.findApplicantByUsername(loginRequest.getUsername());
             if (applicant == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
+
+
             var token = TokenGenerator.generateToken(applicant);
+
+            ResponseApplicantDto applicantDto = ResponseApplicantDto.builder().build();
+            applicantDto.setUsername(applicant.getUsername());
+            applicantDto.setApplicantId(applicant.getID());
+            if(!applicant.getPassword().equals(loginRequest.getPassword())) {
+                applicantDto.setFailReason("Password is not correct!");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(applicantDto);
+            }
+
+            if(applicant.getEnabled()==null || !applicant.getEnabled()) {
+                applicantDto.setFailReason("The account is not enabled! Please verify your email.");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(applicantDto);
+            }
+
+            //temporary ways to complete iteration 3
+            if(true){
+                return ResponseEntity.ok(applicantDto);
+            }
 
             return ResponseEntity.ok(new TokenResponseDto(token));
         }
