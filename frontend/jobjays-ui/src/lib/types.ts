@@ -46,12 +46,6 @@ export interface Location {
     city: string;
 }
 
- // export interface JobPost extends Post {
- //     jobID: number;
- //     postedDate: Date;
- //     closingDate: Date;
- //     employer: Employer;
- // }
 
 export interface User {
     userID: number;
@@ -60,6 +54,8 @@ export interface User {
     //password: string;
 
 }
+export type UserType = Employer | Applicant; // Union type for User
+export type ProfileType = EmployerProfile | ApplicantProfile; // Union type for Profile
 
 export interface Employer extends User {
     //TODO commented out fields are not implemented
@@ -102,5 +98,37 @@ export interface ApplicantProfile extends Profile {
     //trackApplications: () => void;
 }
 
+export interface anonDataTrackingId {
+    trackingId: string;
+    userAgent: string;
+    timestamp: Date;
+}
+
+export interface TimeSpentOnPage { //time spent on a specific page
+    id: anonDataTrackingId;
+    timeSpent: number;
+    page: string;
+
+}
+export interface Impressions { //amount of times your job post has been viewed
+    id: anonDataTrackingId;
+    impressions: number;
+    jobPost: JobPost;
+
+}
+
+export interface ProfileViews { //amount of times your profile has been viewed
+    id: anonDataTrackingId;
+    views: number;
+    user: UserType;
+}
+
+export interface Saves { //amount of saves your job post has
+    id: anonDataTrackingId;
+    saves: number;
+    jobPost: JobPost;
+}
+
+export type EmployerStats = Employer | Saves | ProfileViews | Impressions | TimeSpentOnPage; // Union type for Employer statistics
 
 
