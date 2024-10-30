@@ -10,7 +10,7 @@ This is a web application that allows Johns Hopkins students to find the perfect
 # Iteration 1
 For this iteration, the main features we focused on were all thing related to jobs (creating, editing, searching) and being able to create users whether that be for a jobseeker or employer. All the necessary backend work for those user stories has been implemented and tested to ensure functionality. As seen in class, various front-end pages have been implemented but still need polishing, as we split up the work and want to get together once more to ensure that the entire UI follows a core theme regardless of the page. Once that is done, we will start the backend integration, which will be a task we plan on completing in iteration 2. Besides these deliverables, we also spent time setting up all the architecture we needed, such as Spring Boot, Next.js, our PostgreSQL database, and more. We made sure to communicate with each other on which specific tools we wanted to use (e.g Maven vs Gradle) before we moved any further. Moreover, we made sure to leave time for debugging and adjustments as this is a new experience for some on the team.
 We also made good use of Github to facilitate project planning. We would get together and split up the different work that was left.
-Our team did some more work on the UML diagrams during this iteration as well. We went through various drafts to see what’s working and what isn’t. We feel that it can still change but the one titled ‘class-uml.svg’
+Our team did some more work on the UML diagrams during this iteration as well. We went through various drafts to see what’s working and what isn’t. We feel that it can still change but the one titled ‘class_diagram.mermaid’
 
 # Iteration 2
 For this iteration, we focused on integration and fleshing out some of our features. A point of feedback from Iteration 1 was the absence of integration of the frontend to the backend, so we went back and made our web application useable. We made it possible to go to each feature we started implementing from the home page and a way to return back home. 
@@ -44,6 +44,20 @@ For the following iteration we plan to make sure the applicant and the employer/
 User authentication:
 When user registered an account, they will receive an mail to validate their account. Once they click the link in the email ,they can log in to the job system.
 Besides, after login, we will store the login info in the session, so that users can do some thing like editing their own profile and uploading their resumes, while other applicants cannot have permission.
+
+# Iteration 3
+For this iteration, we added new features, enhanced other larger features, and fixed some errors. 
+
+For one, we added more to our chatbot feature so that: 
+
+- (1) users can get basic job advice with questions like "What is a resume?" and "What are some helpful tips to write a good resume?" This feature is well-suited for anyone, but especially those new to the job search process and who are looking for some basic, reliable guidance. 
+- (2) users can start to leverage their own profile (such as experiences, preference) and saved jobs to receive advice from the chatbot. This involved lots of prompt engineering to find which prompts yield the best results and more research will be done in the next iteration to further advance this. A good question to ask is "Based on my profile, which of my saved jobs would be best suited for me?". In the next iteration, hopefully, once the login functionality is fleshed out, we can further make it more personalized. 
+
+Also, in this iteration, as stated in the directions, we aimed to complete all of the "must have" features. The biggest outstanding feature we needed to start and finish was applying to jobs. We were able to add this functionality along with being able to view applicants (/view-applicants/[id]). We also implemented the feature for applicants to save jobs that they may be interested in and would like to come back to or that they would like the chatbot to easily reference. 
+
+We also got ahead on the next iteration and began to work on polishing the UI. This task will continued to be worked on for the next iteration so we can ensure we have a great looking, cohesive application. 
+
+We also made changes to our UML diagram to mimic the state of our application at this point, which you can find in: ‘class_diagram.mermaid’
 
 
 # Running the JobJays Backend(KAFKA Server) with Docker
