@@ -271,18 +271,18 @@ public class ApplicantController {
     return responseApplicantDto;
   }
 
-  @GetMapping("/profile/saved/{id}")
-  public ResponseEntity<Set<JobPost>> getSavedJobsByApplicantId(@PathVariable Long id) {
-    Set<JobPost> savedJobs = applicantService.findSavedJobsByApplicantId(id);
-    return ResponseEntity.ok(savedJobs);
-
-
-  }
-
-  @PostMapping("/profile/saved")
-  public ResponseEntity<Void> addSavedJob(@RequestBody JobPost jobPost, @PathVariable Long id) {
-    applicantService.addSavedJob(id, jobPost);
-    return ResponseEntity.noContent().build();
-  }
+//  @GetMapping("/profile/saved/{id}")
+//  public ResponseEntity<Set<JobPost>> getSavedJobsByApplicantId(@PathVariable Long id) {
+//    Set<JobPost> savedJobs = applicantService.findSavedJobsByApplicantId(id);
+//    return ResponseEntity.ok(savedJobs);
+//
+//
+//  }
+//
+//  @PostMapping("/profile/saved")
+//  public ResponseEntity<Void> addSavedJob(@RequestBody JobPost jobPost, @PathVariable Long id) {
+//    applicantService.addSavedJob(id, jobPost);
+//    return ResponseEntity.noContent().build();
+//  }
 
 }

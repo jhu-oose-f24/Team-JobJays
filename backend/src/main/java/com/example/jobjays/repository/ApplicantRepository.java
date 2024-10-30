@@ -21,8 +21,8 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
   Applicant findByToken(String token);
 
-  @Query("select sj from JobPost sj where :applicantID MEMBER of sj.applicants")
-  Set<JobPost> findSavedJobsByApplicantId(Long applicantId);
+//  @Query("select sj from JobPost sj where :applicantID MEMBER of sj.applicants")
+//  Set<JobPost> findSavedJobsByApplicantId(Long applicantId);
 //  Optional<JobPost> findJobPostByApplicantIdandJobId(Long applicantId, Long jobPostId);
 
 

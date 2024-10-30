@@ -99,6 +99,7 @@ export interface ApplicantProfile extends Profile {
     name:string;
     bio: string;
     appliedJobs: JobPost[];
+    savedJobs: JobPost[];
     //trackApplications: () => void;
 }
 

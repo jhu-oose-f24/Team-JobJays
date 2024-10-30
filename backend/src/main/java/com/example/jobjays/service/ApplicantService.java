@@ -118,22 +118,22 @@ public class ApplicantService {
     return applicants.stream().map(Applicant::getProfile).toList();
   }
 
-  public Set<JobPost> findSavedJobsByApplicantId(Long applicantId) {
-    return applicantRepository.findSavedJobsByApplicantId(applicantId);
-  }
-
-  public void addSavedJob(Long applicantId, JobPost jobPost) {
-    applicantRepository.findSavedJobsByApplicantId(applicantId).add(jobPost);
-  }
-
-
-//  public Optional<JobPost> findJobPostByApplicantIdandJobId(Long applicantId, Long jobPostId) {
-//    return;
+//  public Set<JobPost> findSavedJobsByApplicantId(Long applicantId) {
+//    return applicantRepository.findSavedJobsByApplicantId(applicantId);
 //  }
 
-  public void deleteJobPostByApplicantId(Long applicantId, JobPost jobPost) {
-    applicantRepository.findSavedJobsByApplicantId(applicantId).remove(jobPost);
-  }
+//  public void addSavedJob(Long applicantId, JobPost jobPost) {
+//    applicantRepository.findSavedJobsByApplicantId(applicantId).add(jobPost);
+//  }
+//
+//
+////  public Optional<JobPost> findJobPostByApplicantIdandJobId(Long applicantId, Long jobPostId) {
+////    return;
+////  }
+//
+//  public void deleteJobPostByApplicantId(Long applicantId, JobPost jobPost) {
+//    applicantRepository.findSavedJobsByApplicantId(applicantId).remove(jobPost);
+//  }
 
 
 

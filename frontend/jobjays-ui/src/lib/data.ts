@@ -143,9 +143,10 @@ const sampleEmployerProfile: {
 const sampleApplicantProfile: ApplicantProfile = {
     ...sampleProfile,
     appliedJobs: [sampleJobPost],
-    trackApplications() {
-        console.log(`${this.name} is tracking their applications.`);
-    }
+    savedJobs: [sampleJobPost]
+    // trackApplications() {
+    //     console.log(`${this.name} is tracking their applications.`);
+    // }
 };
 
 // Assign profiles to Employer and Applicant objects
