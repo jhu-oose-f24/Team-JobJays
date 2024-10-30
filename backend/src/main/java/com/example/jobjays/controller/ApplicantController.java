@@ -1,14 +1,10 @@
 package com.example.jobjays.controller;
 
-import com.example.jobjays.authentication.LoginRequired;
 import com.example.jobjays.authentication.TokenGenerator;
-import com.example.jobjays.dto.applicant.ApplicantResumeRequest;
+import com.example.jobjays.dto.applicant.*;
 import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
 import com.example.jobjays.dto.profile.ResponseApplicantProfileDto;
 import com.example.jobjays.dto.profile.ResponseProfileDto;
-import com.example.jobjays.dto.applicant.CreateApplicantDto;
-import com.example.jobjays.dto.applicant.ResponseApplicantDto;
-import com.example.jobjays.dto.applicant.UpdateApplicantDto;
 import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
 import com.example.jobjays.model.ApplicantResume;
@@ -26,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -273,4 +270,19 @@ public class ApplicantController {
     responseApplicantDto.applicantProfile = mapToResponseProfileDto(applicant.getProfile());
     return responseApplicantDto;
   }
+
+  @GetMapping("/profile/saved/{id}")
+  public ResponseEntity<Set<JobPost>> getSavedJobsByApplicantId(@PathVariable Long id) {
+    Set<JobPost> savedJobs = applicantService.findSavedJobsByApplicantId(id);
+    return ResponseEntity.ok(savedJobs);
+
+
+  }
+
+  @PostMapping("/profile/saved")
+  public ResponseEntity<Void> addSavedJob(@RequestBody JobPost jobPost, @PathVariable Long id) {
+    applicantService.addSavedJob(id, jobPost);
+    return ResponseEntity.noContent().build();
+  }
+
 }
