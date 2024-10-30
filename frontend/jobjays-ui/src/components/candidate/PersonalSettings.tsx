@@ -11,7 +11,7 @@ interface DashboardPageProps {
 const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
     const candidateId = Number(params.candidate_id);
     console.log(candidateId);
-    const [profilePicture, setProfilePicture] = useState(null);
+    const [profilePicture, setProfilePicture] = useState<string | null>(null);
     const [resumeFiles, setResumeFiles] = useState([
         { id: 1, name: 'Professional Resume', size: '3.5 MB' },
         { id: 2, name: 'Product Designer', size: '4.7 MB' },
@@ -25,14 +25,14 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
         }
     };
 
-    const handleResumeUpload = (event) => {
+    const handleResumeUpload = (event:any) => {
         const file = event.target.files[0];
         if (file) {
             setResumeFiles([...resumeFiles, { id: Date.now(), name: file.name, size: `${(file.size / (1024 * 1024)).toFixed(1)} MB` }]);
         }
     };
 
-    const handleDeleteResume = (id) => {
+    const handleDeleteResume = (id:any) => {
         setResumeFiles(resumeFiles.filter((resume) => resume.id !== id));
     };
 

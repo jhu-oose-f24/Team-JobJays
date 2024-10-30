@@ -1,59 +1,81 @@
-/* PostJob.module.css */
-
+/* Container 样式 */
 .postJobContainer {
     padding: 40px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    margin: 20px;
-    width: 100%;
-    max-width: 800px;
+    background: linear-gradient(135deg, #f9f9f9, #e3f2fd);
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    margin: 30px auto;
+    width: 90%;
+    max-width: 900px;
+    transition: all 0.3s ease-in-out;
 }
 
+/* 表单整体布局 */
 .postJobForm {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
+/* 标签样式 */
 .formLabel {
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
     margin-bottom: 5px;
 }
 
+/* 输入框和选择框样式 */
 .formInput,
-.formSelect {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
+.formSelect,
 .textAreaInput {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #d1d9e6;
+    border-radius: 8px;
     font-size: 1rem;
-    resize: vertical; /* Allows vertical resizing of the text area */
+    background-color: #ffffff;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+.formInput:focus,
+.formSelect:focus,
+.textAreaInput:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+/* 文本区域样式 */
+.textAreaInput {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* 薪资输入框布局 */
 .salaryInputs {
     display: flex;
-    gap: 10px;
+    gap: 20px;
 }
 
+/* 按钮样式 */
 .postJobButton {
-    padding: 10px 20px;
-    background-color: #007bff;
+    padding: 12px 25px;
+    background: linear-gradient(90deg, #007bff, #0056b3);
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 .postJobButton:hover {
-    background-color: #0056b3;
+    background: linear-gradient(90deg, #0056b3, #003f7f);
+    box-shadow: 0 6px 15px rgba(0, 123, 255, 0.5);
 }
+
