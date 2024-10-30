@@ -4,7 +4,6 @@ classDiagram
     Profile <|-- ApplicantProfile
     Profile <|-- EmployerProfile
     Post <|-- JobPost
-    Post <|-- Announcement
     ApplicantProfile <|-- Preferences
 
 
@@ -22,6 +21,8 @@ classDiagram
         +List<String> interestedIndustries
         +Double minSalary
         +Double maxSalary
+        +string jobTiming
+        +string location
         void updatePreferences()
 
     }
@@ -38,6 +39,7 @@ classDiagram
         +string applicantName
         +ApplicantProfile applicantProfile
         +Preferences preferences
+        +String resume
         void applyForJob(JobPost jobPost)
         void viewAppliedJobs()
 
@@ -51,40 +53,33 @@ classDiagram
     }
 
     class EmployerProfile {
+        +String industry
         +int employerId
         +string companyDescription
-        +int employeeCount
     }
 
     class ApplicantProfile {
         +int applicantId
-        +string resume
-        +string bio
+        +List<String> skills
     }
 
     class Post {
         +int id
-        +string title
-        +string description
+        -string title
+        -string description
     }
 
     class JobPost {
         +int employerId
-        +string requirements
-        + String location
-        + Double salary
-
-        + Long jobID
-        + LocalDateTime postedDate
-        + LocalDateTime closedDate
-
-        + List<Applicant> applicants
+        +Long jobID
+        -String location
+        +List<String> tags
+        -Double minSalary
+        -Double maxSalary
+        -LocalDateTime closedDate
+        +List<Applicant> applicants
     }
 
-    class Announcement {
-        +int employerId
-        +List <User> recipients
-    }
 
     class Application {
         +int id
@@ -96,4 +91,3 @@ classDiagram
 
     Applicant --> Application : "applies"
     EmployerProfile --> JobPost : "creates"
-
