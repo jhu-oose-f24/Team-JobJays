@@ -99,13 +99,14 @@ export interface ApplicantProfile extends Profile {
 }
 
 export interface anonDataTrackingId {
-    trackingId: string;
+    trackingId: string; //for tracking user session data
     userAgent: string;
     timestamp: Date;
 }
 
 export interface TimeSpentOnPage { //time spent on a specific page
     id: anonDataTrackingId;
+    state: string;
     timeSpent: number;
     page: string;
 

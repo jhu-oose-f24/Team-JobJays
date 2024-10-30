@@ -174,6 +174,28 @@ export const applyToJob = async (
     return { success: true };
 }
 
+export const incrementJobPostView = async (id: number) => {
+    // const response = await fetch(`http://localhost:8080/api/posts/jobs/${id}/increment-view`, {
+    //     method: 'POST',
+    // });
+    // if (!response.ok) {
+    //     const error = await response.json();
+    //     console.log(error);
+    //     return { success: false, error };
+    // }
+    // return { success: true };
+    try {
+        const response = await fetch(`/api/job-posts/${id}/increment-view`, {
+            method: 'POST',
+        });
+        if (!response.ok) {
+           console.error(`Error incrementing view count: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error("Failed to increment job post view count:", error);
+    }
+}
+
 
 
 

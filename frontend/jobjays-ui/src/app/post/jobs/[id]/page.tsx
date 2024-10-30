@@ -1,5 +1,5 @@
 "use client";
-import React from 'react';
+import React, {useEffect} from 'react';
 // import { useParams } from "next/navigation";
 // import { fetchJobPost } from '@/lib/api'; // Use your custom hook or fetch logic
 // import styles from '@/styles/postJob.module.css';
@@ -7,8 +7,16 @@ import JobDetails from "@/components/jobPost/JobDetails";
 import RelatedJobs from "@/components/jobPost/RelatedJobs";
 // import ContactUs from "@/components/ContactUs";
 import Link from "next/link";
+import {useParams} from "next/navigation";
+import {incrementJobPostView} from "@/lib/api";
 
 const JobDetailPage: React.FC = () => {
+    const { id } = useParams<{ id: string }>();
+    useEffect(() => {
+        // Call the API to increment the view count whenever this page loads
+        incrementJobPostView(Number(id));
+    }, [id]);
+
     return (
         <div className="bg-gray-100">
             <header className="bg-white py-4 shadow">
