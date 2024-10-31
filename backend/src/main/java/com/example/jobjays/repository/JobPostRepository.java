@@ -2,6 +2,7 @@ package com.example.jobjays.repository;
 
 
 import com.example.jobjays.model.Applicant;
+import com.example.jobjays.model.Impressions;
 import com.example.jobjays.model.JobPost;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,11 +32,9 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
   @Query("SELECT j.applicants FROM JobPost j WHERE j.jobID = ?1")
   Set<Applicant> findApplicantsByJobPostId(Long jobID);
 
-//  @Modifying
-//  @Query(
-//      value="INSERT INTO job_post_applicants (job_post_jobid, applicant_id) VALUES (:jobID, :applicantId)",
-//      nativeQuery = true)
-//  Set<Applicant> insertApplicantToJobPost(Long jobID, Long applicantId);
+  @Query("SELECT j.impressions FROM JobPost j WHERE j.jobID = ?1")
+  Impressions findImpressionsByJobPostId(Long jobID);
+
 
 
 

@@ -100,7 +100,7 @@ export interface ApplicantProfile extends Profile {
 
 export interface anonDataTrackingId {
     trackingId: string; //for tracking user session data
-    userAgent: string;
+    //userAgent: string;
     timestamp: Date;
 }
 
@@ -112,20 +112,17 @@ export interface TimeSpentOnPage { //time spent on a specific page
 
 }
 export interface Impressions { //amount of times your job post has been viewed
-    id: anonDataTrackingId;
     impressions: number;
-    jobPost: JobPost;
+    //jobPost: JobPost;
 
 }
 
 export interface ProfileViews { //amount of times your profile has been viewed
-    id: anonDataTrackingId;
     views: number;
     user: UserType;
 }
 
 export interface Saves { //amount of saves your job post has
-    id: anonDataTrackingId;
     saves: number;
     jobPost: JobPost;
 }
