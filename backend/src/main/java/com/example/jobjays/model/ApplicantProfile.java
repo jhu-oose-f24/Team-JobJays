@@ -20,12 +20,15 @@ public class ApplicantProfile implements Profile {
   private Applicant applicant;
   @ManyToMany(mappedBy = "applicants")
   private Set<JobPost> appliedJobs;
+  @ManyToMany(mappedBy = "applicants")
+  private Set<JobPost> savedJobs;
 
   public ApplicantProfile() {}
 
   public ApplicantProfile(Applicant applicant, String name, String bio) {
     this.applicant = applicant;
     this.appliedJobs = new HashSet<>();
+    this.savedJobs = new HashSet<>();
     this.name = name;
     this.bio = bio;
   }
@@ -80,5 +83,13 @@ public class ApplicantProfile implements Profile {
   void trackApplications() {
     //TODO: Implement this method
 
+  }
+
+  public Set<JobPost> viewSavedJobs() {
+    return savedJobs;
+  }
+
+  public void addSavedJobs(JobPost jobPost) {
+    savedJobs.add(jobPost);
   }
 }
