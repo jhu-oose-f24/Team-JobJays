@@ -7,10 +7,15 @@ import JobDetails from "@/components/jobPost/JobDetails";
 import RelatedJobs from "@/components/jobPost/RelatedJobs";
 // import ContactUs from "@/components/ContactUs";
 import Link from "next/link";
+import Navbar from '@/components/Navbar';
+import HeaderActions from "@/components/HeaderActions";
+
 
 const JobDetailPage: React.FC = () => {
     return (
         <div className="bg-gray-100">
+            {/* <Navbar />
+            <HeaderActions /> */}
             <header className="bg-white py-4 shadow">
                 <div className="container mx-auto flex items-center">
                     <Link href="/" className= "flex items-center space-x-3">

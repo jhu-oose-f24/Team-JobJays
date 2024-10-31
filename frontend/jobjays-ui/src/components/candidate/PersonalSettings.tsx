@@ -47,7 +47,8 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
     const handleResumeUpload = async (event) => {
         const file = event.target.files[0];
         const formData = new FormData();
-        formData.append("applicantId", candidateId);
+        formData.append("applicantId", candidateId.toString());
+
         formData.append("resume", file);
         console.log(file.name);
         try {
