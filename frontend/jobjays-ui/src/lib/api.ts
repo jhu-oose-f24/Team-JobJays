@@ -72,6 +72,21 @@ export function fetchJobApplicants(id:number) {
     };
 }
 
+export function useJobApplicants(jobId: number | null) {
+    const { data, error } = useSWR(
+      jobId ? `http://localhost:8080/api/${jobId}/applicants` : null,
+      fetcher
+    );
+  
+    console.log('Applicants data:', data); // For debugging
+  
+    return {
+      applicants: data as Applicant[] | undefined,
+      isLoading: !error && !data,
+      isError: error,
+    };
+  }
+
 export function fetchJobPost(id:number) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/posts/jobs/${id}`, fetcher);

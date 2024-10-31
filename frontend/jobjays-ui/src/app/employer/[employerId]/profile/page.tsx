@@ -1,96 +1,236 @@
 "use client";
+
 import React, { useState } from 'react';
-import styles from '@/styles/profile.module.css';
 import Image from "next/image";
+import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { 
+  Building2, 
+  Users, 
+  Share2, 
+  Settings, 
+  Upload, 
+  ImagePlus,
+  Trash2,
+  ChevronRight
+} from "lucide-react";
 import FoundingInfo from "@/components/employer/FoundingInfo";
 import SocialMediaInfo from "@/components/employer/SocialMediaInfo";
 import AccountSettings from "@/components/employer/AccountSettings";
 
-const ProfilePage: React.FC = () => {
-    const [tab, setTab] = useState<'company-info' | 'founding-info' | 'social-media' | 'account-setting'>('company-info');
+const ImageUploadCard = ({ 
+  title, 
+  description, 
+  image, 
+  size,
+  aspectRatio = "aspect-square",
+  onRemove,
+  onUpload 
+}: { 
+  title: string;
+  description: string;
+  image: string;
+  size: string;
+  aspectRatio?: string;
+  onRemove: () => void;
+  onUpload: () => void;
+}) => (
+  <Card className="overflow-hidden">
+    <CardHeader className="space-y-1">
+      <CardTitle className="text-xl">{title}</CardTitle>
+      <CardDescription>{description}</CardDescription>
+    </CardHeader>
+    <CardContent className="space-y-4 p-6">
+      <div className={cn(
+        "relative rounded-lg overflow-hidden border-2 border-dashed",
+        "border-gray-200 hover:border-gray-300 transition-colors",
+        aspectRatio
+      )}>
+        {image ? (
+          <>
+            <Image
+              src={image}
+              alt={title}
+              fill
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity">
+              <div className="flex h-full items-center justify-center space-x-2">
+                <Button variant="secondary" size="sm" onClick={onUpload}>
+                  <Upload className="w-4 h-4 mr-2" />
+                  Replace
+                </Button>
+                <Button variant="destructive" size="sm" onClick={onRemove}>
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  Remove
+                </Button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <button
+            onClick={onUpload}
+            className="absolute inset-0 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors"
+          >
+            <ImagePlus className="w-8 h-8 text-gray-400" />
+            <span className="text-sm text-gray-500">Click to upload</span>
+          </button>
+        )}
+      </div>
+      <div className="flex items-center justify-between text-sm text-gray-500">
+        <span>{size}</span>
+        <span>Max size: 5MB</span>
+      </div>
+    </CardContent>
+  </Card>
+);
 
-    const handleTabClick = (selectedTab: 'company-info' | 'founding-info' | 'social-media' | 'account-setting') => {
-        setTab(selectedTab);
-    };
+const NavigationItem = ({ 
+  icon: Icon, 
+  title, 
+  isActive, 
+  onClick 
+}: { 
+  icon: any;
+  title: string;
+  isActive: boolean;
+  onClick: () => void;
+}) => (
+  <button
+    onClick={onClick}
+    className={cn(
+      "flex items-center w-full p-3 rounded-lg gap-3 transition-colors",
+      "hover:bg-gray-100",
+      isActive && "bg-primary/10 text-primary hover:bg-primary/10"
+    )}
+  >
+    <Icon className="w-5 h-5" />
+    <span className="font-medium">{title}</span>
+    <ChevronRight className={cn(
+      "w-4 h-4 ml-auto transition-transform",
+      isActive && "transform rotate-90"
+    )} />
+  </button>
+);
 
-    return (
-        <div className={styles.profileContainer}>
-            {/* Sidebar */}
+const ProfilePage = () => {
+  const [currentSection, setCurrentSection] = useState<'company-info' | 'founding-info' | 'social-media' | 'account-setting'>('company-info');
+  const [logoFile, setLogoFile] = useState<string>("/company_logo.png");
+  const [bannerFile, setBannerFile] = useState<string>("/company_ban.png");
 
-            {/* Main Profile Content */}
-            <main className={styles.mainContent}>
-                <h3 className={styles.header}>Settings</h3>
+  const navigationItems = [
+    { id: 'company-info', title: 'Company Info', icon: Building2 },
+    { id: 'founding-info', title: 'Founding Info', icon: Users },
+    { id: 'social-media', title: 'Social Media', icon: Share2 },
+    { id: 'account-setting', title: 'Account Settings', icon: Settings }
+  ];
 
-                {/* Tabs Navigation */}
-                <div className={styles.tabs}>
-                    <button className={`${styles.tabButton} ${tab === 'company-info' ? styles.activeTab : ''}`} onClick={() => handleTabClick('company-info')}>
-                        Company Info
-                    </button>
-                    <button className={`${styles.tabButton} ${tab === 'founding-info' ? styles.activeTab : ''}`} onClick={() => handleTabClick('founding-info')}>
-                        Founding Info
-                    </button>
-                    <button className={`${styles.tabButton} ${tab === 'social-media' ? styles.activeTab : ''}`} onClick={() => handleTabClick('social-media')}>
-                        Social Media Profile
-                    </button>
-                    <button className={`${styles.tabButton} ${tab === 'account-setting' ? styles.activeTab : ''}`} onClick={() => handleTabClick('account-setting')}>
-                        Account Setting
-                    </button>
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto p-6">
+        {/* Header */}
+        <div className="flex items-center justify-between pb-6 border-b mb-6">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Settings className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
+              <p className="text-sm text-gray-500">Manage your company profile and preferences</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <div className="grid grid-cols-12 gap-6">
+          {/* Sidebar Navigation */}
+          <div className="col-span-12 md:col-span-3">
+            <Card>
+              <CardContent className="p-4 space-y-1">
+                {navigationItems.map(item => (
+                  <NavigationItem
+                    key={item.id}
+                    icon={item.icon}
+                    title={item.title}
+                    isActive={currentSection === item.id}
+                    onClick={() => setCurrentSection(item.id as typeof currentSection)}
+                  />
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Content Area */}
+          <div className="col-span-12 md:col-span-9 space-y-6">
+            {currentSection === 'company-info' && (
+              <>
+                <div className="grid md:grid-cols-2 gap-6">
+                  <ImageUploadCard
+                    title="Company Logo"
+                    description="Upload your company logo (1:1 ratio recommended)"
+                    image={logoFile}
+                    size="3.5 MB"
+                    onRemove={() => setLogoFile("")}
+                    onUpload={() => {/* Implement upload logic */}}
+                  />
+                  <ImageUploadCard
+                    title="Company Banner"
+                    description="Upload a banner image (16:9 ratio recommended)"
+                    image={bannerFile}
+                    size="4.3 MB"
+                    aspectRatio="aspect-video"
+                    onRemove={() => setBannerFile("")}
+                    onUpload={() => {/* Implement upload logic */}}
+                  />
                 </div>
 
-                {/* Tab Content */}
-                {tab === 'company-info' && (
-                    <div className={styles.tabContent}>
-                        <div className={styles.logoBannerSection}>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Company Details</CardTitle>
+                    <CardDescription>Basic information about your company</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="company-name">Company Name</Label>
+                        <Input 
+                          id="company-name"
+                          placeholder="Enter your company name"
+                        />
+                      </div>
 
-                            <div>
-                                <h4>Logo</h4>
-                                <Image
-                                    className={styles.image}
-                                    src="/company_logo.png"
-                                    alt="company_logo"
-                                    width={200}
-                                    height={200}
-                                    layout="responsive"
-                                />                                {/*<img src="/company_logo.png" alt="Logo" className={styles.image} />*/}
-                                <p>3.5 MB <a href="#" className={styles.removeButton}>Remove</a> <a href="#" className={styles.replaceButton}>Replace</a></p>
-                            </div>
-                            <div>
-                                <h4>Banner</h4>
-                                <img src="/company_ban.png" alt="Banner" className={styles.imageBanner}/>
-                                <p>4.3 MB <a href="#" className={styles.removeButton}>Remove</a> <a href="#" className={styles.replaceButton}>Replace</a></p>
-                            </div>
-                        </div>
-                        <label>Company name</label>
-                        <input type="text" placeholder="Company name" className={styles.inputField} />
-                        <label>About us</label>
-                        <textarea placeholder="Write down about your company here..." className={styles.textArea}></textarea>
-                        <button className={styles.saveButton}>Save Change</button>
+                      <div className="space-y-2">
+                        <Label htmlFor="about">About Us</Label>
+                        <Textarea
+                          id="about"
+                          placeholder="Write a compelling description of your company..."
+                          className="min-h-[150px] resize-y"
+                        />
+                      </div>
                     </div>
-                )}
 
-                {tab === 'founding-info' && (
-                    <div className={styles.tabContent}>
-                        <h4>Founding Info</h4>
-                        <FoundingInfo /> {/* No submit button here */}
+                    <div className="flex justify-end">
+                      <Button>
+                        Save Changes
+                      </Button>
                     </div>
-                )}
+                  </CardContent>
+                </Card>
+              </>
+            )}
 
-                {tab === 'social-media' && (
-                    <div className={styles.tabContent}>
-                        <h4>Social Media Profile</h4>
-                        <SocialMediaInfo />
-                    </div>
-                )}
-
-                {tab === 'account-setting' && (
-                    <div className={styles.tabContent}>
-                        <h4>Account Setting</h4>
-                        <AccountSettings></AccountSettings>
-                    </div>
-                )}
-            </main>
+            {currentSection === 'founding-info' && <FoundingInfo />}
+            {currentSection === 'social-media' && <SocialMediaInfo />}
+            {currentSection === 'account-setting' && <AccountSettings />}
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default ProfilePage;

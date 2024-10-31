@@ -181,7 +181,7 @@ public class JobPostController {
 
   // Utility method to map Applicant entity to ResponseApplicantDto
   private ResponseApplicantDto mapToResponseApplicantDto(Applicant applicant) {
-    ResponseApplicantDto responseApplicantDto = new ResponseApplicantDto();
+    ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
     responseApplicantDto.applicantId = applicant.getID();
     responseApplicantDto.username = applicant.getUsername();
     responseApplicantDto.applicantProfile = mapToResponseProfileDto(applicant.getProfile());

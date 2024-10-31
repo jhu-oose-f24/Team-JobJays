@@ -19,6 +19,8 @@ const JobDetailPage: React.FC = () => {
 
     return (
         <div className="bg-gray-100">
+            {/* <Navbar />
+            <HeaderActions /> */}
             <header className="bg-white py-4 shadow">
                 <div className="container mx-auto flex items-center">
                     <Link href="/" className= "flex items-center space-x-3">
