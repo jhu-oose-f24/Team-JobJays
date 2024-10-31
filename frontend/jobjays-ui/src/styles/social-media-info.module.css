@@ -1,104 +1,156 @@
-.socialMediaContainer {
-    padding: 20px;
-    background-color: #fff;
+/* styles/social-media-info.module.css */
+
+.container {
+    width: calc(100% - 48px);
+    margin: 0 24px 24px; /* Remove top margin */
+    padding: 24px;
+    background: white;
+    border: 1px solid #e5e7eb;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 700px;
-    margin: 0 auto;
 }
 
-.socialMediaTitle {
-    text-align: center;
-    font-size: 24px;
-    color: #333;
-    margin-bottom: 20px;
-}
 
-.socialMediaRow {
+
+.header {
     display: flex;
     align-items: center;
-    gap: 15px; /* Uniform gap between elements */
-    margin-bottom: 15px;
+    gap: 12px;
+    margin-bottom: 24px;
 }
 
-.formGroup {
-    flex: 1;
+.headerIcon {
+    width: 24px;
+    height: 24px;
+    color: #000;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: #000;
+}
+
+.description {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.content {
     display: flex;
     flex-direction: column;
+    gap: 24px;
 }
 
-.selectInput {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
-    height: 40px;
-    background-color: #fff;
-    outline: none;
+.linkRow {
+    display: grid;
+    grid-template-columns: 200px 1fr auto;
+    gap: 12px;
+    align-items: start;
 }
 
-.inputText {
-    padding: 10px;
+.select,
+.input {
     height: 40px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+    color: #111827;
+}
+
+.select {
+    width: 200px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+}
+
+.input {
     width: 100%;
+}
+
+.select:focus,
+.input:focus {
     outline: none;
-    margin-top: 25px; /* Ensure there's some space above the input */
+    border-color: #000;
+    box-shadow: 0 0 0 1px #000;
 }
 
 .removeButton {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 20px;
-    color: #f00; /* Red color for the remove button */
-}
-
-.removeButton:hover {
-    color: #c00;
-}
-
-.addLinkButtonContainer {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.addLinkButton {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    border: none;
+    background: none;
+    color: #ef4444;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
-.addLinkButton:hover {
-    background-color: #e0e0e0;
+.removeButton:hover {
+    color: #dc2626;
 }
 
-.addLinkButton i {
-    margin-right: 5px; /* Ensure there's space between the icon and the text */
+.addLinkContainer {
+    padding-top: 8px;
+}
+
+.addButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    background: none;
+    border: none;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.addButton:hover {
+    color: #1d4ed8;
+}
+
+.plusIcon,
+.trashIcon {
+    flex-shrink: 0;
+}
+
+.saveContainer {
+    padding-top: 16px;
 }
 
 .saveButton {
-    padding: 12px 20px;
-    background-color: #007bff;
+    padding: 8px 16px;
+    background: #000;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
     cursor: pointer;
-    font-size: 16px;
-    display: block;
-    margin: 20px auto;
-    width: 150px;
 }
 
 .saveButton:hover {
-    background-color: #0056b3;
+    background: #333;
+}
+
+@media (max-width: 640px) {
+    .linkRow {
+        grid-template-columns: 1fr;
+    }
+
+    .select {
+        width: 100%;
+    }
 }
