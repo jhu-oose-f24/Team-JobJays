@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import {useToast} from "@/hooks/use-toast";
 import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
+import { JobPost } from '@/lib/types';
 
 
 import { Button } from "@/components/ui/button"
@@ -70,6 +71,12 @@ const JobDetails = () => {
     if (isError) return <div>Error loading job details.</div>;
     if (!JobPost) return <div>Job not found.</div>;
 
+    const [savedJobs, setSavedJobs] = useState<JobPost[]>([]);
+
+    const handleSubmit = () => {
+        setSavedJobs((prev) => [...prev, JobPost]);
+    }
+
 
 
     return (
@@ -109,6 +116,9 @@ const JobDetails = () => {
                                 <JobForm onSubmit={handleJobFormSubmit}/>
                             </DialogContent>
                         </Dialog>
+                        <button onClick={handleSubmit}>
+                            Save
+                        </button>
                     </div>
                 </div>
 

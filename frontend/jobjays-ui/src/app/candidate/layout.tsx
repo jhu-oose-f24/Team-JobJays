@@ -55,6 +55,7 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
                     <Link href={`/candidate/${candidate_id}/jobAlerts`} className={styles.navItem}>Jobs Alerts</Link>
                     <Link href={`/candidate/${candidate_id}/settings`} className={styles.navItem}> Settings</Link>
                     <Link href={"/candidate/preference"} className={styles.navItem}> Preferences</Link>
+                    <Link href={`/candidate/${candidate_id}/savedJobs`} className={styles.navItem}>Saved Jobs</Link>
                 </nav>
             </aside>
 
