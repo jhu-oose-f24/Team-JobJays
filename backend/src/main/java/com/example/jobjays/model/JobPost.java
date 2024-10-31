@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -41,6 +42,16 @@ public class JobPost implements Post {
       inverseJoinColumns = @JoinColumn(name = "applicant_id")
   )
   private Set<Applicant> applicants;
+
+//  @JoinTable(
+//      name = "job_post_metrics",
+//      joinColumns = @JoinColumn(name = "job_post_id"),
+//      inverseJoinColumns = @JoinColumn(name = "metric_id")
+//  )
+  @Getter
+  @Setter
+  @OneToOne(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Impressions impressions;
 
   @ManyToOne
   public Employer employer;
@@ -83,6 +94,16 @@ public JobPost() {}
         this.tags.add(employer.getProfile().getIndustry());
 
   }
+
+  public ImpressionEvent addImpression() {
+    if (impressions == null) {
+      impressions = new Impressions(this);
+      //impressions.setJobPost(this);
+    }
+    return impressions.logImpression();
+
+  }
+
   public String getTitle() {
     return title;
   }

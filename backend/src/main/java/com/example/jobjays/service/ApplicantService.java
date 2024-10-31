@@ -40,7 +40,7 @@ public class ApplicantService {
     return applicantRepository.findByToken(token);
 
   }
-  //TODO CREATE A JOB APPLICATION SERVICE
+
 
   public Applicant updateApplicant(UpdateApplicantDto newApplicant, Long id) {
     Applicant applicantToUpdate = applicantRepository.findById(id).orElse(null);

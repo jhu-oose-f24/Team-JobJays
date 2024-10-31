@@ -13,6 +13,17 @@ interface DashboardPageProps {
 const DashboardPage: React.FC<DashboardPageProps> = ({ params }) => {
     const { EmployerProfile, isLoading, isError } = useUser(Number(params.employerId));
 
+    const getImpressions = async () => {
+        const response = await fetch(`http://localhost:8080/api/metrics/impressions/502`);
+        if (!response.ok) {
+            throw new Error('Network Error');
+        }
+        else {
+            return response.json();
+        }
+
+    }
+
     if (isLoading) return <p>Loading...</p>;
     if (isError) return <p>Error loading data</p>;
     return (
@@ -28,9 +39,11 @@ const DashboardPage: React.FC<DashboardPageProps> = ({ params }) => {
                         <p>5</p>
                         <span>Saved Candidates</span>
                     </div>
-                    <div className={styles.statBox}>
+                    <div
+                        onClick={getImpressions}
+                        className={styles.statBox}>
                         <p>0</p>
-                        <span>Pending Jobs</span>
+                        <span>Impressions</span>
                     </div>
                 </div>
             </header>
