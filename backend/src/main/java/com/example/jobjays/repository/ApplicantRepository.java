@@ -28,5 +28,8 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
   // Set<JobPost> findSavedJobsByApplicantId(Long applicantId);
   // Optional<JobPost> findJobPostByApplicantIdandJobId(Long applicantId, Long
   // jobPostId);
+  @Query("select a.profile.savedJobs from Applicant a where a.applicantId = :applicantId")
+  Set<JobPost> findSavedJobsByApplicantId(Long applicantId);
 
+  Boolean existsByEmail(String email);
 }

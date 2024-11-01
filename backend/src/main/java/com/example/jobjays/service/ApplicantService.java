@@ -119,13 +119,16 @@ public class ApplicantService {
     return applicants.stream().map(Applicant::getProfile).toList();
   }
 
-//  public Set<JobPost> findSavedJobsByApplicantId(Long applicantId) {
-//    return applicantRepository.findSavedJobsByApplicantId(applicantId);
-//  }
 
-//  public void addSavedJob(Long applicantId, JobPost jobPost) {
+
+  public Set<JobPost> findSavedJobsByApplicantId(Long applicantId) {
+    return applicantRepository.findSavedJobsByApplicantId(applicantId);
+  }
+
+  public void addSavedJob(ApplicantProfile applicantProfile, JobPost jobPost) {
 //    applicantRepository.findSavedJobsByApplicantId(applicantId).add(jobPost);
-//  }
+    applicantProfile.addSavedJobs(jobPost);
+  }
 //
 //
 ////  public Optional<JobPost> findJobPostByApplicantIdandJobId(Long applicantId, Long jobPostId) {

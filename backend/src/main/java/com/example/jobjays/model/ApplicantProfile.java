@@ -85,7 +85,7 @@ public class ApplicantProfile implements Profile {
 
   }
 
-  public Set<JobPost> viewSavedJobs() {
+  public Set<JobPost> getSavedJobs() {
     return savedJobs;
   }
 
