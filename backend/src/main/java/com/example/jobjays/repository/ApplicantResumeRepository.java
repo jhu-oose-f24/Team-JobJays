@@ -11,8 +11,10 @@ import java.util.List;
 @Repository
 public interface ApplicantResumeRepository extends JpaRepository<ApplicantResume, Long> {
 
+  //@Query("SELECT a.resume_id,a.resumeName,null,a.userName,a.userId,a.uploadedAt FROM ApplicantResume a WHERE a.userId = :userId")
+  @Query("SELECT new com.example.jobjays.model.ApplicantResume(a.resume_id, a.resumeName, a.userName, a.userId, a.uploadedAt) " +
+          "FROM ApplicantResume a WHERE a.userId = :userId")
   List<ApplicantResume> findByUserId(Long userId);
-  //TODO CREATE A JOB APPLICATION REPOSITORY
 
 
 

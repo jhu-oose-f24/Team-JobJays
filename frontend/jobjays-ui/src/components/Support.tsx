@@ -1,9 +1,11 @@
-"use client"
+"use client";
+
 import { useState } from 'react';
-import styles from '@/styles/support.module.css'; // 引入 CSS 模块
+import { ChevronDown, HelpCircle, Search } from 'lucide-react';
 
 const Support = () => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const questions = [
         {
@@ -28,41 +30,82 @@ const Support = () => {
         }
     ];
 
+    const filteredQuestions = questions.filter(q => 
+        q.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        q.answer.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     const toggleAccordion = (index: number) => {
         setActiveIndex(activeIndex === index ? null : index);
     };
 
     return (
-        <div className={styles.supportContainer}>
-            <h1>Support</h1>
-            <p>If you have any questions, you may find the answers below. If not, feel free to reach out to us!</p>
-            <div className={styles.accordionContainer}>
-                {questions.map((item, index) => (
-                    <div
-                        key={index}
-                        className={`${styles.accordionItem} ${activeIndex === index ? styles.active : ''}`}
-                    >
-                        <div
-                            className={styles.accordionTitle}
-                            onClick={() => toggleAccordion(index)}
-                        >
-                            <h3>{item.question}</h3>
-                            <span>{activeIndex === index ? '-' : '+'}</span>
+        <section className="bg-gray-100 p-12">
+            <div className="max-w-3xl mx-auto">
+                {/* Header */}
+                <div className="text-center mb-12">
+                    {/* <div className="flex justify-center mb-6">
+                        <div className="bg-blue-50 p-3 rounded-full">
+                            <HelpCircle className="w-8 h-8 text-blue-400" />
                         </div>
-                        <div
-                            className={styles.accordionContent}
-                            style={{
-                                maxHeight: activeIndex === index ? '150px' : '0px',
-                                overflow: 'hidden',
-                                transition: 'max-height 0.3s ease'
-                            }}
-                        >
-                            <p>{item.answer}</p>
-                        </div>
+                    </div> */}
+                    <h1 className="text-4xl font-bold font-[family-name:var(--font-geist-mono)] mb-4">
+                        Support Center
+                    </h1>
+                    <p className="text-gray-600 mb-8">
+                        If you have any questions, you may find the answers below. If not, feel free to reach out to us!
+                    </p>
+
+                    {/* Search Bar */}
+                    <div className="relative max-w-xl mx-auto mb-12">
+                        <Search className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" />
+                        <input
+                            type="text"
+                            placeholder="Search for answers..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-md focus:outline-none focus:border-blue-400 placeholder-gray-400"
+                        />
                     </div>
-                ))}
+                </div>
+
+                {/* FAQ Accordion */}
+                <div className="space-y-4">
+                    {filteredQuestions.map((item, index) => (
+                        <div
+                            key={index}
+                            className="bg-white rounded-lg border border-gray-200 overflow-hidden"
+                        >
+                            <button
+                                onClick={() => toggleAccordion(index)}
+                                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                            >
+                                <span className="text-gray-900 font-medium">{item.question}</span>
+                                <ChevronDown 
+                                    className={`w-5 h-5 text-gray-500 transition-transform duration-200 
+                                    ${activeIndex === index ? 'transform rotate-180' : ''}`}
+                                />
+                            </button>
+                            <div
+                                className={`px-6 overflow-hidden transition-all duration-200 ease-in-out
+                                ${activeIndex === index ? 'max-h-40 py-4' : 'max-h-0'}`}
+                            >
+                                <p className="text-gray-600">{item.answer}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Contact Section */}
+                <div className="text-center mt-12 pt-8 border-t border-gray-200">
+                    <h2 className="text-xl font-semibold mb-2">Still need help?</h2>
+                    <p className="text-gray-600 mb-6">We're here to help you with anything you need</p>
+                    <button className="px-6 py-3 bg-blue-400 text-white rounded-md hover:bg-blue-500 transition-colors">
+                        Contact Support
+                    </button>
+                </div>
             </div>
-        </div>
+        </section>
     );
 };
 

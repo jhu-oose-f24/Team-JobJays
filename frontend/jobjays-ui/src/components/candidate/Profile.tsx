@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 // import styles from '@/styles/founding-info.module.css'; // CSS module import
 export interface ProfileData {
     nationality: string;
@@ -15,12 +15,12 @@ interface FoundingInfoProps {
 }
 
 const ProfileData: React.FC<FoundingInfoProps> = ({  }) => {
-    const [organizationType, setOrganizationType] = useState<string>('');
-    const [industryType, setIndustryType] = useState<string>('');
-    const [teamSize, setTeamSize] = useState<string>('');
-    const [yearOfEstablishment, setYearOfEstablishment] = useState<string>('');
-    const [companyWebsite, setCompanyWebsite] = useState<string>('');
-    const [companyVision, setCompanyVision] = useState<string>('');
+    // const [organizationType, setOrganizationType] = useState<string>('');
+    // const [industryType, setIndustryType] = useState<string>('');
+    // const [teamSize, setTeamSize] = useState<string>('');
+    // const [yearOfEstablishment, setYearOfEstablishment] = useState<string>('');
+    // const [companyWebsite, setCompanyWebsite] = useState<string>('');
+    // const [companyVision, setCompanyVision] = useState<string>('');
 
 
     return (

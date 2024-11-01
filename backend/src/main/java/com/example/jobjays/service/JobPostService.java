@@ -1,9 +1,7 @@
 package com.example.jobjays.service;
 
 import com.example.jobjays.kafka.JobPostPublisherService;
-import com.example.jobjays.model.Employer;
-import com.example.jobjays.model.EmployerProfile;
-import com.example.jobjays.model.JobPost;
+import com.example.jobjays.model.*;
 import com.example.jobjays.dto.jobPost.*;
 import com.example.jobjays.repository.JobPostRepository;
 import org.springframework.http.HttpStatus;
@@ -11,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class JobPostService {
@@ -32,7 +31,11 @@ public class JobPostService {
       newJobPost.getMinSalary(),
       newJobPost.getMaxSalary(),
       newJobPost.getClosedDate(),
-      employer, newJobPost.getTags()
+      employer, newJobPost.getTags(),
+            newJobPost.getJobType(),
+            newJobPost.getIndustry(),
+            newJobPost.getWorkTiming(),
+            newJobPost.getSkillsRequired()
     );
     employer.postJob(jobPost); //Adding jobPost to employer's list of jobPosts
 
@@ -120,6 +123,19 @@ public class JobPostService {
 
   public List<JobPost> getJobPostsBySalaryRange(Double minSalary, Double maxSalary) {
     return jobPostRepository.findJobPostsByMinSalaryIsGreaterThanEqualAndMaxSalaryIsLessThanEqual(minSalary, maxSalary);
+  }
+
+  public Set<Applicant> getApplicantsByJobPostId(Long jobID) {
+    return jobPostRepository.findApplicantsByJobPostId(jobID);
+  }
+
+  public JobPost addApplicantToJobPost(JobPost jobPost, Applicant applicant) {
+
+    jobPost.addApplicant(applicant);
+    ApplicantProfile profile = applicant.getProfile();
+    profile.getAppliedJobs().add(jobPost);
+    return jobPostRepository.save(jobPost);
+
   }
 
 }

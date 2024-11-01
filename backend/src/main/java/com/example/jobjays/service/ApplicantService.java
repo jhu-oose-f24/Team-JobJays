@@ -4,14 +4,19 @@ import com.example.jobjays.dto.applicant.CreateApplicantDto;
 import com.example.jobjays.dto.applicant.UpdateApplicantDto;
 import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
+import com.example.jobjays.model.JobPost;
 import com.example.jobjays.repository.ApplicantRepository;
+import jakarta.validation.constraints.Email;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ApplicantService {
   private final ApplicantRepository applicantRepository;
+
 
   public ApplicantService(ApplicantRepository applicantRepository) {
     this.applicantRepository = applicantRepository;
@@ -40,7 +45,7 @@ public class ApplicantService {
     return applicantRepository.findByToken(token);
 
   }
-  //TODO CREATE A JOB APPLICATION SERVICE
+
 
   public Applicant updateApplicant(UpdateApplicantDto newApplicant, Long id) {
     Applicant applicantToUpdate = applicantRepository.findById(id).orElse(null);
@@ -48,7 +53,7 @@ public class ApplicantService {
     if (applicantToUpdate == null) {
       return null;
     }
-
+    applicantToUpdate.setEnabled(newApplicant.getEnabled());
     ApplicantProfile profile = applicantToUpdate.getProfile();
 
     if (newApplicant.getResume() != null && !newApplicant.getResume().isEmpty()) {
@@ -114,5 +119,27 @@ public class ApplicantService {
     return applicants.stream().map(Applicant::getProfile).toList();
   }
 
+//  public Set<JobPost> findSavedJobsByApplicantId(Long applicantId) {
+//    return applicantRepository.findSavedJobsByApplicantId(applicantId);
+//  }
 
+//  public void addSavedJob(Long applicantId, JobPost jobPost) {
+//    applicantRepository.findSavedJobsByApplicantId(applicantId).add(jobPost);
+//  }
+//
+//
+////  public Optional<JobPost> findJobPostByApplicantIdandJobId(Long applicantId, Long jobPostId) {
+////    return;
+////  }
+//
+//  public void deleteJobPostByApplicantId(Long applicantId, JobPost jobPost) {
+//    applicantRepository.findSavedJobsByApplicantId(applicantId).remove(jobPost);
+//  }
+
+
+
+
+  public boolean isEmailInUse(@Email String email) {
+    return applicantRepository.existsByEmail(email);
+  }
 }

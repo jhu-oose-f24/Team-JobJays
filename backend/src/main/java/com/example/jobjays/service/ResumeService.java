@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 public class ResumeService {
@@ -19,15 +21,17 @@ public class ResumeService {
     public ApplicantResume saveResume(MultipartFile file,String username, Long userId) throws IOException {
         String fileName = file.getOriginalFilename();
         String fileType = file.getContentType();
-        if(fileType!=".pdf"){
-            //not a pdf
-            throw new ServiceException("File type is not PDF");
+        if (fileType.isEmpty() || !fileType.equals("application/pdf")) {
+            throw new ServiceException("File type not supported");
         }
         byte[] resumeData = file.getBytes();
 
-        ApplicantResume resume = ApplicantResume.builder().resumeName(fileName).fileData(resumeData)
-                .userName(username).userId(userId)
-                .build();
+        ApplicantResume resume = new ApplicantResume();
+        resume.setResumeName(fileName);
+        resume.setFileData(resumeData);
+        resume.setUserName(username);
+        resume.setUserId(userId);
+        resume.setUploadedAt(LocalDateTime.now());
         return resumeRepository.save(resume);
     }
 
@@ -35,5 +39,13 @@ public class ResumeService {
     public ApplicantResume getResumeById(Long id) {
         return resumeRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Resume not found"));
+    }
+
+    public void deleteById(Long id) {
+        resumeRepository.deleteById(id);
+    }
+
+    public List<ApplicantResume> getAllResumesByUserId(Long userId){
+        return resumeRepository.findByUserId(userId);
     }
 }

@@ -14,7 +14,12 @@ public class JobPostDTO {
     private String title;
     private String description;
     private Location location;
-    private Double salary;
+    private String jobType;
+    private List<String> skillsRequired;
+    private String industry;
+    private String workTiming;
+    private Double minSalary;
+    private Double maxSalary;
     private String employerName;
     private LocalDateTime postedDate;
     private LocalDateTime closedDate;
@@ -23,15 +28,21 @@ public class JobPostDTO {
     public JobPostDTO() {}
 
     public JobPostDTO(Long jobId, String title, String description, Location location,
-                      Double salary, String employerName, LocalDateTime postedDate, LocalDateTime closedDate, List<String> tags) {
+                      Double minSalary, Double maxSalary, String employerName, LocalDateTime postedDate, LocalDateTime closedDate,
+                      List<String> tags, String jobType, String industry, String workTiming, List<String> skillsRequired) {
         this.jobId = jobId;
         this.title = title;
         this.description = description;
         this.location =  location;
-        this.salary = salary;
+        this.minSalary = minSalary;
+        this.maxSalary = maxSalary;
         this.employerName = employerName;
         this.postedDate = postedDate;
         this.closedDate = closedDate;
         this.tags = tags;
+        this.jobType = jobType;
+        this.industry = industry;
+        this.workTiming = workTiming;
+        this.skillsRequired = skillsRequired;
     }
 }

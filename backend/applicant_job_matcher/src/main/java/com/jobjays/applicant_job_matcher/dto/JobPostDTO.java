@@ -14,7 +14,7 @@ public class JobPostDTO {
     private String description;
     @JsonAnyGetter
     private LocationDTO location;
-    private Double salary;
+    private Double minSalary;
     private List<String> skillsRequired;
     private String industry;
     private String jobType; // E.g., "on-site", "remote", "hybrid"
@@ -32,7 +32,7 @@ public class JobPostDTO {
         this.title = title;
         this.description = description;
         this.location = location;
-        this.salary = salary;
+        this.minSalary = salary;
         this.skillsRequired = skillsRequired;
         this.industry = industry;
         this.jobType = jobType;

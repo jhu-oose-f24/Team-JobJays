@@ -1,121 +1,125 @@
-/* Container styling */
-.companyInfoContainer {
+/* styles/founding-info.module.css */
+
+.container {
+    width: calc(100% - 48px);
+    margin: 0 24px 24px; /* Remove top margin */
+    padding: 24px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.headerIcon {
+    width: 32px;
+    height: 32px;
+    color: #000;
+}
+
+.headerContent {
+    flex: 1;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+    color: #000;
+}
+
+.description {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.form {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    max-width: 800px; /* Increased width to accommodate grid */
-    margin: 0 auto;
+    gap: 24px;
 }
 
-/* Title */
-.companyInfoTitle {
-    text-align: center;
-    color: #333;
-    font-size: 24px;
-    margin-bottom: 20px;
-}
-
-/* Input Fields Container */
-.inputFieldsContainer {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 20px;
-}
-
-/* Form Group */
-.formGroup {
+.formField {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-/* Labels */
-.formGroup label {
-    font-weight: bold;
-    color: #555;
+.label {
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
 }
 
-/* Input and TextArea styling */
-.inputText, .textArea {
+.input,
+.select,
+.textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
     outline: none;
-    transition: border-color 0.3s ease;
+    border-color: #000;
 }
 
-.inputText:focus, .textArea:focus {
-    border-color: #4caf50;
+.input::placeholder,
+.textarea::placeholder {
+    color: #9ca3af;
 }
 
-/* TextArea */
-.textArea {
-    resize: vertical;
-    min-height: 120px;
-}
-
-/* Button styling */
-.submitButton {
-    padding: 12px 20px;
-    background-color: #60A5FA;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    align-self: center;
-    transition: background-color 0.3s ease;
-    width: 200px;
-}
-
-.submitButton:hover {
-    background-color: #0056b3;
-}
-
-.submitButton:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Styling for the custom select */
-.customSelect {
-    width: 100%;
-    padding: 12px;
-    background-color: #fff; /* White background */
-    border: 1px solid #ccc; /* Light gray border */
-    border-radius: 4px;     /* Slightly rounded corners */
-    font-size: 16px;        /* Adjust the font size */
-    color: #333;            /* Dark gray text */
-    appearance: none;       /* Remove default select styles */
-    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="%23999999"><polygon points="0,0 10,0 5,7"/></svg>'); /* Custom arrow */
+.select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 12px center; /* Arrow positioning */
-    background-size: 12px; /* Arrow size */
-    cursor: pointer;       /* Cursor changes to pointer */
+    background-position: right 12px center;
+    padding-right: 36px;
 }
 
-/* Focus styling */
-.customSelect:focus {
-    border-color: #4caf50; /* Green border on focus */
+.textarea {
+    min-height: 120px;
+    resize: vertical;
 }
 
-/* Hides the default select arrow in IE11 */
-.customSelect::-ms-expand {
-    display: none;
+.button {
+    width: fit-content;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    background: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
-/* Responsive adjustments */
-@media (max-width: 600px) {
-    .inputFieldsContainer {
-        grid-template-columns: 1fr;
+.button:hover {
+    background: #333;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: calc(100% - 32px);
+        margin: 16px;
+        padding: 16px;
     }
 
-    .submitButton {
+    .button {
         width: 100%;
     }
 }
