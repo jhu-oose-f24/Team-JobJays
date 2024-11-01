@@ -30,6 +30,7 @@ export function addJobAttributes(job: JobPost): JobPost {
 
 // Hook to fetch the ApplicantProfile
 export function useApplicant(applicantId: number) {
+    applicantId = localStorage.getItem('applicantId') ? parseInt(localStorage.getItem('applicantId') as string) : 0;
     const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/profile/${applicantId}`, fetcher);
 
     return {
@@ -122,6 +123,7 @@ export const createJobPost = async (
     jobData: any,
 ) => {
 
+    employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0;
     const response = await fetch(`http://localhost:8080/api/companies/profile/${employerId}/post`, {
         method: 'POST',
         headers: {

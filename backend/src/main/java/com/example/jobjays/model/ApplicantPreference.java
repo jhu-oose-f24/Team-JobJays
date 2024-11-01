@@ -35,6 +35,17 @@ public class ApplicantPreference {
     @Column(name = "industry")
     private List<String> industries;
 
+
+    // skills field added
+    // getter and setter added
+     @Setter
+     @Getter
+     @ElementCollection(fetch = FetchType.EAGER)
+     @CollectionTable(name = "applicant_skills", joinColumns = @JoinColumn(name = "applicant_preference_id"))
+     @Column(name = "skill")
+     private List<String> skills;
+
+
     @Setter
     @Getter
     @ElementCollection(fetch = FetchType.EAGER)
@@ -42,12 +53,6 @@ public class ApplicantPreference {
     @Column(name = "job_title")
     private List<String> jobTitles;
 
-    @Setter
-    @Getter
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "applicant_skills", joinColumns = @JoinColumn(name = "applicant_preference_id"))
-    @Column(name = "skill")
-    private List<String> skills; // New field for skills
 
     @Setter
     @Getter

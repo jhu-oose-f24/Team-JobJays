@@ -45,7 +45,11 @@ public class JobPostPublisherService {
                 employerName,
                 jobPost.getPostedDate(),
                 jobPost.getClosedDate(),
-                jobPost.getTags()
+                jobPost.getTags(),
+                jobPost.getJobType(),
+                jobPost.getIndustry(),
+                jobPost.getWorkTiming(),
+                jobPost.getSkillsRequired()
         );
     }
 }

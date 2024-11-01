@@ -47,6 +47,8 @@ public class ApplicantPreferenceService {
         // call the preference kafka service
         preference = preferenceRepository.save(preference);
 
+        System.out.println(preference.getSkills());
+
         preferencePublisherService.publishApplicantPreference(preference);
         return convertToDto(preference);
     }
@@ -63,6 +65,8 @@ public class ApplicantPreferenceService {
                 .collect(Collectors.toList());
         preference.setLocations(locations);
 
+        // set skills
+        preference.setSkills(dto.getSkills());
         if (dto.getNotificationPreference() != null) {
             NotificationPreference notificationPreference = new NotificationPreference();
             notificationPreference.setNotificationFrequency(
@@ -72,18 +76,21 @@ public class ApplicantPreferenceService {
     }
 
     private ApplicantPreferenceDto convertToDto(ApplicantPreference preference) {
+        if (preference == null) {
+            return null;
+        }
         ApplicantPreferenceDto dto = new ApplicantPreferenceDto(
                 preference.getApplicant().getID(),
                 preference.getIndustries(),
                 preference.getJobTitles(),
                 preference.getMinMonthlySalary(),
+                preference.getSkills(),
                 preference.getLocations().stream()
                         .map(loc -> new LocationDto(loc.getCountry(), loc.getState(), loc.getCity()))
                         .collect(Collectors.toList()),
                 preference.getJobTypes(),
                 preference.getWorkTimings(),
                 preference.getNotificationPreference().toDto()
-
         );
 
         if (preference.getNotificationPreference() != null) {

@@ -74,14 +74,14 @@
 import React from 'react';
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  UserCircle, 
-  Briefcase, 
-  BookmarkPlus, 
-  Users,
-  ChevronLeft,
-  LogOut
+import {
+    LayoutDashboard,
+    UserCircle,
+    Briefcase,
+    BookmarkPlus,
+    Users,
+    ChevronLeft,
+    LogOut
 } from "lucide-react";
 
 const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
@@ -119,17 +119,16 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
     return (
         <div className="flex h-screen bg-gray-50">
             {/* Sidebar */}
-            <aside 
-                className={`${
-                    collapsed ? 'w-20' : 'w-64'
-                } bg-white transition-all duration-300 border-r border-gray-200 flex flex-col`}
+            <aside
+                className={`${collapsed ? 'w-20' : 'w-64'
+                    } bg-white transition-all duration-300 border-r border-gray-200 flex flex-col`}
             >
                 {/* Logo section */}
                 <div className="p-6 flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-3">
-                        <img 
-                            src="/JobJays_logo.png" 
-                            alt="JobJays Logo" 
+                        <img
+                            src="/JobJays_logo.png"
+                            alt="JobJays Logo"
                             className="w-10 h-10 object-contain"
                         />
                         {!collapsed && (
@@ -138,14 +137,13 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
                             </span>
                         )}
                     </Link>
-                    <button 
+                    <button
                         onClick={() => setCollapsed(!collapsed)}
                         className="p-2 rounded-lg hover:bg-gray-100"
                     >
-                        <ChevronLeft 
-                            className={`w-5 h-5 transition-transform duration-300 ${
-                                collapsed ? 'rotate-180' : ''
-                            }`} 
+                        <ChevronLeft
+                            className={`w-5 h-5 transition-transform duration-300 ${collapsed ? 'rotate-180' : ''
+                                }`}
                         />
                     </button>
                 </div>

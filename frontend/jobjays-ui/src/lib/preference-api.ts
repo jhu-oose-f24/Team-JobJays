@@ -1,84 +1,52 @@
-// PreferenceService.ts
+import axios from 'axios';
 
-export const fetchPreference = async (applicantId: number) => {
+// Base URL for axios requests
+const API_BASE_URL = 'http://localhost:8080/api';
+
+export const fetchPreference = async () => {
+    const applicantId = localStorage.getItem('applicantId');
+    
     try {
-        const response = await fetch(`/api/applicant-preferences/${applicantId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status} - ${response.statusText}`);
-        }
-        return await response.json();
-    } catch (error) {
-        console.error('Failed to fetch preference:', error);
-        // Returning fallback data when API call fails
-        return {
-            applicantId: 1,
-            industries: ["Software Development", "Finance", "Healthcare"],
-            jobTitles: ["Software Engineer", "Data Analyst"],
-            minMonthlySalary: 10000,
-            locations: [
-                {
-                    country: "USA",
-                    state: "California",
-                    city: "San Francisco"
+
+        console.log("applicantId is ", applicantId);
+
+        // Make GET request with axios
+        const response = await axios.get(`${API_BASE_URL}/applicant-preferences/${applicantId}`);
+
+        return response.data;
+    } catch (error: any) {
+        if (error.response && error.response.status === 404) {
+            // Return default preference structure if no data exists for the applicant
+            return {
+                applicantId: parseInt(applicantId || '0', 10),
+                industries: [],
+                jobTitles: [],
+                minMonthlySalary: 0,
+                locations: [],
+                jobTypes: [],
+                workTimings: [],
+                notificationPreference: {
+                    notificationFrequency: "DAILY",
                 },
-                {
-                    country: "USA",
-                    state: "New York",
-                    city: "New York City"
-                }
-            ],
-            jobTypes: ["remote", "hybrid", "on-site"],
-            workTimings: ["full-time", "flexible", "part-time"],
-            notificationPreference: {
-                notificationFrequency: "DAILY"
-            }
-        };
+            };
+        }
+        console.error('Failed to fetch preference:', error);
+        throw error;
     }
 };
 
 export const updatePreference = async (preference: any) => {
     try {
-        const response = await fetch('/api/applicant-preferences', {
-            method: 'POST',
+        // Make POST request with axios
+        const response = await axios.post(`${API_BASE_URL}/applicant-preferences`, preference, {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(preference),
         });
-        if (!response.ok) {
-            throw new Error(`Error: ${response.status} - ${response.statusText}`);
-        }
-        return await response.json();
+
+        return response.data;
     } catch (error) {
         console.error('Failed to update preference:', error);
-        // Returning fallback data when API call fails
-        return {
-            applicantId: 1,
-            industries: ["Software Development", "Finance", "Healthcare"],
-            jobTitles: ["Software Engineer", "Data Analyst"],
-            minMonthlySalary: 10000,
-            locations: [
-                {
-                    country: "USA",
-                    state: "California",
-                    city: "San Francisco"
-                },
-                {
-                    country: "USA",
-                    state: "New York",
-                    city: "New York City"
-                }
-            ],
-            jobTypes: ["remote", "hybrid", "on-site"],
-            workTimings: ["full-time", "flexible", "part-time"],
-            notificationPreference: {
-                notificationFrequency: "DAILY"
-            }
-        };
+        throw error;
     }
 };

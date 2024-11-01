@@ -12,6 +12,7 @@ public class Applicant implements User {
   @Column(insertable=false, updatable=false)
   private String name;
   private String password;
+  @Column(unique = true)
   private String email;
   private Boolean enabled;
   private String token;

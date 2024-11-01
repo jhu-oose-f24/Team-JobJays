@@ -16,7 +16,7 @@ public class ResponseJobPostDto {
   public LocalDateTime closedDate;
   public Integer numApplicants;
 
-  //public ResponseEmployerDto employer;
+  // public ResponseEmployerDto employer;
 
   public String setCompanyName(String companyName) {
     this.companyName = companyName;

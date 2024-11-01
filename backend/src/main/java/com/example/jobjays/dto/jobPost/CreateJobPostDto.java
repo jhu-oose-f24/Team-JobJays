@@ -13,17 +13,32 @@ public class CreateJobPostDto {
   @NotBlank
   private String title;
 
-
   @NotBlank
   private String description;
 
-  @NotBlank
+  @NotNull
   private Location location;
+
+  @Getter
+  @Setter
+  @NotNull
+  private String jobType;
+  @Getter
+  @Setter
+  private String industry;
+  @Getter
+  @Setter
+  @NotNull
+  private String workTiming;
 
   @Getter
   @Setter
   List<String> tags;
 
+
+  @Getter
+  @Setter
+  List<String> skillsRequired;
   @NotNull
   @Positive
   private Double minSalary;

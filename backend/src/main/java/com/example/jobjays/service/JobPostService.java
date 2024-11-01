@@ -31,7 +31,11 @@ public class JobPostService {
       newJobPost.getMinSalary(),
       newJobPost.getMaxSalary(),
       newJobPost.getClosedDate(),
-      employer, newJobPost.getTags()
+      employer, newJobPost.getTags(),
+            newJobPost.getJobType(),
+            newJobPost.getIndustry(),
+            newJobPost.getWorkTiming(),
+            newJobPost.getSkillsRequired()
     );
     employer.postJob(jobPost); //Adding jobPost to employer's list of jobPosts
 
