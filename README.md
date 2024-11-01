@@ -57,7 +57,9 @@ Also, in this iteration, as stated in the directions, we aimed to complete all o
 
 We also got ahead on the next iteration and began to work on polishing the UI. This task will continued to be worked on for the next iteration so we can ensure we have a great looking, cohesive application. 
 
-We also made changes to our UML diagram to mimic the state of our application at this point, which you can find in: ‘class_diagram.mermaid’
+We also made changes to our UML diagram to mimic the state of our application at this point, which you can find in: ‘class_diagram.mermaid’ 
+
+### How Preference, JobMatching Services works(video explanation) -  https://drive.google.com/file/d/1K8zL4N61aZ6ESc-EVxIhXuNwvQRUu8E2/view?usp=sharing
 
 
 # Running the JobJays Backend(KAFKA Server) with Docker
