@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.net.http.HttpClient;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -42,10 +44,8 @@ public class ApplicantController {
 
   @Autowired
   private EmailSendWrapper emailSendWrapper;
-
   @Autowired
   private ResumeService resumeService;
-
 
   public ApplicantController(ApplicantService applicantService, ResponseMapperService responseMapperService) {
     this.applicantService = applicantService;
@@ -60,25 +60,6 @@ public class ApplicantController {
     Matcher matcher = EMAIL_PATTERN.matcher(email);
     return matcher.matches();
   }
-
-//  @GetMapping("/verify")
-//  public String verifyUser(@RequestParam("token") String token) {
-//    Applicant applicant = applicantService.findByVerificationToken(token);
-//    UpdateApplicantDto user = new UpdateApplicantDto();
-//
-//    if (applicant == null) {
-//      return "Invalid token!";
-//    }
-//
-//    user.setEnabled(true); // Enable the user
-//    user.setToken(null); // Clear the token
-//    applicantService.updateApplicant(user,applicant.getID());
-//
-//    // redirect to login page
-////    return HttpClient.Redirect()
-//    return "Email verified successfully! You can now log in.";
-//  }
-
 
   @GetMapping("/verify")
   public RedirectView verifyUser(@RequestParam("token") String token) {
@@ -102,17 +83,19 @@ public class ApplicantController {
 
   @PostMapping
   public ResponseEntity<?> addApplicant(@RequestBody CreateApplicantDto createApplicantDto) {
-    //check the email formation
-    if(!isValidEmail(createApplicantDto.getEmail())) {
+    // check the email formation
+    if (!isValidEmail(createApplicantDto.getEmail())) {
       throw new ServiceException("Email format is wrong");
     }
 
     createApplicantDto.setEnabled(false);
     String token = TokenGenerator.generateToken();
     createApplicantDto.setVerificationToken(token);
-    createApplicantDto.setEnabled(false); // User is disabled until they verify
+    createApplicantDto.setEnabled(false); // User is disabled until they v
+    // rify
     // Before adding the applicant, check if the email is already in use
-    // Synchronize on the email or use a unique constraint to prevent race conditions
+    // Synchronize on the email or use a unique constraint to prevent race
+    // conditions
     synchronized (this) {
       // Before adding the applicant, check if the email is already in use
       if (applicantService.isEmailInUse(createApplicantDto.getEmail())) {
@@ -129,7 +112,8 @@ public class ApplicantController {
   }
 
   @PutMapping("/profile/{id}")
-  public ResponseEntity<ResponseApplicantDto> updateApplicant(@RequestBody UpdateApplicantDto updateApplicantDto, @PathVariable Long id) {
+  public ResponseEntity<ResponseApplicantDto> updateApplicant(@RequestBody UpdateApplicantDto updateApplicantDto,
+      @PathVariable Long id) {
     Applicant updatedApplicant = applicantService.updateApplicant(updateApplicantDto, id);
     if (updatedApplicant == null) {
       return ResponseEntity.notFound().build();
@@ -143,14 +127,15 @@ public class ApplicantController {
     return ResponseEntity.noContent().build();
   }
 
-//  @GetMapping("/profile/{id}")
-//  public ResponseEntity<ResponseApplicantDto> getApplicantById(@PathVariable Long id) {
-//    Applicant applicant = applicantService.findApplicantById(id);
-//    if (applicant == null) {
-//      return ResponseEntity.notFound().build();
-//    }
-//    return ResponseEntity.ok(mapToResponseApplicantDto(applicant));
-//  }
+  //
+  // etMapping("/profile/{id}")
+  // blic ResponseEntity<Resp
+  // plicant applicant = applicantService.find
+  // i
+  // return ResponseEntity.notFound().build();
+  // }
+  // return ResponseEntity.ok(mapToResponseApplicantDto(applicant));
+  // }
 
   @GetMapping
   public ResponseEntity<List<ResponseApplicantDto>> getAllApplicants() {
@@ -170,8 +155,6 @@ public class ApplicantController {
     return ResponseEntity.ok(mapToResponseProfileDto(applicantProfile));
   }
 
-
-
   @GetMapping("/resume/fetch")
   public ResponseEntity<ResponseApplicantDto> fetchResumesByApplicantId(@RequestParam("applicantId") Long applicantId) {
     ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
@@ -183,16 +166,18 @@ public class ApplicantController {
       return ResponseEntity.badRequest().body(responseApplicantDto);
     }
 
-
     List<ApplicantResume> applicantResume = null;
 
     try {
       applicantResume = resumeService.getAllResumesByUserId(applicant.getID());
+
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(ResponseApplicantDto.builder().username(applicant.getUsername()).failReason("IO Exception"+e).build());
+      return ResponseEntity.badRequest().body(
+          ResponseApplicantDto.builder().username(applicant.getUsername()).failReason("IO Exception" + e).build());
     }
 
-    return ResponseEntity.ok().body(ResponseApplicantDto.builder().username(applicant.getUsername()).applicantId(applicant.getID()).resumes(applicantResume).build());
+    return ResponseEntity.ok().body(ResponseApplicantDto.builder().username(applicant.getUsername())
+        .applicantId(applicant.getID()).resumes(applicantResume).build());
   }
 
   @PostMapping("/resume/delete")
@@ -203,21 +188,21 @@ public class ApplicantController {
     try {
       applicantResume = resumeService.getResumeById(resumeId);
     } catch (Exception e) {
-      return ResponseEntity.badRequest().body(ResponseApplicantDto.builder().failReason("IO Exception"+e).build());
+      return ResponseEntity.badRequest().body(ResponseApplicantDto.builder().failReason("IO Exception" + e).build());
     }
 
-    if(applicantResume==null){
-      return ResponseEntity.badRequest().body(ResponseApplicantDto.builder().failReason("this resume doesn't exist").build());
+    if (applicantResume == null) {
+      return ResponseEntity.badRequest()
+          .body(ResponseApplicantDto.builder().failReason("this resume doesn't exist").build());
     }
 
     resumeService.deleteById(resumeId);
-
     return ResponseEntity.ok().body(ResponseApplicantDto.builder().applicantResume(applicantResume).build());
   }
 
-
   @PostMapping("/resume")
-  public ResponseEntity<ResponseApplicantDto> uploadResume(@RequestParam("applicantId") Long applicantId,@RequestParam("resume")MultipartFile resume) {
+  public ResponseEntity<ResponseApplicantDto> uploadResume(@RequestParam("applicantId") Long applicantId,
+      @RequestParam("resume") MultipartFile resume) {
     ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
     responseApplicantDto.setApplicantId(applicantId);
     if (resume.isEmpty() || !resume.getContentType().equals("application/pdf")) {
@@ -233,17 +218,20 @@ public class ApplicantController {
 
     ApplicantResume applicantResume = null;
 
-      try {
-          applicantResume = resumeService.saveResume(resume,applicant.getUsername(),applicant.getID());
-      } catch (IOException e) {
-        return ResponseEntity.badRequest().body(ResponseApplicantDto.builder().username(applicant.getUsername()).failReason("IO Exception"+e).build());
-      }
+    try {
+      applicantResume = resumeService.saveResume(resume, applicant.getUsername(), applicant.getID());
+    } catch (IOException e) {
+      return ResponseEntity.badRequest().body(
+          ResponseApplicantDto.builder().username(applicant.getUsername()).failReason("IO Exception" + e).build());
+    }
 
-      return ResponseEntity.ok().body(ResponseApplicantDto.builder().username(applicant.getUsername()).applicantId(applicant.getID()).applicantResume(applicantResume).build());
+    return ResponseEntity.ok().body(ResponseApplicantDto.builder().username(applicant.getUsername())
+        .applicantId(applicant.getID()).applicantResume(applicantResume).build());
   }
 
   @GetMapping("/profile/search/username")
-  public ResponseEntity<ResponseApplicantProfileDto> getApplicantProfileByUsername(@RequestParam("username") String username) {
+  public ResponseEntity<ResponseApplicantProfileDto> getApplicantProfileByUsername(
+      @RequestParam("username") String username) {
     ApplicantProfile applicantProfile = applicantService.findApplicantProfileByUsername(username);
     if (applicantProfile == null) {
       return ResponseEntity.notFound().build();
@@ -253,28 +241,30 @@ public class ApplicantController {
     return new ResponseEntity<>(responseApplicantProfileDto, HttpStatus.OK);
   }
 
-//  @GetMapping("/profile/search/username")
-//  public ResponseEntity<List<ResponseApplicantDto>> getApplicantsByUsername(@RequestParam("username") String username) {
-//    List<Applicant> applicants = applicantService.findApplicantsByUsername(username);
-//    List<ResponseApplicantDto> responseList = applicants.stream()
-//        .map(this::mapToResponseApplicantDto)
-//        .collect(Collectors.toList());
-//    return ResponseEntity.ok(responseList);
-//  }
+  //
+  // etMapping("/profile/search/u
+  // ername")
+  // blic ResponseEntity<List<ResponseApplicantDto>> getApplicants
+  // <Applicant> applicants = applicantSer
+  // <ResponseApplicantDto> respons
+  // .map(this::mapToResponseApplicantDt
+  // .collect(Collectors.toList());
+  // return ResponseEntity.ok(responseList);
+  // }
 
   @GetMapping("/profile/search/name")
   public ResponseEntity<List<ResponseProfileDto>> getApplicantsByName(@RequestParam("name") String name) {
     List<ApplicantProfile> profiles = applicantService.findApplicantProfilesByUsername(name);
     List<ResponseProfileDto> responseList = profiles.stream()
         .map(this::mapToResponseProfileDto)
+
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
 
-
-
-  //TODO: refactor into class
+  // TODO: refactor into class
   public ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
+
     ResponseJobPostDto responseJobPostDto = new ResponseJobPostDto();
     responseJobPostDto.id = jobPost.getID();
     responseJobPostDto.setCompanyName(jobPost.getEmployer().getProfile().getName());
@@ -287,37 +277,43 @@ public class ApplicantController {
     responseJobPostDto.closedDate = jobPost.getClosedDate();
     responseJobPostDto.numApplicants = jobPost.getApplicants().size();
     return responseJobPostDto;
+
   }
 
-   ResponseApplicantProfileDto mapToResponseProfileDto(ApplicantProfile profile) {
+  ResponseApplicantProfileDto mapToResponseProfileDto(ApplicantProfile profile) {
     ResponseApplicantProfileDto responseProfileDto = new ResponseApplicantProfileDto();
     responseProfileDto.name = profile.getName();
+
     responseProfileDto.bio = profile.getBio();
-    responseProfileDto.appliedJobs = profile.getAppliedJobs().stream().map(this::mapToResponseJobPostDto).collect(Collectors.toList());;
+    responseProfileDto.appliedJobs = profile.getAppliedJobs().stream().map(this::mapToResponseJobPostDto)
+        .collect(Collectors.toList());
+    ;
     return responseProfileDto;
   }
 
   // Utility method to map Applicant entity to ResponseApplicantDto
   private ResponseApplicantDto mapToResponseApplicantDto(Applicant applicant) {
     ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
-      responseApplicantDto.applicantId = applicant.getID();
+    responseApplicantDto.applicantId = applicant.getID();
     responseApplicantDto.username = applicant.getUsername();
     responseApplicantDto.applicantProfile = mapToResponseProfileDto(applicant.getProfile());
     return responseApplicantDto;
   }
 
-//  @GetMapping("/profile/saved/{id}")
-//  public ResponseEntity<Set<JobPost>> getSavedJobsByApplicantId(@PathVariable Long id) {
-//    Set<JobPost> savedJobs = applicantService.findSavedJobsByApplicantId(id);
-//    return ResponseEntity.ok(savedJobs);
-//
-//
-//  }
-//
-//  @PostMapping("/profile/saved")
-//  public ResponseEntity<Void> addSavedJob(@RequestBody JobPost jobPost, @PathVariable Long id) {
-//    applicantService.addSavedJob(id, jobPost);
-//    return ResponseEntity.noContent().build();
-//  }
+  //
+  // etMapping("/profile/saved/{id}")
+  // blic ResponseEntity<Set<JobPost>> ge
+  //
+  //
+  //
+  //
+  // }
+  //
+  //
+  // ostMapping("/profile/saved")
+  // blic ResponseEntity<Void> addSavedJob(@Req
+  // applicantService.addSavedJob(id, jobPost);
+  // return ResponseEntity.noContent().build();
+  // }
 
 }
