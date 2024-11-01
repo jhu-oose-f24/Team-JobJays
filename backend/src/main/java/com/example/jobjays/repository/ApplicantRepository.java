@@ -1,6 +1,7 @@
 package com.example.jobjays.repository;
 
 import com.example.jobjays.model.Applicant;
+import jakarta.validation.constraints.Email;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,7 +18,9 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
   Applicant findByUsernameIsIgnoreCase(String username);
 
   Applicant findByToken(String token);
-  //TODO CREATE A JOB APPLICATION REPOSITORY
+
+  boolean existsByEmail(@Email String email);
+    //TODO CREATE A JOB APPLICATION REPOSITORY
 
 
 

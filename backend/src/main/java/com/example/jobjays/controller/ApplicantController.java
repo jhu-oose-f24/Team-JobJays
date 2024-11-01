@@ -23,9 +23,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
+import java.net.http.HttpClient;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -62,24 +66,47 @@ public class ApplicantController {
     return matcher.matches();
   }
 
+//  @GetMapping("/verify")
+//  public String verifyUser(@RequestParam("token") String token) {
+//    Applicant applicant = applicantService.findByVerificationToken(token);
+//    UpdateApplicantDto user = new UpdateApplicantDto();
+//
+//    if (applicant == null) {
+//      return "Invalid token!";
+//    }
+//
+//    user.setEnabled(true); // Enable the user
+//    user.setToken(null); // Clear the token
+//    applicantService.updateApplicant(user,applicant.getID());
+//
+//    // redirect to login page
+////    return HttpClient.Redirect()
+//    return "Email verified successfully! You can now log in.";
+//  }
+
+
   @GetMapping("/verify")
-  public String verifyUser(@RequestParam("token") String token) {
+  public RedirectView verifyUser(@RequestParam("token") String token) {
     Applicant applicant = applicantService.findByVerificationToken(token);
     UpdateApplicantDto user = new UpdateApplicantDto();
 
     if (applicant == null) {
-      return "Invalid token!";
+      RedirectView redirectView = new RedirectView("http://localhost:3000/invalid-token");
+      redirectView.setExposeModelAttributes(false);
+      return redirectView;
     }
 
     user.setEnabled(true); // Enable the user
     user.setToken(null); // Clear the token
-    applicantService.updateApplicant(user,applicant.getID());
+    applicantService.updateApplicant(user, applicant.getID());
 
-    return "Email verified successfully! You can now log in.";
+    RedirectView redirectView = new RedirectView("http://localhost:3000/signin");
+    redirectView.setExposeModelAttributes(false);
+    return redirectView;
   }
 
   @PostMapping
-  public ResponseEntity<ResponseApplicantDto> addApplicant(@RequestBody CreateApplicantDto createApplicantDto) {
+  public ResponseEntity<?> addApplicant(@RequestBody CreateApplicantDto createApplicantDto) {
     //check the email formation
     if(!isValidEmail(createApplicantDto.getEmail())) {
       throw new ServiceException("Email format is wrong");
@@ -89,7 +116,17 @@ public class ApplicantController {
     String token = TokenGenerator.generateToken();
     createApplicantDto.setVerificationToken(token);
     createApplicantDto.setEnabled(false); // User is disabled until they verify
-
+    // Before adding the applicant, check if the email is already in use
+    // Synchronize on the email or use a unique constraint to prevent race conditions
+    synchronized (this) {
+      // Before adding the applicant, check if the email is already in use
+      if (applicantService.isEmailInUse(createApplicantDto.getEmail())) {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Email is already in use.");
+        response.put("status", "BAD_REQUEST");
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+      }
+    }
     Applicant applicant = applicantService.addApplicant(createApplicantDto);
     emailSendWrapper.sendVerificationEmail(applicant.getEmail(), token);
     ResponseApplicantDto responseApplicantDto = mapToResponseApplicantDto(applicant);

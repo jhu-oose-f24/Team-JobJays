@@ -16,6 +16,7 @@ public class ApplicantPreferenceDto {
     private List<String> industries;
     private List<String> jobTitles;
     private Double minMonthlySalary;
+    private List<String> skills;
     private List<LocationDto> locations;
     private List<String> jobTypes;
     private List<String> workTimings;

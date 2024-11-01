@@ -8,13 +8,14 @@ interface DashboardPageProps {
 }
 
 const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
-    const candidateId = Number(params.candidate_id);
+    const candidateId = Number(localStorage.getItem('applicantId'));
     console.log(candidateId);
     const [profilePicture, setProfilePicture] = useState(null);
     const [resumeFiles, setResumeFiles] = useState([]);
 
     // Fetch all PDFs from the server
     const fetchPdfFiles = async () => {
+
         try {
             const response = await fetch(`http://localhost:8080/api/applicants/resume/fetch?applicantId=${candidateId}`,{
                 method: "GET"
@@ -47,7 +48,7 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
     const handleResumeUpload = async (event) => {
         const file = event.target.files[0];
         const formData = new FormData();
-        formData.append("applicantId", candidateId);
+        formData.append("applicantId", candidateId.toString());
         formData.append("resume", file);
         console.log(file.name);
         try {

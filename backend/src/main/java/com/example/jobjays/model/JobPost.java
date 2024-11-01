@@ -21,6 +21,16 @@ public class JobPost implements Post {
   private Location location;
   private Double minSalary;
   private Double maxSalary;
+  // add there same props
+  @Getter
+  @Setter
+  private String industry;
+  @Getter
+  @Setter
+  private String jobType;
+  @Getter
+  @Setter
+  private String workTiming;
 
   @Getter
   @Setter
@@ -28,6 +38,15 @@ public class JobPost implements Post {
   @CollectionTable(name = "job_tags", joinColumns = @JoinColumn(name = "job_id"))
   @Column(name = "tag")
   private List<String> tags;
+
+  @Getter
+  @Setter
+  @ElementCollection
+  @CollectionTable(name = "job_required_skills", joinColumns = @JoinColumn(name = "job_id"))
+  @Column(name = "skill_required")  // Column name for skills in the job_required_skills table
+  private List<String> skillsRequired;
+
+
   @Id
   @GeneratedValue
   private Long jobID;
@@ -55,7 +74,11 @@ public JobPost() {}
       Double maxSalary,
       LocalDateTime closedDate,
       Employer employer,
-      List<String> tags
+      List<String> tags,
+        String industry,
+        String jobType,
+        String workTiming,
+        List<String> skillsRequired
       ) {
 
     //this.jobID = UUID.randomUUID().toString();
@@ -68,6 +91,10 @@ public JobPost() {}
     this.closedDate = closedDate;
     this.employer = employer;
     this.applicants = new HashSet<>();
+    this.industry = industry;
+    this.jobType = jobType;
+    this.workTiming = workTiming;
+    this.skillsRequired = skillsRequired;
     this.tags =tags;
     buildTags();
 
@@ -75,6 +102,7 @@ public JobPost() {}
 
 
   private void buildTags() {
+  this.tags = new ArrayList<>();
      this.tags.add(title);
      this.tags.add(location.getCity());
         this.tags.add(location.getState());

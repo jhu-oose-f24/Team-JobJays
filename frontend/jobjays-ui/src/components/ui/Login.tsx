@@ -6,7 +6,7 @@ import {useRouter} from "next/navigation";
 
 export default function Login() {
   const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
-    "Employer"
+    "Candidate"
   );
 
   const router = useRouter()
@@ -31,7 +31,7 @@ export default function Login() {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    // save the form data to the database
     console.log(formData);
 
     try {
@@ -46,6 +46,10 @@ export default function Login() {
         })
       });
 
+      if (response.status == 404) {
+        alert("Invalid username or password");
+        return;
+      }
 
       if (response.ok) {
         console.log(response);
@@ -53,11 +57,12 @@ export default function Login() {
         console.log(employerData);
         const employerId = employerData.employer_id;
         alert("Sign in successful!");
-
-        router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
+        localStorage.setItem("employerId", employerId);
+        router.push(`employer/dashboard`); // redirect to new user's dashboard
       } else {
+
         const errorData = await response.json();
-        alert(`Error: ${errorData.failReason}`);
+        console.log(`Error: ${errorData.failReason}`);
       }
     } catch (error) {
       alert(`An error occurred: ${error}`);
@@ -88,12 +93,17 @@ export default function Login() {
         const applicantData = await response.json();
         console.log(applicantData);
         const applicantId = applicantData.applicantId;
-        alert("Sign in successful!");
-
-        router.push(`candidate/${applicantId}/dashboard`); // redirect to new user's dashboard
+        // alert("Sign in successful!");
+        // so we can retrieve it for other pages - but not good approach
+        localStorage.setItem("applicantId", applicantId);
+        router.push(`candidate/dashboard`); // redirect to new user's dashboard
       } else {
         const errorData = await response.json();
-        alert(`Error: ${errorData.failReason}`);
+
+        if (response.status == 404) {
+          alert("Invalid username or password");
+        }
+        console.log(`Error: ${errorData.failReason}`);
       }
     } catch (error) {
       alert(`An error occurred: ${error}`);

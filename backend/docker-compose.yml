@@ -5,13 +5,11 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_DEFAULT_REPLICATION_FACTOR: 2        # Set default replication factor
-      KAFKA_NUM_PARTITIONS: 3
     ports:
       - "2181:2181"
     networks:
       - kafka-network
+
   kafka:
     image: confluentinc/cp-kafka:latest
     container_name: kafka
@@ -28,33 +26,14 @@ services:
       - zookeeper
     networks:
       - kafka-network
-#  kafka-ui:
-#    image: provectuslabs/kafka-ui:latest
-#    container_name: kafka-ui
-#    ports:
-#      - "9000:8080"  # Expose Kafka UI on port 9000
-#    environment:
-#      KAFKA_CLUSTERS_0_NAME: "local"
-#      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "kafka:9092"
-#      KAFKA_CLUSTERS_0_ZOOKEEPER: "zookeeper:2181"
-#    depends_on:
-#      - kafka
-#    networks:
-#      - kafka-network
-#  kafbat-ui:
-#    container_name: kafbat-ui
-#    image: ghcr.io/kafbat/kafka-ui:latest
-#    ports:
-#      - "9090:9090"
-#    environment:
-#      DYNAMIC_CONFIG_ENABLED: 'true'
-#      KAFKA_CLUSTERS_0_NAME: "local"
-#      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: "localhost:9092"
-#      KAFKA_CLUSTERS_0_ZOOKEEPER: "localhost:2181"
-#    depends_on:
-#      - kafka
-#    networks:
-#      - kafka-network
+    volumes:
+      - kafka-data:/var/lib/kafka/data  # New volume for Kafka data
+      - kafka-streams-state:/var/lib/kafka/streams  # New volume for Kafka Streams state
+
 networks:
   kafka-network:
     driver: bridge
+
+volumes:
+  kafka-data:
+  kafka-streams-state:

@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,19 +42,22 @@ public class EmployerController {
 
 
   @GetMapping("/verify")
-  public String verifyUser(@RequestParam("token") String token) {
+  public RedirectView verifyUser(@RequestParam("token") String token) {
     Employer employer = employerService.findByVerificationToken(token);
     UpdateEmployerDto user = new UpdateEmployerDto();
 
     if (employer == null) {
-      return "Invalid token!";
+      return  new RedirectView("http://localhost:3000/invalid-token");
     }
 
     user.setEnabled(true); // Enable the user
     user.setToken(null); // Clear the token
     employerService.updateEmployer(user,employer.getID());
 
-    return "Email verified successfully! You can now log in.";
+    RedirectView redirectView = new RedirectView("http://localhost:3000/signin");
+    redirectView.setExposeModelAttributes(false);
+
+    return redirectView;
   }
 
   @PostMapping

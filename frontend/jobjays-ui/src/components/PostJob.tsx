@@ -17,12 +17,11 @@ const PostJob = () => {
 
 
     const  handleJobFormSubmit = async (data: any) => {
+        console.log(data);
 
         //We need to send the filteredData with proper attributes to backend for now until we have type in backend
-        const {jobType, ...filteredData} = data;
-        //JobPost.type = data.type;
 
-        const result = await createJobPost(Number(employerId), filteredData);
+        const result = await createJobPost(Number(employerId), data);
         if (result.success) {
             setOpen(false);
             console.log(result.data.id)

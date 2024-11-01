@@ -5,6 +5,7 @@ import com.example.jobjays.dto.applicant.UpdateApplicantDto;
 import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
 import com.example.jobjays.repository.ApplicantRepository;
+import jakarta.validation.constraints.Email;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Objects;
@@ -48,7 +49,7 @@ public class ApplicantService {
     if (applicantToUpdate == null) {
       return null;
     }
-
+    applicantToUpdate.setEnabled(newApplicant.getEnabled());
     ApplicantProfile profile = applicantToUpdate.getProfile();
 
     if (newApplicant.getResume() != null && !newApplicant.getResume().isEmpty()) {
@@ -115,4 +116,7 @@ public class ApplicantService {
   }
 
 
+  public boolean isEmailInUse(@Email String email) {
+    return applicantRepository.existsByEmail(email);
+  }
 }

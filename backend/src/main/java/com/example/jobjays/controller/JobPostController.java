@@ -40,15 +40,15 @@ public class JobPostController {
     this.responseMapperService = responseMapperService;
   }
 
-
-
   @PostMapping("/companies/profile/{employerId}/post")
-  @LoginRequired
   public ResponseEntity<ResponseJobPostDto> addJobPost(@Valid @RequestBody CreateJobPostDto newJobPost, @PathVariable Long employerId) {
     Employer employer = employerService.findEmployerById(employerId);
     if (employer == null) {
       return ResponseEntity.notFound().build();
     }
+    // set industry from employer data
+    System.out.println(newJobPost.getSkillsRequired());
+    newJobPost.setIndustry(employer.getProfile().getIndustry());
     JobPost jobPost = jobPostService.addJobPost(newJobPost, employer);
     ResponseJobPostDto responseJobPostDto = responseMapperService.mapToResponseJobPostDto(jobPost);
 

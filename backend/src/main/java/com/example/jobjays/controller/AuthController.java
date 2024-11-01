@@ -1,10 +1,9 @@
 package com.example.jobjays.controller;
 
 import com.example.jobjays.authentication.TokenGenerator;
-import com.example.jobjays.dto.applicant.CreateApplicantDto;
 import com.example.jobjays.dto.applicant.LoginApplicationDto;
 import com.example.jobjays.dto.applicant.ResponseApplicantDto;
-import com.example.jobjays.dto.auth.TokenResponseDto;
+//import com.example.jobjays.dto.auth.TokenResponseDto;
 import com.example.jobjays.dto.employer.ResponseEmployerDto;
 import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.Employer;
@@ -70,12 +69,12 @@ public class AuthController {
         }
 
         //temporary ways to complete iteration 3
-        if(true){
+//        if(true){
             return ResponseEntity.ok(employerDto);
-        }
+//        }
 
-        String token = TokenGenerator.generateToken(employer);
-        return ResponseEntity.ok(new TokenResponseDto(token));
+//        String token = TokenGenerator.generateToken(employer);
+//        return ResponseEntity.ok(new TokenResponseDto(token));
     }
 
 
@@ -106,11 +105,11 @@ public class AuthController {
             }
 
             //temporary ways to complete iteration 3
-            if(true){
+//            if(true){
                 return ResponseEntity.ok(applicantDto);
-            }
+//            }
 
-            return ResponseEntity.ok(new TokenResponseDto(token));
+//            return ResponseEntity.ok(new TokenResponseDto(token));
         }
     }
         @PostMapping("/logout")
