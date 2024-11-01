@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
-import { HomeIcon, GearIcon, ExitIcon } from "@radix-ui/react-icons";
+import { HomeIcon, GearIcon, ExitIcon, BookmarkIcon } from "@radix-ui/react-icons";
 
-export default function Sidebar() {
+export default function Sidebar({isApplicant}: {isApplicant: boolean}) {
     const [isOpen] = useState(false);
 
     return (
@@ -37,6 +37,13 @@ export default function Sidebar() {
                         <ExitIcon className="w-5 h-5" />
                         <span>Login</span>
                     </a>
+                    { isApplicant && <a
+                        href="/saved"
+                        className="flex items-center space-x-2 hover:text-blue-600"
+                    >
+                        <BookmarkIcon className="w-5 h-5" />
+                        <span>Saved</span>
+                    </a>}
                 </div>
             </div>
         </div>

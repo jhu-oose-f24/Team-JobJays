@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
 
 interface DashboardPageProps {
@@ -17,7 +17,7 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
     const fetchPdfFiles = async () => {
 
         try {
-            const response = await fetch(`http://localhost:8080/api/applicants/resume/fetch?applicantId=${candidateId}`,{
+            const response = await fetch(`http://localhost:8080/api/applicants/resume/fetch?applicantId=${candidateId}`, {
                 method: "GET"
             });
             const data = await response.json();
@@ -105,9 +105,9 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
 
     return (
         <div>
-            <section style={{marginTop: '30px'}}>
+            <section style={{ marginTop: '30px' }}>
                 <h3>Basic Information</h3>
-                <div style={{display: 'flex', gap: '20px', marginTop: '20px'}}>
+                <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
                     {/* Profile Picture Upload */}
                     <div style={{
                         width: '200px',
@@ -118,12 +118,12 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
                     }}>
                         {profilePicture ? (
                             <img src={profilePicture} alt="Profile"
-                                 style={{width: '100%', height: '100%', objectFit: 'cover'}}/>
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                         ) : (
                             <>
                                 <input type="file" accept="image/*" onChange={handleFileChange}
-                                       style={{display: 'none'}} id="upload-profile"/>
-                                <label htmlFor="upload-profile" style={{cursor: 'pointer', color: '#007bff'}}>
+                                    style={{ display: 'none' }} id="upload-profile" />
+                                <label htmlFor="upload-profile" style={{ cursor: 'pointer', color: '#007bff' }}>
                                     Browse photo or drop here
                                 </label>
                                 <p>Max photo size 5 MB.</p>
@@ -132,25 +132,25 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
                     </div>
 
                     {/* Form Fields */}
-                    <div style={{flex: 1}}>
+                    <div style={{ flex: 1 }}>
                         <input type="text" placeholder="Full name"
-                               style={{width: '100%', padding: '10px', marginBottom: '10px'}}/>
+                            style={{ width: '100%', padding: '10px', marginBottom: '10px' }} />
                         <input type="text" placeholder="Title/headline"
-                               style={{width: '100%', padding: '10px', marginBottom: '10px'}}/>
-                        <select style={{width: '100%', padding: '10px', marginBottom: '10px'}}>
+                            style={{ width: '100%', padding: '10px', marginBottom: '10px' }} />
+                        <select style={{ width: '100%', padding: '10px', marginBottom: '10px' }}>
                             <option>Experience</option>
                             <option>1-2 years</option>
                             <option>3-5 years</option>
                             <option>5+ years</option>
                         </select>
-                        <select style={{width: '100%', padding: '10px', marginBottom: '10px'}}>
+                        <select style={{ width: '100%', padding: '10px', marginBottom: '10px' }}>
                             <option>Education</option>
                             <option>Bachelor's</option>
                             <option>Master's</option>
                             <option>PhD</option>
                         </select>
                         <input type="url" placeholder="Website URL"
-                               style={{width: '100%', padding: '10px', marginBottom: '10px'}}/>
+                            style={{ width: '100%', padding: '10px', marginBottom: '10px' }} />
                         <button style={{
                             padding: '10px 20px',
                             backgroundColor: '#007bff',
@@ -165,9 +165,9 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
             </section>
 
             {/* Resume Section */}
-            <section style={{marginTop: '30px'}}>
+            <section style={{ marginTop: '30px' }}>
                 <h3>Your CV/Resume</h3>
-                <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                     {resumeFiles.map((resume) => (
                         <div key={resume["resume_id"]} style={{
                             border: '1px solid #ddd',
@@ -176,18 +176,18 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
                             position: 'relative'
                         }}>
                             <p>{resume["resumeName"]}</p>
-                            <p style={{color: '#888'}}>{resume["uploadedAt"]}</p>
-                            <div style={{position: 'relative', top: '10px', right: '10px', cursor: 'pointer'}}>
+                            <p style={{ color: '#888' }}>{resume["uploadedAt"]}</p>
+                            <div style={{ position: 'relative', top: '10px', right: '10px', cursor: 'pointer' }}>
                                 <button onClick={() => handleDeleteResume(resume["resume_id"])}
-                                        style={{color: 'red', border: 'none', background: 'none'}}>Delete
+                                    style={{ color: 'red', border: 'none', background: 'none' }}>Delete
                                 </button>
                             </div>
                         </div>
                     ))}
-                    <div style={{width: '150px', border: '1px dashed #ddd', padding: '15px', textAlign: 'center'}}>
+                    <div style={{ width: '150px', border: '1px dashed #ddd', padding: '15px', textAlign: 'center' }}>
                         <input type="file" accept="application/pdf" onChange={handleResumeUpload}
-                               style={{display: 'none'}} id="upload-resume"/>
-                        <label htmlFor="upload-resume" style={{cursor: 'pointer', color: '#007bff'}}>
+                            style={{ display: 'none' }} id="upload-resume" />
+                        <label htmlFor="upload-resume" style={{ cursor: 'pointer', color: '#007bff' }}>
                             Add CV/Resume
                         </label>
                         <p>Only PDF files</p>

@@ -21,10 +21,12 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
                     <Link href={`/candidate/settings`} className={styles.navItem}> Settings</Link>
                     <Link href={"/candidate/preference"} className={styles.navItem}> Preferences</Link>
 
+
                     <a href="#logout" onClick={() => {
                         localStorage.removeItem("candidateId");
                         router.push("/signin"); // Use router.push for navigation
                     }} className={styles.navItem}>Log Out</a>
+                    <Link href={`/candidate/${candidate_id}/savedJobs`} className={styles.navItem}>Saved Jobs</Link>
                 </nav>
             </aside>
 

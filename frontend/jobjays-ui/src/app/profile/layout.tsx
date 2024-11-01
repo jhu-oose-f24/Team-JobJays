@@ -2,6 +2,7 @@ import Sidebar from "@/components/ui/Sidebar";
 import NavBar from "@/components/ui/NavBar";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
+    const userIsApplicant = true;
     return (
         <div className="flex flex-col h-screen">
             {/* NavBar at the top, full width */}
@@ -13,7 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="flex flex-1 overflow-hidden">
                 {/* Sidebar on the left */}
                 <div className="w-full flex-none md:w-64 bg-white">
-                    <Sidebar />
+                    <Sidebar isApplicant={userIsApplicant} />
                 </div>
 
                 {/* Main content area */}

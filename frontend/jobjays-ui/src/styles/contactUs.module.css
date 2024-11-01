@@ -3,7 +3,7 @@
     display: flex;
     justify-content: space-between;
     padding: 50px;
-    background-color: #f5f7fa;
+    background-color: #fff !important;
     gap: 40px;
 }
 
@@ -18,9 +18,12 @@
 }
 
 .leftSection h1 {
-    font-size: 2.5rem;
-    color: #0056d2;
+    font-size: 3rem;
+    font-weight: bold;
     margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgb(96, 165, 250); /* 标题字体颜色为蓝色 */
 }
 
 .leftSection p {
@@ -37,7 +40,7 @@
 }
 
 .emailButton {
-    background-color: #0070f3;
+    background-color: rgb(96, 165, 250);
     color: white;
     border: none;
     padding: 12px 25px;
@@ -48,7 +51,7 @@
 }
 
 .emailButton:hover {
-    background-color: #005bb5;
+    background-color: rgb(96, 165, 250);
 }
 
 /* 右侧表单 */
@@ -81,7 +84,7 @@
 }
 
 .inputField:focus, .textareaField:focus {
-    border-color: #0070f3;
+    border-color: rgb(96, 165, 250);
     outline: none;
 }
 
@@ -90,7 +93,7 @@
 }
 
 .submitButton {
-    background-color: #0070f3;
+    background-color: rgb(96, 165, 250);
     color: white;
     border: none;
     padding: 15px;
@@ -101,7 +104,7 @@
 }
 
 .submitButton:hover {
-    background-color: #005bb5;
+    background-color: rgb(96, 165, 250);
 }
 
 .submitButton span {

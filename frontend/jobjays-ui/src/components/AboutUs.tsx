@@ -1,101 +1,154 @@
-// src/components/AboutUs.tsx
-import styles from '@/styles/aboutUs.module.css'; // 引入 CSS 模块
+"use client";
+
 import Image from 'next/image';
+import { Users, Lightbulb, Target, Mail } from 'lucide-react';
+
+const teamMembers = [
+    {
+        name: "Murad Azimzada",
+        role: "Frontend Engineer",
+        image: "/team1.jpg"
+    },
+    {
+        name: "Ahmed Hashi",
+        role: "Backend Developer",
+        image: "/team2.jpg"
+    },
+    {
+        name: "Enoch Appiah",
+        role: "Backend Developer",
+        image: "/team3.jpg"
+    },
+    {
+        name: "Xinyang Li",
+        role: "Frontend Engineer",
+        image: "/team4.jpg"
+    },
+    {
+        name: "Samuel Muzac",
+        role: "Frontend Engineer",
+        image: "/team5.jpg"
+    },
+    {
+        name: "Jiaxuan Luo",
+        role: "Fullstack Developer",
+        image: "/team4.jpg"
+    }
+];
+
+const philosophyPoints = [
+    {
+        icon: "👨‍💻",
+        title: "User-Centered Design",
+        description: "We prioritize the user in every step of the development process."
+    },
+    {
+        icon: "🌍",
+        title: "Innovation",
+        description: "Always strive to stay ahead with the latest tech and trends."
+    },
+    {
+        icon: "🤝",
+        title: "Collaboration",
+        description: "A strong, united team with shared goals can achieve amazing things."
+    },
+    {
+        icon: "📈",
+        title: "Continuous Improvement",
+        description: "Learning and improving are at the core of our mission."
+    }
+];
+
 const AboutUs = () => {
     return (
-        <div className={styles.container}>
-            {/* 团队简介 */}
-            <section className={styles.intro}>
-                <h1>About Us</h1>
-                <p>
-                    We are a team of passionate developers, dedicated to creating innovative web applications
-                    that not only solve real-world problems but also provide seamless user experiences.
-                    Our focus is on building scalable and maintainable applications with modern technologies.
-                </p>
+        <div className="bg-gray-50 min-h-screen">
+            {/* Hero Section */}
+            <section className="bg-white py-20 px-4">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h1 className="text-4xl font-bold font-[family-name:var(--font-geist-mono)] mb-6">
+                        About Us
+                    </h1>
+                    <p className="text-gray-600 text-lg leading-relaxed">
+                        We are a team of passionate developers, dedicated to creating innovative web applications
+                        that not only solve real-world problems but also provide seamless user experiences.
+                        Our focus is on building scalable and maintainable applications with modern technologies.
+                    </p>
+                </div>
             </section>
 
-            {/* 团队理念 */}
-            <section className={styles.philosophy}>
-                <h2>Our Philosophy</h2>
-                <ul>
-                    <li>👨‍💻 <strong>User-Centered Design</strong>: We prioritize the user in every step of the development process.</li>
-                    <li>🌍 <strong>Innovation</strong>: Always strive to stay ahead with the latest tech and trends.</li>
-                    <li>🤝 <strong>Collaboration</strong>: A strong, united team with shared goals can achieve amazing things.</li>
-                    <li>📈 <strong>Continuous Improvement</strong>: Learning and improving are at the core of our mission.</li>
-                </ul>
-            </section>
-
-            {/* 照片墙 */}
-            <section className={styles.photoWall}>
-                <h2>Meet Our Team</h2>
-                <div className={styles.photos}>
-                    <div className={styles.photo}>
-                        <div>
-                          <Image src={"/team1.jpg" } alt="Team member 1" width={200} height={200} />
-                        </div>
-                        {/* <img src="/team1.jpg" alt="Team member 1" /> */}
-                        <p>Murad Azimzada - Frontend Engineer</p>
-                    </div>
-                    <div className={styles.photo}>
-                        <div>
-                          <Image src={"/team2.jpg" } alt="Team member 2" width={200} height={200} />
-                        </div>
-                        {/* <img src="/images/team2.jpg" alt="Team member 2" /> */}
-                        <p>Ahmed Hashi - Backend Developer</p>
-                    </div>
-                    <div className={styles.photo}>
-                        {/* <img src="/images/team3.jpg" alt="Team member 3" /> */}
-                        <div>
-                          <Image src={"/team3.jpg" } alt="Team member 3" width={200} height={200} />
-                        </div>
-                        <p>Enoch Appiah - Backend Developer</p>
-                    </div>
-                    <div className={styles.photo}>
-                        {/* <img src="/images/team4.jpg" alt="Team member 4" /> */}
-                        <div>
-                          <Image src={"/team4.jpg" } alt="Team member 4" width={200} height={200} />
-                        </div>
-                        <p>Xinyang Li - Frontend Engineer</p>
-                    </div>
-                    <div className={styles.photo}>
-                        {/* <img src="/images/team4.jpg" alt="Team member 4" /> */}
-                        <div>
-                          <Image src={"/team5.jpg" } alt="Team member 5" width={200} height={200} />
-                        </div>
-                        <p>Samuel Muzac - Frontend Engineer</p>
-                    </div>
-                    <div className={styles.photo}>
-                        {/* <img src="/images/team4.jpg" alt="Team member 4" /> */}
-                        <div>
-                          <Image src={"/team4.jpg" } alt="Team member 6" width={200} height={200} />
-                        </div>
-                        <p>Jiaxuan Luo - Fullstack Developer</p>
+            {/* Philosophy Section */}
+            <section className="py-16 px-4 bg-gray-100">
+                <div className="max-w-6xl mx-auto">
+                    <h2 className="text-3xl font-bold text-center mb-12">Our Philosophy</h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {philosophyPoints.map((point, index) => (
+                            <div key={index} className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                                <div className="text-3xl mb-4">{point.icon}</div>
+                                <h3 className="text-xl font-semibold mb-2">{point.title}</h3>
+                                <p className="text-gray-600">{point.description}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* 愿景和使命 */}
-            <section className={styles.mission}>
-                <h2>Our Mission & Vision</h2>
-                <p>
-                    <strong>Mission:</strong> To empower businesses by building high-quality web applications that cater to
-                    their unique needs, providing robust and scalable solutions.
-                </p>
-                <p>
-                    <strong>Vision:</strong> To become leaders in the web development industry, recognized for our creativity,
-                    innovation, and quality.
-                </p>
+            {/* Team Section */}
+            <section className="py-16 px-4">
+                <div className="max-w-6xl mx-auto">
+                    <h2 className="text-3xl font-bold text-center mb-12">Meet Our Team</h2>
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {teamMembers.map((member, index) => (
+                            <div key={index} className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition-all hover:-translate-y-1">
+                                <div className="relative w-40 h-40 mx-auto mb-4">
+                                    <Image
+                                        src={member.image}
+                                        alt={member.name}
+                                        fill
+                                        className="rounded-full object-cover"
+                                    />
+                                </div>
+                                <h3 className="text-xl font-semibold mb-1">{member.name}</h3>
+                                <p className="text-gray-600">{member.role}</p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </section>
 
-            {/* 联系信息 */}
-            <section className={styles.contact}>
-                <h2>Contact Us</h2>
-                <p>
-                    Have questions or want to collaborate? Feel free to <a href="/contact">get in touch with us</a>.
-                </p>
+            {/* Mission & Vision Section */}
+            <section className="py-16 px-4 bg-gray-100">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-bold text-center mb-12">Our Mission & Vision</h2>
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="bg-white p-8 rounded-lg shadow-sm">
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="p-3 bg-blue-50 rounded-full">
+                                    <Target className="w-6 h-6 text-blue-500" />
+                                </div>
+                                <h3 className="text-xl font-semibold">Mission</h3>
+                            </div>
+                            <p className="text-gray-600">
+                                To empower businesses by building high-quality web applications that cater to
+                                their unique needs, providing robust and scalable solutions.
+                            </p>
+                        </div>
+                        <div className="bg-white p-8 rounded-lg shadow-sm">
+                            <div className="flex items-center gap-4 mb-4">
+                                <div className="p-3 bg-blue-50 rounded-full">
+                                    <Lightbulb className="w-6 h-6 text-blue-500" />
+                                </div>
+                                <h3 className="text-xl font-semibold">Vision</h3>
+                            </div>
+                            <p className="text-gray-600">
+                                To become leaders in the web development industry, recognized for our creativity,
+                                innovation, and quality.
+                            </p>
+                        </div>
+                    </div>
+                </div>
             </section>
         </div>
     );
-}
+};
 
 export default AboutUs;
