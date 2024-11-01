@@ -42,6 +42,7 @@ export function useApplicant(applicantId: number) {
 
 // Hook to fetch the EmployerProfile and process job posts
 export function useUser(employerId: number) {
+    // employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0;
     const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${employerId}`, fetcher);
 
     // Process job posts if data is available
@@ -202,7 +203,7 @@ export const incrementJobPostView = async (id: number) => {
     // }
     // return { success: true };
     try {
-        const response = await fetch(`/api/job-posts/${id}/increment-view`, {
+        const response = await fetch(`http://localhost:8080/api//api/job-posts/${id}/increment-view`, {
             method: 'POST',
         });
         if (!response.ok) {
@@ -211,6 +212,43 @@ export const incrementJobPostView = async (id: number) => {
     } catch (error) {
         console.error("Failed to increment job post view count:", error);
     }
+}
+
+//add a job to Saved
+export const saveJob = async (applicantId: number, jobId:number) => {
+    const response = await fetch(`http://localhost:8080/api/applicants/profile/${applicantId}/saved-jobs/${jobId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        console.log(error);
+        return { success: false, error };
+    } else {
+        console.log("Job saved successfully");
+        return { success: true };
+    }
+
+}
+
+
+//get saved a job
+export function getSavedJobs(applicantId:number) {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/profile/${applicantId}/saved-jobs`, fetcher);
+    //returns applicantProfile
+    const processedApplicantProfile = data && data.savedJobs ? {
+        ...data,
+        jobPosts: data.jobPosts.map((job: JobPost) => addJobAttributes(job))
+    } : data;
+
+    return {
+        ApplicantProfile: processedApplicantProfile as ApplicantProfile,
+        isLoading,
+        isError: error
+    };
 }
 
 

@@ -80,7 +80,9 @@ const ListJob = ({ query }: ListJobProps) => {
         ? activeJobListings.filter(job =>
             job.title.toLowerCase().includes(query.toLowerCase()) ||
             job.description.toLowerCase().includes(query.toLowerCase()) ||
-            job.location.toLowerCase().includes(query.toLowerCase()) ||
+            job.location.city.toLowerCase().includes(query.toLowerCase()) ||
+            job.location.state.toLowerCase().includes(query.toLowerCase()) ||
+            job.location.country.toLowerCase().includes(query.toLowerCase()) ||
             job.companyName.toLowerCase().includes(query.toLowerCase())
         )
         : activeJobListings;
@@ -100,7 +102,7 @@ const ListJob = ({ query }: ListJobProps) => {
                                 <span className={styles.typeText}>{jobListing.type}</span>
                             </div>
                             <div className="justify-between">
-                                <p>{jobListing.location}</p>
+                                <p>Location: {jobListing.location.city},{jobListing.location.state},{jobListing.location.country} </p>
                                 <p>Salary: ${jobListing.minSalary.toLocaleString()} - ${jobListing.maxSalary.toLocaleString()}</p>
                             </div>
                         </div>

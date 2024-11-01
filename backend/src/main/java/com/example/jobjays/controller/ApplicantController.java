@@ -9,7 +9,9 @@ import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.ApplicantProfile;
 import com.example.jobjays.model.ApplicantResume;
 import com.example.jobjays.model.JobPost;
+import com.example.jobjays.repository.ApplicantRepository;
 import com.example.jobjays.service.ApplicantService;
+import com.example.jobjays.service.JobPostService;
 import com.example.jobjays.service.ResponseMapperService;
 import com.example.jobjays.service.ResumeService;
 import com.example.jobjays.wrapper.EmailSendWrapper;
@@ -36,6 +38,7 @@ import java.util.stream.Collectors;
 public class ApplicantController {
 
   private final ApplicantService applicantService;
+  private final JobPostService jobPostService;
   private final ResponseMapperService responseMapperService;
 
   // Define the email pattern
@@ -46,9 +49,12 @@ public class ApplicantController {
   private EmailSendWrapper emailSendWrapper;
   @Autowired
   private ResumeService resumeService;
+  @Autowired
+  private ApplicantRepository applicantRepository;
 
-  public ApplicantController(ApplicantService applicantService, ResponseMapperService responseMapperService) {
+  public ApplicantController(ApplicantService applicantService, JobPostService jobPostService, ResponseMapperService responseMapperService) {
     this.applicantService = applicantService;
+    this.jobPostService = jobPostService;
     this.responseMapperService = responseMapperService;
   }
 
@@ -241,16 +247,6 @@ public class ApplicantController {
     return new ResponseEntity<>(responseApplicantProfileDto, HttpStatus.OK);
   }
 
-  //
-  // etMapping("/profile/search/u
-  // ername")
-  // blic ResponseEntity<List<ResponseApplicantDto>> getApplicants
-  // <Applicant> applicants = applicantSer
-  // <ResponseApplicantDto> respons
-  // .map(this::mapToResponseApplicantDt
-  // .collect(Collectors.toList());
-  // return ResponseEntity.ok(responseList);
-  // }
 
   @GetMapping("/profile/search/name")
   public ResponseEntity<List<ResponseProfileDto>> getApplicantsByName(@RequestParam("name") String name) {
@@ -261,6 +257,32 @@ public class ApplicantController {
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
+
+  @GetMapping("/profile/{applicantId}/saved-jobs")
+  public ResponseEntity<Set<ResponseJobPostDto>> getSavedJobsByApplicantId(@PathVariable Long applicantId) {
+    Set<JobPost> savedJobs = applicantService.findSavedJobsByApplicantId(applicantId);
+    Set<ResponseJobPostDto> responseList = savedJobs.stream()
+        .map(this::mapToResponseJobPostDto)
+        .collect(Collectors.toSet());
+    return ResponseEntity.ok(responseList);
+  }
+
+  @PutMapping("/profile/{applicantId}/saved-jobs/{jobId}")
+  public ResponseEntity<ResponseApplicantProfileDto> saveJob(@PathVariable Long applicantId, @PathVariable Long jobId) {
+    Applicant applicant = applicantService.findApplicantById(applicantId);
+    JobPost jobPost = jobPostService.getJobPostById(jobId);
+    if (applicant == null || jobPost == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    ApplicantProfile applicantProfile = applicant.getProfile();
+    applicantService.addSavedJob(applicantProfile, jobPost);
+
+    applicantRepository.save(applicant);
+    //return ResponseEntity.ok(mapToResponseProfileDto(applicantProfile));
+    return ResponseEntity.ok().build();
+  }
+
+
 
   // TODO: refactor into class
   public ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
@@ -287,7 +309,7 @@ public class ApplicantController {
     responseProfileDto.bio = profile.getBio();
     responseProfileDto.appliedJobs = profile.getAppliedJobs().stream().map(this::mapToResponseJobPostDto)
         .collect(Collectors.toList());
-    ;
+    responseProfileDto.savedJobs = profile.getSavedJobs().stream().map(this::mapToResponseJobPostDto).collect(Collectors.toSet());
     return responseProfileDto;
   }
 
@@ -300,20 +322,5 @@ public class ApplicantController {
     return responseApplicantDto;
   }
 
-  //
-  // etMapping("/profile/saved/{id}")
-  // blic ResponseEntity<Set<JobPost>> ge
-  //
-  //
-  //
-  //
-  // }
-  //
-  //
-  // ostMapping("/profile/saved")
-  // blic ResponseEntity<Void> addSavedJob(@Req
-  // applicantService.addSavedJob(id, jobPost);
-  // return ResponseEntity.noContent().build();
-  // }
 
 }

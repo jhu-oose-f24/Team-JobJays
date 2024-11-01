@@ -35,7 +35,7 @@ export interface JobPost extends Post {
     closedDate: Date;
     numApplicants: number;
     daysRemaining: number;
-    type: "Full Time" | "Part Time" | "Internship";
+    type: "Full Time" | "Part Time" | "Internship"; //TODO change to workTiming
     status: "Active" | "Expired";
 
 }

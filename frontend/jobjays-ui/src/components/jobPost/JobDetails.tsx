@@ -1,7 +1,7 @@
 "use client";
 import React, {useState} from 'react';
 import {useParams} from "next/navigation";
-import {applyToJob, fetchJobPost, updateJobPost} from "@/lib/api";
+import {applyToJob, fetchJobPost, saveJob, updateJobPost} from "@/lib/api";
 import JobForm from "@/components/employer/JobForm";
 import {
     Dialog,
@@ -67,15 +67,34 @@ const JobDetails = () => {
         }
     }
 
+    const handleSave = async () => {
+        const applicantId = 802; //TODO replace hardcoded  with actual applicant id
+
+        const result = await saveJob(applicantId, Number(id));
+        if (result.success) {
+            toast({
+                title: "Success",
+                description: "Job saved successfully!",
+                variant: "default",
+            });
+        } else {
+            toast({
+                title: "Error",
+                description: `Failed to save job. Message: ${result.error.message}, Code: ${result.error.status}`,
+                variant: "destructive",
+            });
+        }
+    }
+
     if (isLoading) return <SkeletonJobDetails/>;
     if (isError) return <div>Error loading job details.</div>;
     if (!JobPost) return <div>Job not found.</div>;
 
-    const [savedJobs, setSavedJobs] = useState<JobPost[]>([]);
+    //const [savedJobs, setSavedJobs] = useState<JobPost[]>([]);
 
-    const handleSubmit = () => {
-        setSavedJobs((prev) => [...prev, JobPost]);
-    }
+    // const handleSubmit = () => {
+    //     setSavedJobs((prev) => [...prev, JobPost]);
+    // }
 
 
 
@@ -96,6 +115,7 @@ const JobDetails = () => {
                     {/*    <button>Edit Job Post</button>*/}
                     {/*) : (*/}
                     {/*    <button>Apply</button>*/}
+                    {/*    <button>Save</button>*/}
                     {/*)}*/}
                     <div className="flex flex-col space-y-2">
                         <button onClick={handleApply}
@@ -116,9 +136,9 @@ const JobDetails = () => {
                                 <JobForm onSubmit={handleJobFormSubmit}/>
                             </DialogContent>
                         </Dialog>
-                        <button onClick={handleSubmit}>
-                            Save
-                        </button>
+                        <button
+                            onClick={handleSave}
+                            className="px-4 py-2 bg-blue-400 text-white rounded-md">Save Job</button>
                     </div>
                 </div>
 
