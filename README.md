@@ -60,6 +60,46 @@ We also got ahead on the next iteration and began to work on polishing the UI. T
 We also made changes to our UML diagram to mimic the state of our application at this point, which you can find in: ‘class_diagram.mermaid’ 
 
 ### How Preference, JobMatching Services works(video explanation) -  https://drive.google.com/file/d/1K8zL4N61aZ6ESc-EVxIhXuNwvQRUu8E2/view?usp=sharing
+# Start the remote database in cloud
+
+## the localhost way is to use the local database to test:
+It is much faster.
+
+step1:download the postgres server.
+
+https://www.postgresql.org/download/
+
+please use the username:postgres and password:postgres
+
+Or you have to modify the application.properties to specify your username and password of database.
+
+step2:run the local postgres server
+
+step3:check the application.properties:
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+
+## the formal way is to use the remote database:
+The remote way is to use AWS's permitted account to start the remote server. (do not use it for too long cause it costs money, and stop it after using)
+
+Click this URL and enter the login information below:
+
+https://us-east-2.console.aws.amazon.com/ec2/home?region=us-east-2#Instances:v=3;$case=tags:true%5C,client:false;$regex=tags:false%5C,client:false
+![img.png](img.png)
+
+
+And find the instance named 'oose':
+![img_1.png](img_1.png)
+
+
+You should wait until the status check column becomes '2/2 checks passed' from 'initializing'.
+
+And after finished, the public IP address will reallocate and you have to change the application.properties to its new public IP
+spring.datasource.url=jdbc:postgresql://your_new_ip:5432/postgres
+
+After using, stop the instance on the AWS.
+
+
 
 
 # Running the JobJays Backend(KAFKA Server) with Docker
