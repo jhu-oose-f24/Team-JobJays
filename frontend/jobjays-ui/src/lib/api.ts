@@ -1,6 +1,6 @@
 
 import useSWR from 'swr' ;
-import {Applicant, ApplicantProfile, EmployerProfile, JobPost} from './types'; // Ensure you have the correct types for your data
+import {Applicant, ApplicantProfile, Employer, EmployerProfile, JobPost} from './types'; // Ensure you have the correct types for your data
 
 // Fetcher function
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -112,6 +112,17 @@ export function fetchAllJobPosts() {
     
     return {
         JobPosts: processedJobPosts as JobPost[],
+        isLoading,
+        isError: error,
+        mutate
+    };
+}
+
+export function fetchAllCompanies() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/companies`, fetcher);
+    return {
+        Employers: data as Employer[],
         isLoading,
         isError: error,
         mutate
