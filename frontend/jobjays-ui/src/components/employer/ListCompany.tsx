@@ -16,6 +16,11 @@ interface ListCompanyProps {
 const ListCompany = ({query}: ListCompanyProps) => {
     const { Employers, isLoading, isError} = fetchAllCompanies();
 
+    if (query === "JOBS" || query === "CANDIDATES") {
+        return <div></div>;
+    }
+    if (query === "EMPLOYERS") { query = "";}
+    console.log(query);
     if (isLoading)
         return <div> Loading... </div>;
     if (isError) return <div>Error loading all employer details.</div>;

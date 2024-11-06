@@ -1,7 +1,27 @@
 import React from 'react';
 import styles from '@/styles/dashboard.module.css';
+import useSWR from "swr";
+import {fetcher} from "@/lib/api";
+import ErrorPage from "@/components/ui/ErrorPage";
 
 const DashboardPage: React.FC = () => {
+    const employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : <ErrorPage/>;
+
+    function useEmployerProfile() {
+        const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${employerId}`, fetcher);
+
+        // Process job posts if data is available
+        const processedEmployerProfile = data && data.jobPosts ? {
+            ...data,
+            jobPosts: data.jobPosts.map((job: JobPost) => addJobAttributes(job))
+        } : data;
+
+        return {
+            EmployerProfile: processedEmployerProfile as EmployerProfile,
+            isLoading,
+            isError: error
+        };
+    }
     return (
         <div>
             <header className={styles.dashboardHeader}>

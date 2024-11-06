@@ -71,6 +71,11 @@ interface ListJobProps {
 const ListJob = ({ query }: ListJobProps) => {
     const { JobPosts, isLoading, isError } = fetchAllJobPosts();
 
+    if (query === "EMPLOYERS" || query === "CANDIDATES") {
+        return <div></div>;
+    }
+    if (query === "JOBS") { query = "";}
+    console.log(query);
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading all job details.</div>;
     if (!JobPosts) return <div>Jobs not found.</div>;

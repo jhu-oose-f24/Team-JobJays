@@ -79,8 +79,8 @@ export default function Header() {
               </Link>
               <nav className="flex gap-9">
                   <Link href="/">Home</Link>
-                  <Link href="http://localhost:3000/post/jobs/all">Find Job</Link>
-                  <Link href="/employer/dashboard">Employers</Link>
+                  <Link href="http://localhost:3000/post/jobs/all?query=JOBS">Find Job</Link>
+                  <Link href="http://localhost:3000/post/jobs/all?query=EMPLOYERS">Employers</Link>
                   <Link href="/candidate/dashboard">Candidates</Link>
               </nav>
           </div>
@@ -127,7 +127,7 @@ export default function Header() {
           <div className="flex gap-4 font-[family-name:var(--font-geist-sans)]">
               <button className="px-4 py-2 border rounded-md" onClick={() => router.push('/signup')}>Sign Up</button>
               <button className="px-4 py-2 bg-blue-400 text-white rounded-md"
-                      onClick={() => router.push('http://localhost:3000/employer/post-job')}>Post A Job
+                      onClick={() => router.push('http://localhost:3000/signin')}>Log In
               </button>
           </div>
       </header>

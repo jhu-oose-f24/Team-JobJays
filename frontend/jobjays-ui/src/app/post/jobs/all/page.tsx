@@ -7,7 +7,7 @@ import ListCompany from "@/components/employer/ListCompany";
 
     const ListJobPage = () => {
         const searchParams = useSearchParams();
-        const query = searchParams.get("query") || "";
+        const query = searchParams.get("query") || "" || "JOBS" || "EMPLOYERS" || "CANDIDATES";
         return (
         <>
             <Header />
