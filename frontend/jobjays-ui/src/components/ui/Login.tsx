@@ -3,11 +3,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import {useRouter} from "next/navigation";
+import {useToast} from "@/hooks/use-toast";
 
 export default function Login() {
   const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
     "Candidate"
   );
+  const {toast} = useToast();
 
   const router = useRouter()
 
@@ -56,7 +58,12 @@ export default function Login() {
         const employerData = await response.json();
         console.log(employerData);
         const employerId = employerData.employer_id;
-        alert("Sign in successful!");
+        //alert("Sign in successful!");
+        toast({
+          title: "Success",
+          description: "Sign in successful!",
+          variant: "default",
+        });
         localStorage.setItem("employerId", employerId);
         router.push(`employer/dashboard`); // redirect to new user's dashboard
       } else {
@@ -94,6 +101,11 @@ export default function Login() {
         console.log(applicantData);
         const applicantId = applicantData.applicantId;
         // alert("Sign in successful!");
+        toast({
+          title: "Success",
+          description: "Sign in successful!",
+          variant: "default",
+        });
         // so we can retrieve it for other pages - but not good approach
         localStorage.setItem("applicantId", applicantId);
         router.push(`candidate/dashboard`); // redirect to new user's dashboard

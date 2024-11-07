@@ -3,11 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {useToast} from "@/hooks/use-toast";
 
 export default function CreateAccount() {
   const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
     "Employer"
   );
+  const { toast } = useToast();
+
 
   const router = useRouter()
 
@@ -67,7 +70,12 @@ export default function CreateAccount() {
         const employerData = await response.json();
         console.log(employerData);
         const employerId = employerData.employer_id;
-        alert("Signup successful! Check your email for verification.");
+        //alert("Signup successful! Check your email for verification.");
+        toast({
+          title: "Success",
+          description: "Signup successful! Check your email for verification.",
+          variant: "default",
+        });
         router.push(`signin`);
         //router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
       } else {
@@ -114,7 +122,12 @@ export default function CreateAccount() {
           const candidateData = await response.json();
           console.log(candidateData);
           const candidateId = candidateData.applicantId;
-          alert("Signup successful! Check your email for verification.");
+          //alert("Signup successful! Check your email for verification.");
+          toast({
+            title: "Success",
+            description: "Signup successful! Check your email for verification.",
+            variant: "default",
+          });
           router.push(`signin`);
           //router.push(`candidate/${candidateId}/dashboard`);
         } else {
