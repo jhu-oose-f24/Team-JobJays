@@ -22,4 +22,4 @@ jobs:
 
       - name: Test Connection and Create File
         run: |
-          ssh -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_IP "echo 'This is a test file for SSH connection verification.' > ~/test_connection.txt"
+          ssh -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_IP sh -c "'echo \"This is a test file for SSH connection verification.\" > ~/test_connection.txt'"
