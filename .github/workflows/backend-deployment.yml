@@ -26,20 +26,11 @@ jobs:
           SERVER_IP: ${{ secrets.HOST_JJ_SERVER_IP }}
         run: |
           ssh -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_IP echo "SSH connection successful."
-
-      - name: Create File on Remote Server
-        env:
-          SERVER_USER: ${{ secrets.JJ_SERVER_USERNAME }}
-          SERVER_IP: ${{ secrets.HOST_JJ_SERVER_IP }}
-        run: |
-          ssh -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_IP \
-            "echo 'This is a test file for SSH connection verification.' > ~/test_connection.txt" 
   
-    
       - name: Build and Deploy
         env:
           SERVER_USER: ${{ secrets.JJ_SERVER_USERNAME }}
           SERVER_IP: ${{ secrets.HOST_JJ_SERVER_IP }}
         run: |
           ssh -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_IP \
-            "cd jobjays/source/Team-JobJays && git pull && docker compose up --build" 
+            "cd jobjays/source/Team-JobJays && git pull && cd production && docker compose up --build" 
