@@ -1,5 +1,5 @@
 # Use an official Maven image with Java 23 for the build stage
-FROM maven:3.9.4-eclipse-temurin-22 AS build
+FROM maven:3.9.6-eclipse-temurin-22 AS build
 WORKDIR /app
 
 # Copy only the Maven configuration files to download dependencies first
