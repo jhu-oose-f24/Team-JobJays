@@ -1,4 +1,4 @@
-name: Test SSH Connection and Create File
+name: Deploy Backend Services
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main  # Adjust to your target branch
 
 jobs:
-  test-ssh:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Setup SSH
@@ -26,11 +26,11 @@ jobs:
           SERVER_IP: ${{ secrets.HOST_JJ_SERVER_IP }}
         run: |
           ssh -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_IP echo "SSH connection successful."
-
-      - name: Create File on Remote Server
+  
+      - name: Build and Deploy
         env:
           SERVER_USER: ${{ secrets.JJ_SERVER_USERNAME }}
           SERVER_IP: ${{ secrets.HOST_JJ_SERVER_IP }}
         run: |
           ssh -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_IP \
-            "echo 'This is a test file for SSH connection verification.' > ~/test_connection.txt"
+            "cd jobjays/source/Team-JobJays && git pull && cd backend/production && docker compose up --build" 
