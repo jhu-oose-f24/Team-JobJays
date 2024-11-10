@@ -22,20 +22,6 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaConfig {
-
-//    @Bean(name = "defaultKafkaStreamsBuilder")
-//    @Lazy(false)
-//    public StreamsBuilderFactoryBean defaultKafkaStreamsBuilder() {
-//        Map<String, Object> props = new HashMap<>();
-//        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "applicant-preferences-app");
-//        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-//        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.StringSerde.class);
-//        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.StringSerde.class);
-//
-//        KafkaStreamsConfiguration streamsConfig = new KafkaStreamsConfiguration(props);
-//        return new StreamsBuilderFactoryBean(streamsConfig);
-//    }
-
     @Bean
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
