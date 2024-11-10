@@ -1,4 +1,4 @@
-name: Test SSH Connection and Create File
+name: Test SSH Connection and Deploy with Docker Compose
 
 on:
   push:
@@ -26,4 +26,3 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_IP \
             "cd ~/backend/production && docker-compose up --build -d"
-
