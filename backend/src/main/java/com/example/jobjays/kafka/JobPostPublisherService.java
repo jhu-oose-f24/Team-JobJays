@@ -3,16 +3,17 @@ package com.example.jobjays.kafka;
 import com.example.jobjays.model.JobPost;
 import com.example.jobjays.model.Location;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class JobPostPublisherService {
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
     private final ObjectMapper objectMapper;
     private static final String NEW_JOBS_TOPIC = "new_jobs";
 
-    public JobPostPublisherService(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+    public JobPostPublisherService(KafkaTemplate<String, Object> kafkaTemplate, ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
     }
