@@ -1,12 +1,13 @@
-package org.example.applicant_matcher;
+package org.example.matcher;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ApplicantMatcherApplication {
+public class MatcherApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(ApplicantMatcherApplication.class, args);
+        SpringApplication.run(MatcherApplication.class, args);
     }
 
 }
