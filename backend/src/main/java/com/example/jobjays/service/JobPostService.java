@@ -1,8 +1,7 @@
 package com.example.jobjays.service;
 
-import com.example.jobjays.model.Employer;
-import com.example.jobjays.model.EmployerProfile;
-import com.example.jobjays.model.JobPost;
+import com.example.jobjays.kafka.JobPostPublisherService;
+import com.example.jobjays.model.*;
 import com.example.jobjays.dto.jobPost.*;
 import com.example.jobjays.repository.JobPostRepository;
 import org.springframework.http.HttpStatus;
@@ -10,19 +9,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class JobPostService {
   private final JobPostRepository jobPostRepository;
-  private final EmployerService employerService;
+  private final JobPostPublisherService jobPostPublisherService;
 
 
-  public JobPostService(JobPostRepository jobPostRepository, EmployerService employerService) {
+  public JobPostService(JobPostRepository jobPostRepository, JobPostPublisherService jobPostPublisherService) {
     this.jobPostRepository = jobPostRepository;
-    this.employerService = employerService;
+      this.jobPostPublisherService = jobPostPublisherService;
   }
 
   public JobPost addJobPost(CreateJobPostDto newJobPost, Employer employer) {
+
     JobPost jobPost = new JobPost(
       newJobPost.getTitle(),
       newJobPost.getDescription(),
@@ -30,14 +31,26 @@ public class JobPostService {
       newJobPost.getMinSalary(),
       newJobPost.getMaxSalary(),
       newJobPost.getClosedDate(),
-      employer
+      employer, newJobPost.getTags(),
+            newJobPost.getJobType(),
+            newJobPost.getIndustry(),
+            newJobPost.getWorkTiming(),
+            newJobPost.getSkillsRequired()
     );
     employer.postJob(jobPost); //Adding jobPost to employer's list of jobPosts
 
-    return jobPostRepository.save(jobPost);
+    JobPost newJobPostEntity =  jobPostRepository.save(jobPost);
+
+    jobPostPublisherService.publishJobPost(newJobPostEntity);
+    // now we need to send it to kafka topic
+
+    return newJobPostEntity;
   }
 
   public JobPost updateJobPost(UpdateJobPostDto jobPost, Long id) {
+
+
+
     JobPost jobPostToUpdate = jobPostRepository.findById(id).orElse(null);
 
     if (jobPostToUpdate == null) {
@@ -52,7 +65,7 @@ public class JobPostService {
       jobPostToUpdate.setDescription(jobPost.getDescription());
     }
 
-    if (jobPost.getLocation() != null && !jobPost.getLocation().isEmpty()) {
+    if (jobPost.getLocation() != null) {
       jobPostToUpdate.setLocation(jobPost.getLocation());
     }
 
@@ -110,6 +123,19 @@ public class JobPostService {
 
   public List<JobPost> getJobPostsBySalaryRange(Double minSalary, Double maxSalary) {
     return jobPostRepository.findJobPostsByMinSalaryIsGreaterThanEqualAndMaxSalaryIsLessThanEqual(minSalary, maxSalary);
+  }
+
+  public Set<Applicant> getApplicantsByJobPostId(Long jobID) {
+    return jobPostRepository.findApplicantsByJobPostId(jobID);
+  }
+
+  public JobPost addApplicantToJobPost(JobPost jobPost, Applicant applicant) {
+
+    jobPost.addApplicant(applicant);
+    ApplicantProfile profile = applicant.getProfile();
+    profile.getAppliedJobs().add(jobPost);
+    return jobPostRepository.save(jobPost);
+
   }
 
 }

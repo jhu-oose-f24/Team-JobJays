@@ -2,10 +2,15 @@ package com.example.jobjays.model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.context.annotation.Lazy;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
+
 
 
 @Entity
@@ -14,9 +19,34 @@ public class JobPost implements Post {
 
   private String title ;
   private String description;
-  private String location;
+  private Location location;
   private Double minSalary;
   private Double maxSalary;
+  // add there same props
+  @Getter
+  @Setter
+  private String industry;
+  @Getter
+  @Setter
+  private String jobType;
+  @Getter
+  @Setter
+  private String workTiming;
+
+  @Getter
+  @Setter
+  @ElementCollection
+  @CollectionTable(name = "job_tags", joinColumns = @JoinColumn(name = "job_id"))
+  @Column(name = "tag")
+  private List<String> tags;
+
+  @Getter
+  @Setter
+  @ElementCollection
+  @CollectionTable(name = "job_required_skills", joinColumns = @JoinColumn(name = "job_id"))
+  @Column(name = "skill_required")  // Column name for skills in the job_required_skills table
+  private List<String> skillsRequired;
+
 
   @Id
   @GeneratedValue
@@ -25,7 +55,22 @@ public class JobPost implements Post {
   private LocalDateTime closedDate;
 
   @ManyToMany
-  private List<Applicant> applicants;
+  @JoinTable(
+      name = "job_post_applicants",
+      joinColumns = @JoinColumn(name = "job_post_jobid"),
+      inverseJoinColumns = @JoinColumn(name = "applicant_id")
+  )
+  private Set<Applicant> applicants;
+
+//  @JoinTable(
+//      name = "job_post_metrics",
+//      joinColumns = @JoinColumn(name = "job_post_id"),
+//      inverseJoinColumns = @JoinColumn(name = "metric_id")
+//  )
+  @Getter
+  @Setter
+  @OneToOne(mappedBy = "jobPost", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Impressions impressions;
 
   @ManyToOne
   public Employer employer;
@@ -35,11 +80,16 @@ public JobPost() {}
   public JobPost(
       String title,
       String description,
-      String location,
+      Location location,
       Double minSalary,
       Double maxSalary,
       LocalDateTime closedDate,
-      Employer employer
+      Employer employer,
+      List<String> tags,
+        String industry,
+        String jobType,
+        String workTiming,
+        List<String> skillsRequired
       ) {
 
     //this.jobID = UUID.randomUUID().toString();
@@ -51,7 +101,34 @@ public JobPost() {}
     this.postedDate = LocalDateTime.now();
     this.closedDate = closedDate;
     this.employer = employer;
-    this.applicants = new ArrayList<>();
+    this.applicants = new HashSet<>();
+    this.industry = industry;
+    this.jobType = jobType;
+    this.workTiming = workTiming;
+    this.skillsRequired = skillsRequired;
+    this.tags =tags;
+    buildTags();
+
+  }
+
+
+  private void buildTags() {
+  this.tags = new ArrayList<>();
+     this.tags.add(title);
+     this.tags.add(location.getCity());
+        this.tags.add(location.getState());
+        this.tags.add(location.getCountry());
+        this.tags.add(employer.getProfile().getName());
+        this.tags.add(employer.getProfile().getIndustry());
+
+  }
+
+  public ImpressionEvent addImpression() {
+    if (impressions == null) {
+      impressions = new Impressions(this);
+      //impressions.setJobPost(this);
+    }
+    return impressions.logImpression();
 
   }
 
@@ -73,11 +150,12 @@ public JobPost() {}
     return description;
   }
 
-  public String getLocation() {
+  public Location getLocation() {
     return location;
   }
 
-  public String setLocation(String location) {
+
+  public Location setLocation(Location location) {
     this.location = location;
     return location;
   }
@@ -134,7 +212,7 @@ public JobPost() {}
     applicants.remove(applicant);
   }
 
-  public List<Applicant> getApplicants() {
+  public Set<Applicant> getApplicants() {
     return applicants;
   }
 

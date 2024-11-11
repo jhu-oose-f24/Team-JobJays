@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import styles from '@/styles/founding-info.module.css'; // CSS module import
+import React from 'react';
+// import styles from '@/styles/founding-info.module.css'; // CSS module import
 export interface ProfileData {
     nationality: string;
     gender: string;
@@ -15,12 +15,12 @@ interface FoundingInfoProps {
 }
 
 const ProfileData: React.FC<FoundingInfoProps> = ({  }) => {
-    const [organizationType, setOrganizationType] = useState<string>('');
-    const [industryType, setIndustryType] = useState<string>('');
-    const [teamSize, setTeamSize] = useState<string>('');
-    const [yearOfEstablishment, setYearOfEstablishment] = useState<string>('');
-    const [companyWebsite, setCompanyWebsite] = useState<string>('');
-    const [companyVision, setCompanyVision] = useState<string>('');
+    // const [organizationType, setOrganizationType] = useState<string>('');
+    // const [industryType, setIndustryType] = useState<string>('');
+    // const [teamSize, setTeamSize] = useState<string>('');
+    // const [yearOfEstablishment, setYearOfEstablishment] = useState<string>('');
+    // const [companyWebsite, setCompanyWebsite] = useState<string>('');
+    // const [companyVision, setCompanyVision] = useState<string>('');
 
 
     return (
@@ -28,7 +28,7 @@ const ProfileData: React.FC<FoundingInfoProps> = ({  }) => {
             <h1 className="text-2xl font-bold mb-6">Profile Settings</h1>
 
             {/* Form for Profile Information */}
-            <form onSubmit={onsubmit} className="grid grid-cols-2 gap-6 bg-white p-6 rounded shadow-md">
+            <form onSubmit={() => onsubmit} className="grid grid-cols-2 gap-6 bg-white p-6 rounded shadow-md">
                 <div className="space-y-4">
                     <div>
                         <label className="block text-sm font-medium">Nationality</label>

@@ -79,8 +79,8 @@ export default function Header() {
               </Link>
               <nav className="flex gap-9">
                   <Link href="/">Home</Link>
-                  <Link href="http://localhost:3000/post/jobs/all">Find Job</Link>
-                  <Link href="/employer/dashboard">Employers</Link>
+                  <Link href="http://localhost:3000/post/jobs/all?query=JOBS">Find Job</Link>
+                  <Link href="http://localhost:3000/post/jobs/all?query=EMPLOYERS">Employers</Link>
                   <Link href="/candidate/dashboard">Candidates</Link>
               </nav>
           </div>
@@ -99,7 +99,7 @@ export default function Header() {
               {/* Dropdown for search results */}
               {showDropdown && results.length > 0 && (
                   <div className="absolute left-0 right-0 bg-white border mt-1 rounded-md shadow-lg z-10">
-                      {results.map((result, index) => (
+                      {results.slice(0, 5).map((result, index) => (
                           <div
                               key={index}
                               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -120,6 +120,14 @@ export default function Header() {
                               )}
                           </div>
                       ))}
+                      {results.length > 5 && (
+                          <div
+                              className="px-4 py-2 text-center text-blue-500 hover:bg-gray-100 cursor-pointer"
+                              onClick={() => router.push('/post/jobs/all?query=' + query)}
+                          >
+                              View all results
+                          </div>
+                      )}
                   </div>
               )}
           </div>
@@ -127,7 +135,7 @@ export default function Header() {
           <div className="flex gap-4 font-[family-name:var(--font-geist-sans)]">
               <button className="px-4 py-2 border rounded-md" onClick={() => router.push('/signup')}>Sign Up</button>
               <button className="px-4 py-2 bg-blue-400 text-white rounded-md"
-                      onClick={() => router.push('http://localhost:3000/employer/post-job')}>Post A Job
+                      onClick={() => router.push('http://localhost:3000/signin')}>Log In
               </button>
           </div>
       </header>

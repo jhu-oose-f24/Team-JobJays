@@ -1,25 +1,26 @@
 package com.example.jobjays.model;
 
-import com.fasterxml.jackson.annotation.JsonTypeName;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
-
-import java.util.ArrayList;
-import java.util.UUID;
 
 @Entity
 public class Applicant implements User {
-  private String username;
-  private String password;
-  private String email;
 
+  private String username;
+  @Column(insertable=false, updatable=false)
+  private String name;
+  private String password;
+  @Column(unique = true)
+  private String email;
+  private Boolean enabled;
+  private String token;
   @Id
   @GeneratedValue
   private Long applicantId;
   private String resume;
+
 
   @Embedded
   private ApplicantProfile profile;
@@ -27,21 +28,31 @@ public class Applicant implements User {
 
   public Applicant(
       String username,
+      String name,
       String password,
       String email,
-      String resume
+      Boolean enabled,
+      String resume,
+      String token
   ) {
+    this.name = name;
     this.username = username;
     this.password = password;
     this.email = email;
+    this.enabled = enabled;
     this.resume = resume;
     this.profile = new ApplicantProfile(this, "", "");
-
+    this.token = token;
   }
   public Applicant(){}
 
   public Long getID() {
     return this.applicantId;
+  }
+
+  @Override
+  public String getName() {
+    return this.name;
   }
 
   public String getUsername() {
@@ -51,6 +62,25 @@ public class Applicant implements User {
   public String setUsername(String username) {
     this.username = username;
     return username;
+  }
+
+  public Boolean getEnabled() {
+    return this.enabled;
+  }
+
+  public Boolean setEnabled(Boolean enabled) {
+    this.enabled = enabled;
+    return enabled;
+  }
+
+
+  public String getToken() {
+    return this.token;
+  }
+
+  public String setToken(String token) {
+    this.token = token;
+    return token;
   }
 
   public String getPassword() {

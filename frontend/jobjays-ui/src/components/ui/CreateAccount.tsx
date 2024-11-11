@@ -3,11 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import {useToast} from "@/hooks/use-toast";
 
 export default function CreateAccount() {
   const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
     "Employer"
   );
+  const { toast } = useToast();
+
 
   const router = useRouter()
 
@@ -23,6 +26,7 @@ export default function CreateAccount() {
   const [candForm, setCandForm] = useState({
     username: "",
     password: "",
+    confirmPassword: "",
     email: "",
     resume: "",
     applicantName: "",
@@ -66,8 +70,14 @@ export default function CreateAccount() {
         const employerData = await response.json();
         console.log(employerData);
         const employerId = employerData.employer_id;
-        alert("Employer account created successfully!"); // could change to toast to look cleaner
-        router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
+        //alert("Signup successful! Check your email for verification.");
+        toast({
+          title: "Success",
+          description: "Signup successful! Check your email for verification.",
+          variant: "default",
+        });
+        router.push(`signin`);
+        //router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
       } else {
         const errorData = await response.json();
         alert(`Error: ${errorData.message}`);
@@ -86,7 +96,10 @@ export default function CreateAccount() {
     // Handle form submission
     const handleCandSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
-
+      if (formData.password !== formData.confirmPassword) {
+        alert("Passwords do not match");
+        return;
+      }
   
       try {
         const response = await fetch("http://localhost:8080/api/applicants", {
@@ -109,8 +122,14 @@ export default function CreateAccount() {
           const candidateData = await response.json();
           console.log(candidateData);
           const candidateId = candidateData.applicantId;
-          alert("Candidate account created successfully!");
-          router.push(`candidate/${candidateId}/dashboard`);
+          //alert("Signup successful! Check your email for verification.");
+          toast({
+            title: "Success",
+            description: "Signup successful! Check your email for verification.",
+            variant: "default",
+          });
+          router.push(`signin`);
+          //router.push(`candidate/${candidateId}/dashboard`);
         } else {
           const errorData = await response.json();
           alert(`Error: ${errorData.message}`);
@@ -226,75 +245,83 @@ export default function CreateAccount() {
             </button>
           </form>
         ) : (
-          <form className="flex flex-col gap-4" onSubmit={handleCandSubmit}>
-            <input
-              type="text"
-              name="username"
-              value={candForm.username}
-              onChange={handleCandInputChange}
-              placeholder="Username"
-              className="px-4 py-2 border rounded-md"
-            />
-            <input
-              type="password"
-              name="password"
-              value={candForm.password}
-              onChange={handleCandInputChange}
-              placeholder="Password"
-              className="px-4 py-2 border rounded-md"
-            />
-            <input
-              type="email"
-              name="email"
-              value={candForm.email}
-              onChange={handleCandInputChange}
-              placeholder="Email Address"
-              className="px-4 py-2 border rounded-md"
-            />
-            <input
-              type="text"
-              name="resume"
-              value={candForm.resume}
-              onChange={handleCandInputChange}
-              placeholder="Resume (will be fleshed out)"
-              className="px-4 py-2 border rounded-md"
-            />
-            <input
-              type="text"
-              name="applicantName"
-              value={candForm.applicantName}
-              onChange={handleCandInputChange}
-              placeholder="Applicant Name"
-              className="px-4 py-2 border rounded-md"
-            />
-            <input
-              type="text"
-              name="applicantInfo"
-              value={candForm.applicantInfo}
-              onChange={handleCandInputChange}
-              placeholder="Applicant Info"
-              className="px-4 py-2 border rounded-md"
-            />
-            <div className="flex items-center gap-2">
-              <input type="checkbox" id="terms" className="h-4 w-4" />
-              <label htmlFor="terms" className="text-gray-500">
-                I&apos;ve read and agree with your <a href="#" className="text-blue-600">Terms of Services</a>
-              </label>
-            </div>
-            <button className="px-6 py-3 bg-blue-400 text-white rounded-md mt-4">
-              <h2 className="font-bold">Create Account</h2>
-            </button>
-          </form>
+            <form className="flex flex-col gap-4" onSubmit={handleCandSubmit}>
+              <input
+                  type="text"
+                  name="username"
+                  value={candForm.username}
+                  onChange={handleCandInputChange}
+                  placeholder="Username"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="password"
+                  name="password"
+                  value={candForm.password}
+                  onChange={handleCandInputChange}
+                  placeholder="Password"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="password"
+                  name="confirmPassword"
+                  value={candForm.confirmPassword}
+                  onChange={handleCandInputChange}
+                  placeholder="Password"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="email"
+                  name="email"
+                  value={candForm.email}
+                  onChange={handleCandInputChange}
+                  placeholder="Email Address"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="text"
+                  name="resume"
+                  value={candForm.resume}
+                  onChange={handleCandInputChange}
+                  placeholder="Resume (will be fleshed out)"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="text"
+                  name="applicantName"
+                  value={candForm.applicantName}
+                  onChange={handleCandInputChange}
+                  placeholder="Applicant Name"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="text"
+                  name="applicantInfo"
+                  value={candForm.applicantInfo}
+                  onChange={handleCandInputChange}
+                  placeholder="Applicant Info"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <div className="flex items-center gap-2">
+                <input type="checkbox" id="terms" className="h-4 w-4"/>
+                <label htmlFor="terms" className="text-gray-500">
+                  I&apos;ve read and agree with your <a href="#" className="text-blue-600">Terms of Services</a>
+                </label>
+              </div>
+              <button className="px-6 py-3 bg-blue-400 text-white rounded-md mt-4">
+                <h2 className="font-bold">Create Account</h2>
+              </button>
+            </form>
         )}
       </div>
 
       {/* Right side */}
       <div className="hidden md:flex md:w-1/2 bg-blue-400 items-center justify-center relative">
         <Image
-          src="/create-account-banner.jpg"
-          alt=""
-          layout="fill"
-          objectFit="cover"
+            src="/create-account-banner.jpg"
+            alt=""
+            layout="fill"
+            objectFit="cover"
           className="opacity-70"
         />
         <div className="absolute text-white text-center px-8">

@@ -14,6 +14,8 @@ public interface EmployerRepository extends JpaRepository<Employer, Long> {
 
   Employer findByUsernameIs(String username);
 
+  Employer findByToken(String token);
+
 
 
 

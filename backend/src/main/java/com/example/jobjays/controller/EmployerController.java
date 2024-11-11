@@ -1,19 +1,25 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.authentication.TokenGenerator;
+import com.example.jobjays.dto.applicant.UpdateApplicantDto;
 import com.example.jobjays.dto.profile.ResponseEmployerProfileDto;
 import com.example.jobjays.dto.profile.ResponseProfileDto;
 import com.example.jobjays.dto.employer.CreateEmployerDto;
 import com.example.jobjays.dto.employer.ResponseEmployerDto;
 import com.example.jobjays.dto.employer.UpdateEmployerDto;
 import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
+import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.Employer;
 import com.example.jobjays.model.EmployerProfile;
 import com.example.jobjays.model.JobPost;
 import com.example.jobjays.service.EmployerService;
 import com.example.jobjays.service.ResponseMapperService;
+import com.example.jobjays.wrapper.EmailSendWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,14 +31,44 @@ public class EmployerController {
   private final EmployerService employerService;
   private final ResponseMapperService responseMapperService;
 
+
+  @Autowired
+  private EmailSendWrapper emailSendWrapper;
+
   public EmployerController(EmployerService employerService, ResponseMapperService responseMapperService) {
     this.employerService = employerService;
     this.responseMapperService = responseMapperService;
   }
 
+
+  @GetMapping("/verify")
+  public RedirectView verifyUser(@RequestParam("token") String token) {
+    Employer employer = employerService.findByVerificationToken(token);
+    UpdateEmployerDto user = new UpdateEmployerDto();
+
+    if (employer == null) {
+      return  new RedirectView("http://localhost:3000/invalid-token");
+    }
+
+    user.setEnabled(true); // Enable the user
+    user.setToken(null); // Clear the token
+    employerService.updateEmployer(user,employer.getID());
+
+    RedirectView redirectView = new RedirectView("http://localhost:3000/signin");
+    redirectView.setExposeModelAttributes(false);
+
+    return redirectView;
+  }
+
   @PostMapping
   public ResponseEntity<ResponseEmployerDto> addEmployer(@RequestBody CreateEmployerDto createEmployerDto) {
+    createEmployerDto.setEnabled(false);
+    String token = TokenGenerator.generateToken();
+    createEmployerDto.setVerificationToken(token);
+    createEmployerDto.setEnabled(false); // User is disabled until they verify
+
     Employer employer = employerService.addEmployer(createEmployerDto);
+    emailSendWrapper.sendVerificationEmailForEmployer(employer.getEmail(), token);
     ResponseEmployerDto responseEmployerDto = mapToResponseEmployerDto(employer);
 //    HttpHeaders headers = new HttpHeaders();
 //    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employer.getID()));

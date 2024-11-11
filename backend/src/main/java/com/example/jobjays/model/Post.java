@@ -9,8 +9,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 public interface Post {
   String getTitle();
   String getDescription();
-  String getLocation();
-  //Double getSalary(); //Later implementations dont need a salary
+  Location getLocation();
   Long getID();
 
   void publish();

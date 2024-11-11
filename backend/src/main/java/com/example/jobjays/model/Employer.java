@@ -2,14 +2,21 @@ package com.example.jobjays.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @Entity
 public class Employer implements User {
+  @Column(insertable=false, updatable=false)
+  private String name;
   private String username;
   private String password;
   private String email;
-
+  @Setter
+  @Getter
+  private Boolean enabled;
+  private String token;
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long employer_id;
@@ -22,11 +29,13 @@ public class Employer implements User {
   public Employer() {}
 
   public Employer(
-      String username,
-      String password,
-      String email,
-      String employerName,
-      String employerInfo
+          String username,
+          String password,
+          String email,
+          String employerName,
+          String employerInfo,
+          Boolean enabled,
+          String token
 
   ) {
     this.username = username;
@@ -35,10 +44,21 @@ public class Employer implements User {
     this.employerName = employerName;
     this.employerInfo = employerInfo;
     this.profile = new EmployerProfile(this, employerName, employerInfo); //could also replace employerName and Info with empty strings literals
+    this.enabled = enabled;
+    this.token = token;
   }
 
   public Long getID() {
     return this.employer_id;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  @Override
+  public String getName() {
+    return name;
   }
 
   public String getUsername() {
@@ -55,13 +75,23 @@ public class Employer implements User {
   }
 
 
-   String setPassword(String password) {
+  String setPassword(String password) {
     this.password = password;
     return password;
   }
 
   public String getEmail() {
     return this.email;
+  }
+
+  @Override
+  public Boolean getEnabled() {
+    return enabled;
+  }
+
+  @Override
+  public String getToken() {
+    return token;
   }
 
   public String setEmail(String email) {

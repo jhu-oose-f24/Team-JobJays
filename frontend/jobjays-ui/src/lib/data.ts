@@ -6,7 +6,7 @@ import { Post, JobPost, User, JobListing, Employer, Applicant, Profile, Employer
 
 // Placeholder for Post
 const samplePost: Post = {
-    jobID: 101,
+    id: 101,
     title: "Software Engineer",
     description: "Develop and maintain web applications.",
     location: "New York, NY",
@@ -143,9 +143,10 @@ const sampleEmployerProfile: {
 const sampleApplicantProfile: ApplicantProfile = {
     ...sampleProfile,
     appliedJobs: [sampleJobPost],
-    trackApplications() {
-        console.log(`${this.name} is tracking their applications.`);
-    }
+    savedJobs: [sampleJobPost]
+    // trackApplications() {
+    //     console.log(`${this.name} is tracking their applications.`);
+    // }
 };
 
 // Assign profiles to Employer and Applicant objects

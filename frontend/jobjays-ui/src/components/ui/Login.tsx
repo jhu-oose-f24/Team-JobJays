@@ -2,11 +2,127 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import {useRouter} from "next/navigation";
+import {useToast} from "@/hooks/use-toast";
 
 export default function Login() {
   const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
-    "Employer"
+    "Candidate"
   );
+  const {toast} = useToast();
+
+  const router = useRouter()
+
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+  });
+
+  // const [candForm, setCandForm] = useState({
+  //   username: "",
+  //   password: ""
+  // });
+
+  // Handle input changes
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    // save the form data to the database
+    console.log(formData);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/employer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password
+        })
+      });
+
+      if (response.status == 404) {
+        alert("Invalid username or password");
+        return;
+      }
+
+      if (response.ok) {
+        console.log(response);
+        const employerData = await response.json();
+        console.log(employerData);
+        const employerId = employerData.employer_id;
+        //alert("Sign in successful!");
+        toast({
+          title: "Success",
+          description: "Sign in successful!",
+          variant: "default",
+        });
+        localStorage.setItem("employerId", employerId);
+        router.push(`employer/dashboard`); // redirect to new user's dashboard
+      } else {
+
+        const errorData = await response.json();
+        console.log(`Error: ${errorData.failReason}`);
+      }
+    } catch (error) {
+      alert(`An error occurred: ${error}`);
+    }
+  };
+
+
+  const handleCandidateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    console.log(formData);
+
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/applicant", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password
+        })
+      });
+
+
+      if (response.ok) {
+        console.log(response);
+        const applicantData = await response.json();
+        console.log(applicantData);
+        const applicantId = applicantData.applicantId;
+        // alert("Sign in successful!");
+        toast({
+          title: "Success",
+          description: "Sign in successful!",
+          variant: "default",
+        });
+        // so we can retrieve it for other pages - but not good approach
+        localStorage.setItem("applicantId", applicantId);
+        router.push(`candidate/dashboard`); // redirect to new user's dashboard
+      } else {
+        const errorData = await response.json();
+
+        if (response.status == 404) {
+          alert("Invalid username or password");
+        }
+        console.log(`Error: ${errorData.failReason}`);
+      }
+    } catch (error) {
+      alert(`An error occurred: ${error}`);
+    }
+  };
+
+
 
   return (
     <section className="flex flex-row h-screen">
@@ -53,46 +169,60 @@ export default function Login() {
 
         {/* Login based on tab (candidate vs employer) */}
         {selectedTab === "Employer" ? (
-          <form className="flex flex-col gap-4">
-            <input
-              type="text"
-              placeholder="Username"
-              className="px-4 py-2 border rounded-md"
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              className="px-4 py-2 border rounded-md"
-            />
-            <button className="px-6 py-3 bg-blue-400 text-white rounded-md mt-4">
-              <h2 className="font-bold">Log In</h2>
-            </button>
-            {/* <a href="#" className="text-blue-600 mt-4">Forgot Password?</a> */}
-          </form>
-        ) : (
-          <div className="flex flex-col gap-4">
-            <p>Log in using the following option:</p>
-            <button className="px-6 py-3 flex items-center gap-2 border rounded-md">
-              <Image
-                src="/jhucrest.png"
-                alt="JHU SSO"
-                width={65}
-                height={20}
+            <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+              <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  placeholder="Username"
+                  className="px-4 py-2 border rounded-md"
               />
-              JHU SSO
-            </button>
-          </div>
+              <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Password"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <button className="px-6 py-3 bg-blue-400 text-white rounded-md mt-4">
+                <h2 className="font-bold">Log in</h2>
+              </button>
+            </form>
+        ) : (
+            <form className="flex flex-col gap-4" onSubmit={handleCandidateSubmit}>
+              <input
+                  type="text"
+                  name="username"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  placeholder="Username"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  placeholder="Password"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <button className="px-6 py-3 bg-blue-400 text-white rounded-md mt-4">
+                <h2 className="font-bold">Log in</h2>
+              </button>
+            </form>
         )}
       </div>
 
       {/* Right side */}
       <div className="hidden md:flex md:w-1/2 bg-blue-400 items-center justify-center relative">
         <Image
-          src="/create-account-banner.jpg"
-          alt=""
-          layout="fill"
-          objectFit="cover"
-          className="opacity-70"
+            src="/create-account-banner.jpg"
+            alt=""
+            layout="fill"
+            objectFit="cover"
+            className="opacity-70"
         />
         <div className="absolute text-white text-center px-8">
           <h3 className="text-3xl font-bold mb-4">

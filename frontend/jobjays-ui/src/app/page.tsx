@@ -1,3 +1,4 @@
+"use client";
 import Header from "@/components/ui/Header";
 import Hero from "@/components/ui/Hero";
 import HowItWorks from "@/components/ui/Instructions";
@@ -7,7 +8,7 @@ import Support from "@/components/Support";
 import ContactUs from "@/components/ContactUs";
 
 export default function Home() {
-  return (
+    return (
     <>
       <Header />
       <Hero />

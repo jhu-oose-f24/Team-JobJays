@@ -1,11 +1,13 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.authentication.LoginRequired;
+import com.example.jobjays.dto.applicant.ResponseApplicantDto;
 import com.example.jobjays.dto.jobPost.CreateJobPostDto;
 import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
 import com.example.jobjays.dto.jobPost.UpdateJobPostDto;
-import com.example.jobjays.model.Employer;
-import com.example.jobjays.model.EmployerProfile;
-import com.example.jobjays.model.JobPost;
+import com.example.jobjays.dto.profile.ResponseApplicantProfileDto;
+import com.example.jobjays.model.*;
+import com.example.jobjays.service.ApplicantService;
 import com.example.jobjays.service.EmployerService;
 import com.example.jobjays.service.JobPostService;
 import com.example.jobjays.service.ResponseMapperService;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @RestController
@@ -23,15 +26,19 @@ public class JobPostController {
 
   private final JobPostService jobPostService;
   private final EmployerService employerService;
+  private final ApplicantService applicantService;
   private final ResponseMapperService responseMapperService;
 
-  public JobPostController(JobPostService jobPostService, EmployerService employerService, ResponseMapperService responseMapperService) {
+  public JobPostController(JobPostService jobPostService,
+                           EmployerService employerService,
+                           ResponseMapperService responseMapperService,
+                           ApplicantService applicantService
+  ) {
     this.jobPostService = jobPostService;
     this.employerService = employerService;
+    this.applicantService = applicantService;
     this.responseMapperService = responseMapperService;
   }
-
-
 
   @PostMapping("/companies/profile/{employerId}/post")
   public ResponseEntity<ResponseJobPostDto> addJobPost(@Valid @RequestBody CreateJobPostDto newJobPost, @PathVariable Long employerId) {
@@ -39,6 +46,9 @@ public class JobPostController {
     if (employer == null) {
       return ResponseEntity.notFound().build();
     }
+    // set industry from employer data
+    System.out.println(newJobPost.getSkillsRequired());
+    newJobPost.setIndustry(employer.getProfile().getIndustry());
     JobPost jobPost = jobPostService.addJobPost(newJobPost, employer);
     ResponseJobPostDto responseJobPostDto = responseMapperService.mapToResponseJobPostDto(jobPost);
 
@@ -136,6 +146,46 @@ public class JobPostController {
         .map(responseMapperService::mapToResponseJobPostDto)
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseJobPosts);
+  }
+
+  @GetMapping("/{jobID}/applicants")
+  public ResponseEntity<Set<ResponseApplicantDto>> getApplicants(@PathVariable Long jobID) {
+    Set<Applicant> applicants = jobPostService.getApplicantsByJobPostId(jobID);
+    Set<ResponseApplicantDto> responseApplicants = applicants.stream()
+        .map(this::mapToResponseApplicantDto)
+        .collect(Collectors.toSet());
+    return ResponseEntity.ok(responseApplicants);
+  }
+
+  @PutMapping("/apply/{jobID}/{applicantId}")
+  public ResponseEntity<ResponseJobPostDto> applyForJob(@PathVariable Long jobID, @PathVariable Long applicantId) {
+    JobPost jobPost = jobPostService.getJobPostById(jobID);
+    Applicant applicant = applicantService.findApplicantById(applicantId);
+    if (jobPost == null || applicant == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    JobPost updatedJobPost = jobPostService.addApplicantToJobPost(jobPost, applicant);
+    //return ResponseEntity.ok(responseMapperService.mapToResponseJobPostDto(updatedJobPost));
+    return ResponseEntity.ok().build();
+
+  }
+
+
+  ResponseApplicantProfileDto mapToResponseProfileDto(ApplicantProfile profile) {
+    ResponseApplicantProfileDto responseProfileDto = new ResponseApplicantProfileDto();
+    responseProfileDto.name = profile.getName();
+    responseProfileDto.bio = profile.getBio();
+    //responseProfileDto.appliedJobs = profile.getAppliedJobs().stream().map(responseMapperService::mapToResponseJobPostDto).collect(Collectors.toList());;
+    return responseProfileDto;
+  }
+
+  // Utility method to map Applicant entity to ResponseApplicantDto
+  private ResponseApplicantDto mapToResponseApplicantDto(Applicant applicant) {
+    ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
+    responseApplicantDto.applicantId = applicant.getID();
+    responseApplicantDto.username = applicant.getUsername();
+    responseApplicantDto.applicantProfile = mapToResponseProfileDto(applicant.getProfile());
+    return responseApplicantDto;
   }
 
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+        h2 {
+            color: #0056b3;
+        }
+        .job-container {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .apply-button {
+            display: inline-block;
+            background-color: #0056b3;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .apply-button:hover {
+            background-color: #003f7f;
+        }
+    </style>
+</head>
+<body>
+<h2>Hello, [[${userName}]]!</h2>
+<p>Based on your preferences, we found a job recommendation for you:</p>
+<div class="job-container">
+    <strong th:text="${jobTitle}">Job Title</strong> at <span th:text="${employerName}">Company</span>
+    <p>Employer: <span th:text="${employerName}">Location</span></p>
+<!--    //<p>Salary: <span th:text="${salary}">Salary</span></p>-->
+    <a th:href="@{|http://localhost:3000/post/jobs/${jobId}|}" class="apply-button">Apply Now</a>
+</div>
+<p>Good luck!</p>
+<p>Best regards,</p>
+<p>Your Job Jays Team</p>
+</body>
+</html>

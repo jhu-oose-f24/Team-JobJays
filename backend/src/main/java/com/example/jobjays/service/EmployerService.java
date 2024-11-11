@@ -24,14 +24,20 @@ public class EmployerService {
     this.applicantRepository = applicantRepository;
   }
 
+
+  public Employer findByVerificationToken(String token){
+    return employerRepository.findByToken(token);
+
+  }
   public Employer addEmployer(CreateEmployerDto employer) {
 
     Employer newEmployer = new Employer(
       employer.getUsername(),
       employer.getPassword(), employer.getEmail(),
       employer.getEmployerName(),
-      employer.getEmployerInfo()
-
+      employer.getEmployerInfo(),
+            employer.getEnabled(),
+            employer.getVerificationToken()
     );
 
     assert newEmployer.getProfile() != null;
@@ -52,6 +58,10 @@ public class EmployerService {
     }
     if (newEmployer.getEmployerName() != null && !newEmployer.getEmployerName().isEmpty()) {
       profile.setName(newEmployer.getEmployerInfo());
+    }
+
+    if (newEmployer.getEnabled() != null) {
+      employerToUpdate.setEnabled(newEmployer.getEnabled());
     }
 
 

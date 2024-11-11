@@ -1,7 +1,7 @@
 "use client";
 import React, {useState} from 'react';
 import {useParams} from "next/navigation";
-import {fetchJobPost, updateJobPost, useUser} from "@/lib/api";
+import {applyToJob, fetchJobPost, saveJob, updateJobPost} from "@/lib/api";
 import JobForm from "@/components/employer/JobForm";
 import {
     Dialog,
@@ -11,8 +11,9 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
-import {toast, useToast} from "@/hooks/use-toast";
+import {useToast} from "@/hooks/use-toast";
 import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
+import { JobPost } from '@/lib/types';
 
 
 import { Button } from "@/components/ui/button"
@@ -30,8 +31,8 @@ const JobDetails = () => {
         //We need to send the filteredData with proper attributes to backend for now until we have type in backend
         const {jobType, ...filteredData} = data;
         JobPost.type = data.type;
-
-        const result = await updateJobPost(Number(id), filteredData, mutate, data);
+        const employer_id = 1; //TODO replace hardcoded 1 with employer id from state managed employer
+        const result = await updateJobPost(Number(id), employer_id, filteredData, mutate, data);
         if (result.success) {
             setOpen(false);
             toast({
@@ -48,9 +49,52 @@ const JobDetails = () => {
         }
     }
 
+    const handleApply = async () => {
+        const applicantId = 1; //TODO replace hardcoded 1 with actual applicant id
+        const result = await applyToJob(Number(id), applicantId);
+        if (result.success) {
+            toast({
+                title: "Success",
+                description: "Application submitted successfully!",
+                variant: "default",
+            });
+        } else {
+            toast({
+                title: "Error",
+                description: `Failed to apply for job. Message: ${result.error.message}, Code: ${result.error.status}`,
+                variant: "destructive",
+            });
+        }
+    }
+
+    const handleSave = async () => {
+        const applicantId = 802; //TODO replace hardcoded  with actual applicant id
+
+        const result = await saveJob(applicantId, Number(id));
+        if (result.success) {
+            toast({
+                title: "Success",
+                description: "Job saved successfully!",
+                variant: "default",
+            });
+        } else {
+            toast({
+                title: "Error",
+                description: `Failed to save job. Message: ${result.error.message}, Code: ${result.error.status}`,
+                variant: "destructive",
+            });
+        }
+    }
+
     if (isLoading) return <SkeletonJobDetails/>;
     if (isError) return <div>Error loading job details.</div>;
     if (!JobPost) return <div>Job not found.</div>;
+
+    //const [savedJobs, setSavedJobs] = useState<JobPost[]>([]);
+
+    // const handleSubmit = () => {
+    //     setSavedJobs((prev) => [...prev, JobPost]);
+    // }
 
 
 
@@ -71,9 +115,11 @@ const JobDetails = () => {
                     {/*    <button>Edit Job Post</button>*/}
                     {/*) : (*/}
                     {/*    <button>Apply</button>*/}
+                    {/*    <button>Save</button>*/}
                     {/*)}*/}
                     <div className="flex flex-col space-y-2">
-                        <button className="px-4 py-2 bg-blue-400 text-white rounded-md">Apply Now</button>
+                        <button onClick={handleApply}
+                            className="px-4 py-2 bg-blue-400 text-white rounded-md">Apply Now</button>
                         <Dialog modal={false} open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
                                 <Button onClick={() => setOpen(true)}
@@ -90,6 +136,9 @@ const JobDetails = () => {
                                 <JobForm onSubmit={handleJobFormSubmit}/>
                             </DialogContent>
                         </Dialog>
+                        <button
+                            onClick={handleSave}
+                            className="px-4 py-2 bg-blue-400 text-white rounded-md">Save Job</button>
                     </div>
                 </div>
 
@@ -120,7 +169,7 @@ const JobDetails = () => {
                         <li>Date posted: {(new Date(JobPost.postedDate)).toDateString()}</li>
                         <li>Experience: $50k-$60k/month</li>
                         <li>Job level: Entry Level</li>
-                        <li>Location: {JobPost.location}</li>
+                        <li>Location: {JobPost.location.city},{JobPost.location.state},{JobPost.location.country} </li>
                     </ul>
                 </div>
 

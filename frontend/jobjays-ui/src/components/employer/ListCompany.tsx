@@ -16,8 +16,11 @@ interface ListCompanyProps {
 const ListCompany = ({query}: ListCompanyProps) => {
     const { Employers, isLoading, isError} = fetchAllCompanies();
 
-    if (isLoading)
-        return <div> Loading... </div>;
+    if (query === "JOBS" || query === "CANDIDATES") {
+        return <div></div>;
+    }
+    if (query === "EMPLOYERS") { query = "";}
+    if (isLoading) return <div> Loading... </div>;
     if (isError) return <div>Error loading all employer details.</div>;
     if (!Employers) return <div>Employers not found.</div>;
     //TODO can use a skeleton here and render the amount of Employers.length
@@ -33,7 +36,7 @@ const ListCompany = ({query}: ListCompanyProps) => {
             {filteredEmployers.map((company) => (
                 <Link
                     key={company.employer_id}
-                    href={`http://localhost:3000/employer/${company.employer_id}/my-jobs`}
+                    href={`/profile/employers/${company.employer_id}`}
                     className={styles.jobBox} // This applies styling to the entire box
                 >
                     <div>

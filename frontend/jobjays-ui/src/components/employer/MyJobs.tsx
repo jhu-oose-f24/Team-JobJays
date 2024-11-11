@@ -11,7 +11,7 @@ import SkeletonMyJobs from "@/components/employer/SkeletonMyJobs";
 
 
 const MyJobs: React.FC = () => {
-    const { employerId, jobPostId } = useParams<{employerId:string; jobPostId:string}>();
+    const { employerId } = useParams<{employerId:string;}>();
     const { EmployerProfile, isLoading, isError} = useUser(Number(employerId));
     const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
     const router = useRouter();
