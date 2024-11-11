@@ -41,7 +41,7 @@ export function useApplicant(applicantId: number) {
 }
 
 // Hook to fetch the EmployerProfile and process job posts
-export function useUser(employerId: number) {
+export function useEmployer(employerId: number) {
     // employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0;
     const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${employerId}`, fetcher);
 

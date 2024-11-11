@@ -80,7 +80,9 @@ const ListJob = ({ query }: ListJobProps) => {
     if (isError) return <div>Error loading all job details.</div>;
     if (!JobPosts) return <div>Jobs not found.</div>;
 
-    const activeJobListings = JobPosts.filter(job => job.status === 'Active');
+    // const activeJobListings = JobPosts.filter(job => job.status === 'Active');
+    const activeJobListings = JobPosts;
+
     const filteredJobListings = query
         ? activeJobListings.filter(job =>
             job.title.toLowerCase().includes(query.toLowerCase()) ||
