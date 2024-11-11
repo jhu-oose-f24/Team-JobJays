@@ -99,7 +99,7 @@ export default function Header() {
               {/* Dropdown for search results */}
               {showDropdown && results.length > 0 && (
                   <div className="absolute left-0 right-0 bg-white border mt-1 rounded-md shadow-lg z-10">
-                      {results.map((result, index) => (
+                      {results.slice(0, 5).map((result, index) => (
                           <div
                               key={index}
                               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -120,6 +120,14 @@ export default function Header() {
                               )}
                           </div>
                       ))}
+                      {results.length > 5 && (
+                          <div
+                              className="px-4 py-2 text-center text-blue-500 hover:bg-gray-100 cursor-pointer"
+                              onClick={() => router.push('/post/jobs/all?query=' + query)}
+                          >
+                              View all results
+                          </div>
+                      )}
                   </div>
               )}
           </div>

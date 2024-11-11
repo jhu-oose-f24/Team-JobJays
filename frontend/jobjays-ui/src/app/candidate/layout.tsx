@@ -23,7 +23,7 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
 
 
                     <a href="#logout" onClick={() => {
-                        localStorage.removeItem("candidateId");
+                        localStorage.removeItem("applicantId");
                         router.push("/signin"); // Use router.push for navigation
                     }} className={styles.navItem}>Log Out</a>
                     <Link href={`/candidate/${candidate_id}/savedJobs`} className={styles.navItem}>Saved Jobs</Link>
