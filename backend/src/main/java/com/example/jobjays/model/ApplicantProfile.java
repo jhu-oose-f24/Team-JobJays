@@ -86,10 +86,13 @@ public class ApplicantProfile implements Profile {
   }
 
   public Set<JobPost> getSavedJobs() {
-    return savedJobs;
+    return this.savedJobs;
   }
 
   public void addSavedJobs(JobPost jobPost) {
-    savedJobs.add(jobPost);
+    System.out.println("YO!!!!" + jobPost.getTitle());
+    System.out.println("Before:" + this.savedJobs);
+    this.savedJobs.add(jobPost);
+    System.out.println("After:" + this.savedJobs);
   }
 }

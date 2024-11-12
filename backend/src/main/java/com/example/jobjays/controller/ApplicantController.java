@@ -275,7 +275,8 @@ public class ApplicantController {
       return ResponseEntity.badRequest().build();
     }
     ApplicantProfile applicantProfile = applicant.getProfile();
-    applicantService.addSavedJob(applicantProfile, jobPost);
+    applicantService.addSavedJob(applicant, jobPost);
+    System.out.println(jobPost.getTitle());
 
     applicantRepository.save(applicant);
     //return ResponseEntity.ok(mapToResponseProfileDto(applicantProfile));
@@ -321,6 +322,9 @@ public class ApplicantController {
     responseApplicantDto.applicantProfile = mapToResponseProfileDto(applicant.getProfile());
     return responseApplicantDto;
   }
+
+
+
 
 
 }

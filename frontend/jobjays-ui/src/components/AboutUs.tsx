@@ -27,12 +27,12 @@ const teamMembers = [
     {
         name: "Samuel Muzac",
         role: "Frontend Engineer",
-        image: "/team5.jpg"
+        image: "/user.jpg"
     },
     {
         name: "Jiaxuan Luo",
         role: "Fullstack Developer",
-        image: "/team4.jpg"
+        image: "/user.jpg"
     }
 ];
 
@@ -62,22 +62,10 @@ const philosophyPoints = [
 const AboutUs = () => {
     return (
         <div className="bg-gray-50 min-h-screen">
-            {/* Hero Section */}
-            <section className="bg-white py-20 px-4">
-                <div className="max-w-4xl mx-auto text-center">
-                    <h1 className="text-4xl font-bold font-[family-name:var(--font-geist-mono)] mb-6">
-                        About Us
-                    </h1>
-                    <p className="text-gray-600 text-lg leading-relaxed">
-                        We are a team of passionate developers, dedicated to creating innovative web applications
-                        that not only solve real-world problems but also provide seamless user experiences.
-                        Our focus is on building scalable and maintainable applications with modern technologies.
-                    </p>
-                </div>
-            </section>
+
 
             {/* Philosophy Section */}
-            <section className="py-16 px-4 bg-gray-100">
+            {/* <section className="py-16 px-4 bg-gray-100">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-3xl font-bold text-center mb-12">Our Philosophy</h2>
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -90,7 +78,7 @@ const AboutUs = () => {
                         ))}
                     </div>
                 </div>
-            </section>
+            </section> */}
 
             {/* Team Section */}
             <section className="py-16 px-4">
@@ -115,8 +103,22 @@ const AboutUs = () => {
                 </div>
             </section>
 
+            {/* Hero Section */}
+            <section className="bg-white py-20 px-4">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h1 className="text-4xl font-bold font-[family-name:var(--font-geist-mono)] mb-6">
+                        About Us
+                    </h1>
+                    <p className="text-gray-600 text-lg leading-relaxed">
+                        We are a team of passionate developers, dedicated to creating innovative web applications
+                        that not only solve real-world problems but also provide seamless user experiences.
+                        Our focus is on building scalable and maintainable applications with modern technologies.
+                    </p>
+                </div>
+            </section>
+
             {/* Mission & Vision Section */}
-            <section className="py-16 px-4 bg-gray-100">
+            {/* <section className="py-16 px-4 bg-gray-100">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-3xl font-bold text-center mb-12">Our Mission & Vision</h2>
                     <div className="grid md:grid-cols-2 gap-8">
@@ -146,7 +148,7 @@ const AboutUs = () => {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section> */}
         </div>
     );
 };

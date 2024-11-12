@@ -50,7 +50,11 @@ const JobDetails = () => {
     }
 
     const handleApply = async () => {
-        const applicantId = 1; //TODO replace hardcoded 1 with actual applicant id
+        const applicantId = typeof window !== 'undefined' && localStorage.getItem('applicantId')
+            ? parseInt(localStorage.getItem('applicantId') as string)
+            : 0;
+        console.log("Hello", applicantId);
+        //const applicantId = 1; //TODO replace hardcoded 1 with actual applicant id
         const result = await applyToJob(Number(id), applicantId);
         if (result.success) {
             toast({
@@ -68,8 +72,9 @@ const JobDetails = () => {
     }
 
     const handleSave = async () => {
-        const applicantId = 802; //TODO replace hardcoded  with actual applicant id
-
+        const applicantId = typeof window !== 'undefined' && localStorage.getItem('applicantId')
+            ? parseInt(localStorage.getItem('applicantId') as string)
+            : 0;
         const result = await saveJob(applicantId, Number(id));
         if (result.success) {
             toast({

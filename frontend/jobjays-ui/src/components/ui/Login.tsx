@@ -96,7 +96,7 @@ export default function Login() {
         // alert("Sign in successful!");
         // so we can retrieve it for other pages - but not good approach
         localStorage.setItem("applicantId", applicantId);
-        router.push(`candidate/dashboard`); // redirect to new user's dashboard
+        router.push(`candidate/profile`); // redirect to new user's dashboard
       } else {
         const errorData = await response.json();
 

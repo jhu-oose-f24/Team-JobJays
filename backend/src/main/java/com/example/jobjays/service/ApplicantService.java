@@ -125,9 +125,12 @@ public class ApplicantService {
     return applicantRepository.findSavedJobsByApplicantId(applicantId);
   }
 
-  public void addSavedJob(ApplicantProfile applicantProfile, JobPost jobPost) {
+  public void addSavedJob(Applicant applicant, JobPost jobPost) {
 //    applicantRepository.findSavedJobsByApplicantId(applicantId).add(jobPost);
+    ApplicantProfile applicantProfile = applicant.getProfile();
     applicantProfile.addSavedJobs(jobPost);
+    applicantRepository.save(applicant);
+    //applicantProfile.addSavedJobs(jobPost);
   }
 //
 //

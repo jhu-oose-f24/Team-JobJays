@@ -78,7 +78,7 @@ export default function Header() {
                   <img src="/JobJays_logo.png" alt="JobJays Logo" width={80}/>
               </Link>
               <nav className="flex gap-9">
-                  <Link href="/">Home</Link>
+                  <Link href="/advice">Use our AI Guide</Link>
                   <Link href="http://localhost:3000/post/jobs/all">Find Job</Link>
                   <Link href="/employer/dashboard">Employers</Link>
                   <Link href="/candidate/dashboard">Candidates</Link>

@@ -1,11 +1,21 @@
 import Image from "next/image";
+import { Inter, Roboto } from 'next/font/google';
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['500', '100'],
+});
+
+const inter = Inter({ subsets: ['latin'] })
 
 export default function Hero() {
   return (
-    <section className="bg-gray-100 p-12 pl-26 flex flex-row items-center justify-between ">
+    <section className="bg-gray-100 p-14 pl-18 flex flex-row items-center justify-between ">
       {/* Left Content */}
       <div className="flex flex-col gap-5 max-w-md ml-12">
-        <h1 className="text-4xl font-bold font-[family-name:var(--font-geist-mono)]">Find a job that suits your interest & skills.</h1>
+        <h1 className={`text-4xl font-bold ${roboto.className}`}>
+          Find a job that suits your interest & skills.
+        </h1>
         <p className="text-gray-600">
           With our algorithms and unique use of artificial intelligence, JobJays allows you to find jobs that are tailored to just you!
         </p>

@@ -1,17 +1,21 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [messages, setMessages] = useState([
     {
       id: 1,
       sender: 'assistant',
-      text: 'Hello there! How may I assist you today?',
+      text: 'Hello there! My name is Jay, how may I assist you today?',
     },
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false); // To show a loading indicator
+
+  const router = useRouter();
+
 
   const handleSend = async () => {
     if (input.trim() === '') return;
@@ -83,9 +87,16 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen bg-blue-50">
       {/* Header */}
-      <header className="bg-blue-500 text-white p-4">
-        <h1 className="text-xl font-semibold">JobJays Guide</h1>
-      </header>
+      <header className="bg-blue-500 text-white p-4 flex items-center">
+      <button
+        onClick={() => router.back()}
+        className="mr-4 text-white font-semibold focus:outline-none"
+      >
+        &larr; 
+      </button>
+      <h1 className="text-xl font-semibold">Advice from Jay</h1>
+    </header>
+
 
       {/* Chat messages */}
       <main className="flex-1 overflow-y-auto p-4">

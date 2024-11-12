@@ -1,6 +1,6 @@
 
 import useSWR from 'swr' ;
-import {Applicant, ApplicantProfile, EmployerProfile, JobPost} from './types'; // Ensure you have the correct types for your data
+import {Applicant, ApplicantProfile, Employer, EmployerProfile, JobPost} from './types'; // Ensure you have the correct types for your data
 
 // Fetcher function
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -31,6 +31,8 @@ export function addJobAttributes(job: JobPost): JobPost {
 // Hook to fetch the ApplicantProfile
 export function useApplicant(applicantId: number) {
     applicantId = localStorage.getItem('applicantId') ? parseInt(localStorage.getItem('applicantId') as string) : 0;
+    console.log("oaieoiaeoi");
+    console.log(applicantId);
     const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/profile/${applicantId}`, fetcher);
 
     return {
@@ -118,6 +120,17 @@ export function fetchAllJobPosts() {
     };
 }
 
+export function fetchAllCompanies() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/companies`, fetcher);
+    return {
+        Employers: data as Employer[],
+        isLoading,
+        isError: error,
+        mutate
+    };
+}
+
 
 export const createJobPost = async (
     employerId: number,
@@ -173,8 +186,8 @@ export const updateJobPost = async (
 }
 
 export const applyToJob = async (
-    applicantId: number,
     id: number,
+    applicantId: number,
 ) => {
 
     const response = await fetch(`http://localhost:8080/api/apply/${id}/${applicantId}`, {
@@ -237,6 +250,7 @@ export const saveJob = async (applicantId: number, jobId:number) => {
 //get saved a job
 export function getSavedJobs(applicantId:number) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
+    console.log("Hello!", applicantId);
     const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/profile/${applicantId}/saved-jobs`, fetcher);
     //returns applicantProfile
     const processedApplicantProfile = data && data.savedJobs ? {
@@ -250,6 +264,27 @@ export function getSavedJobs(applicantId:number) {
         isError: error
     };
 }
+
+export function useGetSavedJobs(applicantId: number) {
+    console.log("Hello!", applicantId);
+    const { data, error, isLoading } = useSWR(
+        `http://localhost:8080/api/applicants/profile/${applicantId}/saved-jobs`,
+        fetcher
+    );
+
+    // Process the data
+    const savedJobs = data
+        ? data.map((job: JobPost) => addJobAttributes(job))
+        : [];
+
+    return {
+        savedJobs,
+        isLoading,
+        isError: error,
+    };
+}
+
+
 
 
 
