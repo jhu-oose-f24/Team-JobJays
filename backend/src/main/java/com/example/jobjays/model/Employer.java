@@ -65,7 +65,7 @@ public class Employer implements User {
     return this.username;
   }
 
-  String setUsername(String username) {
+  public String setUsername(String username) {
     this.username = username;
     return username;
   }
@@ -75,7 +75,7 @@ public class Employer implements User {
   }
 
 
-  String setPassword(String password) {
+  public String setPassword(String password) {
     this.password = password;
     return password;
   }
@@ -86,6 +86,11 @@ public class Employer implements User {
 
   @Override
   public Boolean getEnabled() {
+    return enabled;
+  }
+
+  @Override
+  public Boolean setEnabled(Boolean enabled) {
     return enabled;
   }
 

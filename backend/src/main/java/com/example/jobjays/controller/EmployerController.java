@@ -60,6 +60,7 @@ public class EmployerController {
     return redirectView;
   }
 
+  //THE SAME AS REGISTERING
   @PostMapping
   public ResponseEntity<ResponseEmployerDto> addEmployer(@RequestBody CreateEmployerDto createEmployerDto) {
     createEmployerDto.setEnabled(false);
@@ -75,6 +76,8 @@ public class EmployerController {
     return new ResponseEntity<>(responseEmployerDto, HttpStatus.CREATED);
   }
 
+  //REQUIRES USER TO BE SIGNED
+  //REQUIRES USER TO BE OWNER OF THE PROFILE
   @PutMapping("/profile/{id}")
   public ResponseEntity<ResponseEmployerDto> updateEmployer(@RequestBody UpdateEmployerDto updateEmployerDto, @PathVariable Long id) {
     Employer updatedEmployer = employerService.updateEmployer(updateEmployerDto, id);
@@ -84,29 +87,30 @@ public class EmployerController {
     return ResponseEntity.ok(mapToResponseEmployerDto(updatedEmployer));
   }
 
+  //REQUIRES USER TO BE SIGNED
+  //REQUIRES USER TO BE OWNER OF THE PROFILE
   @DeleteMapping("/profile/{id}")
   public ResponseEntity<Void> deleteEmployer(@PathVariable Long id) {
     employerService.deleteEmployer(id);
     return ResponseEntity.noContent().build();
   }
 
-//  @GetMapping("/profile/{id}")
-//  public ResponseEntity<ResponseEmployerDto> getEmployerById(@PathVariable Long id) {
-//    Employer employer = employerService.findEmployerById(id);
-//    if (employer == null) {
-//      return ResponseEntity.notFound().build();
-//    }
-//    return ResponseEntity.ok(mapToResponseEmployerDto(employer));
-//  }
-
+  //REQUIRES USER TO BE SIGNED
   @GetMapping("/profile/{id}")
-  public ResponseEntity<ResponseProfileDto> getEmployerProfileById(@PathVariable Long id) {
+  public ResponseEntity<ResponseProfileDto> getEmployerProfileById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
     EmployerProfile employerProfile = employerService.findEmployerProfileById(id);
+    System.out.println(token);
     if (employerProfile == null) {
       return ResponseEntity.notFound().build();
     }
     return ResponseEntity.ok(mapToResponseProfileDto(employerProfile));
   }
+
+
+
+
+
+
 
 
   @GetMapping("/profile/all")

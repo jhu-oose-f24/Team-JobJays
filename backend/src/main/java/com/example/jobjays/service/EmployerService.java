@@ -68,6 +68,27 @@ public class EmployerService {
     return employerRepository.save(employerToUpdate);
   }
 
+  public Employer updateEmployerNoDto(Employer employer, Long id) {
+    Employer employerToUpdate = employerRepository.findById(id).orElse(null);
+
+    if (employerToUpdate == null) {
+      return null;
+    }
+    EmployerProfile profile = employerToUpdate.getProfile();
+
+    if (employer.getProfile().getBio() != null && !employer.getProfile().getBio().isEmpty()) {
+      profile.setBio(employer.getProfile().getBio());
+    }
+    if (employer.getProfile().getName() != null && !employer.getProfile().getName().isEmpty()) {
+      profile.setName(employer.getProfile().getName());
+    }
+
+    if (employer.getEnabled() != null) {
+      employerToUpdate.setEnabled(employer.getEnabled());
+    }
+    return employerRepository.save(employerToUpdate);
+  }
+
   public void deleteEmployer(Long id) {
     EmployerProfile profile = Objects.requireNonNull(employerRepository.findById(id).orElse(null)).getProfile();
     if (profile != null) {
@@ -107,7 +128,7 @@ public class EmployerService {
   }
 
   public Employer findEmployerByUsername(String username) {
-    return employerRepository.findByUsernameIs(username);
+    return employerRepository.findByUsernameIsIgnoreCase(username);
   }
 
 
