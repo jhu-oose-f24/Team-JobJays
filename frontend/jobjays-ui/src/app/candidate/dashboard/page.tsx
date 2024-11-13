@@ -10,10 +10,13 @@ interface DashboardPageProps {
 }
 
 const ApplicantDashboardPage: React.FC<DashboardPageProps> = ({ params }) => {
+    
     const { applicantProfile, isLoading, isError } = useApplicant(Number(params.candidate_id));
 
     if (isLoading) return <p>Loading...</p>;
     if (isError) return <p>Error loading data</p>;
+    if (!applicantProfile) return <p>No data available</p>;
+
 
     return (
         <div>

@@ -1,19 +1,46 @@
 "use client";  // Add this directive at the top
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from '@/styles/my-jobs.module.css';
 import {getSavedJobs} from "@/lib/api";
 import {useParams} from "next/navigation";
 import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
 import Link from "next/link";
+import {ApplicantProfile, JobPost} from "@/lib/types";
 
 const FavoriteJobs: React.FC = () => {
     const { id } = useParams<{ id: string }>(); // Get the job ID from the route
-    const {ApplicantProfile, isLoading, isError} = getSavedJobs(Number(id));
-    const savedJobs = ApplicantProfile.savedJobs;
-    if (isLoading) return <SkeletonJobDetails/>;
-    if (isError) return <div>Error loading job details.</div>;
-    if (!savedJobs) return <div>Jobs not found.</div>;
+    // const {ApplicantProfile, isLoading, isError} = getSavedJobs(Number(id));
+    // const savedJobs = ApplicantProfile.savedJobs;
+    // if (isLoading) return <SkeletonJobDetails/>;
+    // if (isError) return <div>Error loading job details.</div>;
+    // if (!savedJobs) return <div>Jobs not found.</div>;
+    const [aP, setAP] = useState<ApplicantProfile>();
+
+    useEffect(() => {
+        const fetchSavedJobs = async () => {
+            try {
+                if (id) {
+                    const {ApplicantProfile, isLoading, isError} = getSavedJobs(Number(id));
+                    setAP(ApplicantProfile);
+                    if (isLoading) return <SkeletonJobDetails/>;
+                }
+            } catch (error) {
+                return <div>Error loading job details</div>;
+            }
+        };
+
+        fetchSavedJobs();
+        }, [id]);
+
+
+
+    if (!aP || !aP.savedJobs) return <div>No jobs found</div>
+
+    const savedJobs = aP.savedJobs;
+
+
+
 
     return (
         <div className={styles.jobListGrid}>

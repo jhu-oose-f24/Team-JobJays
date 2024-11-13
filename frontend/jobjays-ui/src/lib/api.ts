@@ -30,7 +30,10 @@ export function addJobAttributes(job: JobPost): JobPost {
 
 // Hook to fetch the ApplicantProfile
 export function useApplicant(applicantId: number) {
-    applicantId = localStorage.getItem('applicantId') ? parseInt(localStorage.getItem('applicantId') as string) : 0;
+    const isBroswer = typeof window !== 'undefined';
+    if (isBroswer) {
+        applicantId = localStorage.getItem('applicantId') ? parseInt(localStorage.getItem('applicantId') as string) : 0;
+    }
     const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/profile/${applicantId}`, fetcher);
 
     return {
@@ -76,18 +79,18 @@ export function fetchJobApplicants(id:number) {
 
 export function useJobApplicants(jobId: number | null) {
     const { data, error } = useSWR(
-      jobId ? `http://localhost:8080/api/${jobId}/applicants` : null,
-      fetcher
+        jobId ? `http://localhost:8080/api/${jobId}/applicants` : null,
+        fetcher
     );
-  
+
     console.log('Applicants data:', data); // For debugging
-  
+
     return {
-      applicants: data as Applicant[] | undefined,
-      isLoading: !error && !data,
-      isError: error,
+        applicants: data as Applicant[] | undefined,
+        isLoading: !error && !data,
+        isError: error,
     };
-  }
+}
 
 export function fetchJobPost(id:number) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -109,7 +112,7 @@ export function fetchAllJobPosts() {
     const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/posts/jobs`, fetcher);
 
     const processedJobPosts = data ? (data as JobPost[]).map(addJobAttributes) : null;
-    
+
     return {
         JobPosts: processedJobPosts as JobPost[],
         isLoading,
@@ -135,7 +138,11 @@ export const createJobPost = async (
     jobData: any,
 ) => {
 
-    employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0;
+    const isBrowser = typeof window !== "undefined";
+    if (isBrowser) {
+        employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0;
+    }
+
     const response = await fetch(`http://localhost:8080/api/companies/profile/${employerId}/post`, {
         method: 'POST',
         headers: {
@@ -218,7 +225,7 @@ export const incrementJobPostView = async (id: number) => {
             method: 'POST',
         });
         if (!response.ok) {
-           console.error(`Error incrementing view count: ${response.statusText}`);
+            console.error(`Error incrementing view count: ${response.statusText}`);
         }
     } catch (error) {
         console.error("Failed to increment job post view count:", error);

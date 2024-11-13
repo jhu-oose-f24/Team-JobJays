@@ -103,7 +103,10 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
                 <div className="p-4 border-t border-gray-200">
                     <button
                         onClick={() => {
-                            localStorage.removeItem("employerId");
+                            const isBrowser = typeof window !== "undefined";
+                            if (isBrowser) {
+                                localStorage.removeItem("employerId");
+                            }
                             router.push("/signin"); // Use router.push for navigation
                         }}
                         className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors w-full">
