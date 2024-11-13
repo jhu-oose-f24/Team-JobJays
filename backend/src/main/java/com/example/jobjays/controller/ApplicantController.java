@@ -19,6 +19,9 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
@@ -120,6 +123,10 @@ public class ApplicantController {
   @PutMapping("/profile/{id}")
   public ResponseEntity<ResponseApplicantDto> updateApplicant(@RequestBody UpdateApplicantDto updateApplicantDto,
       @PathVariable Long id) {
+    UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//    if (!userDetails.getUsername().equals(applicantService.findApplicantById(id).getUsername())) {
+//      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//    }
     Applicant updatedApplicant = applicantService.updateApplicant(updateApplicantDto, id);
     if (updatedApplicant == null) {
       return ResponseEntity.notFound().build();

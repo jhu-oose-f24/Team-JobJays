@@ -14,6 +14,9 @@ import com.example.jobjays.service.EmployerService;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +28,9 @@ public class AuthService {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
+
+  @Autowired
+  private AuthenticationManager authenticationManager;
 
 
   private final ApplicantService applicantService;
@@ -46,7 +52,14 @@ public class AuthService {
     return new ResponseProfileDto(profile.getName(), profile.getBio());
   }
   public UserResponseDto mapToUserResponseDto(User user) {
-    return new UserResponseDto(user.getID(), user.getUsername(), user.getClass().toString(),mapToResponseProfileDto(user.getProfile()));
+    String role;
+    if (user.getClass().toString().equalsIgnoreCase("class com.example.jobjays.model.Applicant")) {
+      role = "Applicant";
+//      return new UserResponseDto(user.getID(), user.getUsername(), user.getClass().toString(),mapToResponseProfileDto(((Applicant) user).getProfile()));
+    } else {
+      role = "Employer";
+    }
+    return new UserResponseDto(user.getID(), user.getUsername(), role, mapToResponseProfileDto(user.getProfile()));
   }
 
 
@@ -66,13 +79,27 @@ public class AuthService {
   }
 
 
+
   //loginUser
+//  public String loginUser(UserLoginDto userLoginDto) {
+//    UserResponseDto userResponseDto = validateUser(userLoginDto);
+//    if (userResponseDto == null) {
+//      return null;
+//    }
+//    return jwtTokenProvider.generateToken(userResponseDto);
+//  }
+
   public String loginUser(UserLoginDto userLoginDto) {
-    UserResponseDto userResponseDto = validateUser(userLoginDto);
-    if (userResponseDto == null) {
-      return null;
+//    UserResponseDto userResponseDto = validateUser(userLoginDto);
+
+    Authentication authentication = authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(userLoginDto.username(), userLoginDto.password()));
+    if (authentication.isAuthenticated()) {
+      UserResponseDto userResponseDto = validateUser(userLoginDto);
+      System.out.println("username: " + userResponseDto.username());
+      return jwtTokenProvider.generateToken(userResponseDto);
     }
-    return jwtTokenProvider.generateToken(userResponseDto);
+    return "fail";
   }
 
   //decodeToken
@@ -109,10 +136,9 @@ public class AuthService {
     return null;
   }
 
+  //same as register
   public UserResponseDto createUser(UserCreateDto userCreateDto) {
     if (userCreateDto.role().equalsIgnoreCase("Applicant")) {
-      System.out.println("Creating applicant");
-      System.out.println(userCreateDto.username());
       Applicant existingUser = getApplicant(userCreateDto.username());
       if (existingUser != null) {
         throw new IllegalArgumentException("User already exists");
@@ -149,7 +175,9 @@ public class AuthService {
   public String enableAccount(String token) {
     Claims claims = getClaims(token);
     String role = (String) claims.get("role");
+    System.out.println("Role: " + role);
     String username = (String) claims.get("username");
+    System.out.println("Username: " + username);
     if (role.equalsIgnoreCase("applicant")) {
       Applicant applicant = getApplicant(username);
       applicant.setEnabled(true);

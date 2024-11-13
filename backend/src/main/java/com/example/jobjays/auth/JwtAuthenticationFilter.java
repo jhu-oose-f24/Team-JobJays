@@ -6,6 +6,7 @@ import com.example.jobjays.repository.ApplicantRepository;
 import com.example.jobjays.repository.EmployerRepository;
 import com.example.jobjays.service.ApplicantService;
 import com.example.jobjays.service.EmployerService;
+import com.example.jobjays.service.MyUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -17,10 +18,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -37,6 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   private final ApplicantService applicantService;
   private final EmployerService employerService;
 
+  @Autowired
+  ApplicationContext context;
+
 
   public JwtAuthenticationFilter(ApplicantService applicantService, EmployerService employerService, JwtTokenProvider jwtTokenProvider) {
     //this.userService = userService;
@@ -45,20 +52,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     this.jwtTokenProvider = jwtTokenProvider;
   }
 
-
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
     String token = getJwtFromRequest(request);
     System.out.println("Token: " + token);
-    if (token != null && validateToken(token)) {
-      //String username = jwtTokenProvider.getUsernameFromToken(token);
-      String username = getSubject(token);
-      UserDetails userDetails = getUser(username); //look up authorities in user details
-      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+      String username = jwtTokenProvider.extractUserName(token);
+      String userId = jwtTokenProvider.extractId(token);
+      UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(username);
+      if (jwtTokenProvider.validateToken(token, userDetails)) {
+          UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+          authentication.setDetails(new WebAuthenticationDetailsSource()
+            .buildDetails(request));
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+      }
     }
-  filterChain.doFilter(request, response);
+    filterChain.doFilter(request, response);
   }
+
+
+//  @Override
+//  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+//    String token = getJwtFromRequest(request);
+//    System.out.println("Token: " + token);
+//    if (token != null && validateToken(token)) {
+//      //String username = jwtTokenProvider.getUsernameFromToken(token);
+//      String username = getSubject(token);
+//      UserDetails userDetails = getUser(username); //look up authorities in user details
+//      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//      SecurityContextHolder.getContext().setAuthentication(authentication);
+//    }
+//  filterChain.doFilter(request, response);
+//  }
 
   private UserDetails getUser(String username) {
     Applicant applicant = applicantService.findApplicantByUsername(username);
