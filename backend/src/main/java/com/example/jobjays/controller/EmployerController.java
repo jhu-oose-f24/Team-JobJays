@@ -1,5 +1,8 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.auth.AuthService;
+import com.example.jobjays.auth.CustomAuthenticationDetails;
+import com.example.jobjays.auth.JwtTokenProvider;
 import com.example.jobjays.authentication.TokenGenerator;
 import com.example.jobjays.dto.applicant.UpdateApplicantDto;
 import com.example.jobjays.dto.profile.ResponseEmployerProfileDto;
@@ -18,6 +21,7 @@ import com.example.jobjays.wrapper.EmailSendWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -30,20 +34,38 @@ public class EmployerController {
 
   private final EmployerService employerService;
   private final ResponseMapperService responseMapperService;
+  private final AuthService authService;
+
 
 
   @Autowired
   private EmailSendWrapper emailSendWrapper;
 
-  public EmployerController(EmployerService employerService, ResponseMapperService responseMapperService) {
+  public EmployerController(EmployerService employerService, ResponseMapperService responseMapperService, AuthService authService) {
     this.employerService = employerService;
     this.responseMapperService = responseMapperService;
+    this.authService = authService;
+
   }
 
+  private String getCurrentUserId() {
+    CustomAuthenticationDetails details = (CustomAuthenticationDetails)
+        SecurityContextHolder.getContext().getAuthentication().getDetails();
+    return details != null ? details.getUserId() : null;
+  }
+
+  private Long parsedUserId() {
+    String userId = getCurrentUserId();
+    if (userId == null) {
+      return null; // Prevents access to another user's data
+    }
+    return Long.parseLong(userId);
+  }
 
   @GetMapping("/verify")
   public RedirectView verifyUser(@RequestParam("token") String token) {
-    Employer employer = employerService.findByVerificationToken(token);
+    String username = authService.extractUsername(token);
+    Employer employer = employerService.findEmployerByUsername(username);
     UpdateEmployerDto user = new UpdateEmployerDto();
 
     if (employer == null) {
@@ -61,26 +83,24 @@ public class EmployerController {
   }
 
   //THE SAME AS REGISTERING
-  @PostMapping
+  @PostMapping("/register")
   public ResponseEntity<ResponseEmployerDto> addEmployer(@RequestBody CreateEmployerDto createEmployerDto) {
     createEmployerDto.setEnabled(false);
-    String token = TokenGenerator.generateToken();
-    createEmployerDto.setVerificationToken(token);
+    String token = authService.getEmployerEnablementToken(createEmployerDto);
     createEmployerDto.setEnabled(false); // User is disabled until they verify
 
     Employer employer = employerService.addEmployer(createEmployerDto);
     emailSendWrapper.sendVerificationEmailForEmployer(employer.getEmail(), token);
     ResponseEmployerDto responseEmployerDto = mapToResponseEmployerDto(employer);
-//    HttpHeaders headers = new HttpHeaders();
-//    headers.setLocation(URI.create("http://localhost:8080/api/companies/profile/" + employer.getID()));
     return new ResponseEntity<>(responseEmployerDto, HttpStatus.CREATED);
   }
 
   //REQUIRES USER TO BE SIGNED
   //REQUIRES USER TO BE OWNER OF THE PROFILE
-  @PutMapping("/profile/{id}")
-  public ResponseEntity<ResponseEmployerDto> updateEmployer(@RequestBody UpdateEmployerDto updateEmployerDto, @PathVariable Long id) {
-    Employer updatedEmployer = employerService.updateEmployer(updateEmployerDto, id);
+  @PutMapping("/profile")
+  public ResponseEntity<ResponseEmployerDto> updateEmployer(@RequestBody UpdateEmployerDto updateEmployerDto) {
+    Long userId = parsedUserId();
+    Employer updatedEmployer = employerService.updateEmployer(updateEmployerDto, userId);
     if (updatedEmployer == null) {
       return ResponseEntity.notFound().build();
     }
@@ -89,17 +109,19 @@ public class EmployerController {
 
   //REQUIRES USER TO BE SIGNED
   //REQUIRES USER TO BE OWNER OF THE PROFILE
-  @DeleteMapping("/profile/{id}")
-  public ResponseEntity<Void> deleteEmployer(@PathVariable Long id) {
-    employerService.deleteEmployer(id);
+  @DeleteMapping("/profile")
+  public ResponseEntity<Void> deleteEmployer() {
+    Long userId = parsedUserId();
+    employerService.deleteEmployer(userId);
     return ResponseEntity.noContent().build();
   }
 
   //REQUIRES USER TO BE SIGNED
-  @GetMapping("/profile/{id}")
-  public ResponseEntity<ResponseProfileDto> getEmployerProfileById(@PathVariable Long id, @RequestHeader("Authorization") String token) {
-    EmployerProfile employerProfile = employerService.findEmployerProfileById(id);
-    System.out.println(token);
+  @GetMapping("/profile")
+  public ResponseEntity<ResponseProfileDto> getEmployerProfileById() {
+    Long userId = parsedUserId();
+    EmployerProfile employerProfile = employerService.findEmployerProfileById(userId);
+
     if (employerProfile == null) {
       return ResponseEntity.notFound().build();
     }
