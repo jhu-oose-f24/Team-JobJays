@@ -75,10 +75,10 @@ public class JwtTokenProvider {
   public String extractId(String token) {
 
     final Claims claims = extractAllClaims(token);
-    String userId = claims.get("id", String.class);
+    Integer userId = claims.get("id", Integer.class);
     System.out.println("EXTRACT JWT userId: " + userId);
 
-    return userId;
+    return userId != null ? userId.toString() : null;
   }
 
 

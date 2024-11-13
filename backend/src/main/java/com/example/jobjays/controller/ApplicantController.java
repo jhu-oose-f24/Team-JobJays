@@ -1,5 +1,6 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.auth.CustomAuthenticationDetails;
 import com.example.jobjays.authentication.TokenGenerator;
 import com.example.jobjays.dto.applicant.*;
 import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
@@ -19,15 +20,12 @@ import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
-import java.net.http.HttpClient;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -122,16 +120,30 @@ public class ApplicantController {
 
   @PutMapping("/profile/{id}")
   public ResponseEntity<ResponseApplicantDto> updateApplicant(@RequestBody UpdateApplicantDto updateApplicantDto,
-      @PathVariable Long id) {
-    UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//    if (!userDetails.getUsername().equals(applicantService.findApplicantById(id).getUsername())) {
-//      return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//    }
+                                                              @PathVariable Long id) {
+    // Retrieve authentication details
+    System.out.println("In Update!!!");
+    String currentUserId = getCurrentUserId();
+    System.out.println("Current User Id" + currentUserId);
+    System.out.println("Applicant Id" + id);
+    if (currentUserId == null || !currentUserId.equals(id.toString())) {
+      System.out.println("Failure!");
+      return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // Prevents access to another user's data
+    }
+
+    System.out.println("going to update applicat service");
+    // Proceed with the update if authorized
     Applicant updatedApplicant = applicantService.updateApplicant(updateApplicantDto, id);
     if (updatedApplicant == null) {
       return ResponseEntity.notFound().build();
     }
     return ResponseEntity.ok(mapToResponseApplicantDto(updatedApplicant));
+  }
+
+  private String getCurrentUserId() {
+    CustomAuthenticationDetails details = (CustomAuthenticationDetails)
+            SecurityContextHolder.getContext().getAuthentication().getDetails();
+    return details != null ? details.getUserId() : null;
   }
 
   @DeleteMapping("/profile/{id}")
