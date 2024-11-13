@@ -18,6 +18,7 @@ import com.example.jobjays.wrapper.EmailSendWrapper;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.io.IOException;
 import java.net.http.HttpClient;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -161,6 +163,20 @@ public class ApplicantController {
     return ResponseEntity.ok(mapToResponseProfileDto(applicantProfile));
   }
 
+  @GetMapping("/photos/{applicantId}")
+  public ResponseEntity<byte[]> fetchPhotoByApplicantId(@PathVariable Long applicantId) {
+    Applicant applicant = applicantService.findApplicantById(applicantId);
+
+    if (applicant == null || applicant.getPhoto() == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    byte[] photo = applicant.getPhoto();
+    return ResponseEntity.ok()
+            .contentType(MediaType.IMAGE_JPEG) // Or MediaType.IMAGE_PNG based on the type
+            .body(photo);
+  }
+
   @GetMapping("/resume/fetch")
   public ResponseEntity<ResponseApplicantDto> fetchResumesByApplicantId(@RequestParam("applicantId") Long applicantId) {
     ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
@@ -205,6 +221,71 @@ public class ApplicantController {
     resumeService.deleteById(resumeId);
     return ResponseEntity.ok().body(ResponseApplicantDto.builder().applicantResume(applicantResume).build());
   }
+
+
+  @PostMapping("/photo")
+  public ResponseEntity<ResponseApplicantDto> uploadPhoto(@RequestParam("applicantId") Long applicantId,
+                                                           @RequestParam("photo") MultipartFile photo) {
+    ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
+    responseApplicantDto.setApplicantId(applicantId);
+    if (photo.isEmpty() || !photo.getContentType().equals("image/jpeg") && !photo.getContentType().equals("image/png") ) {
+      responseApplicantDto.setFailReason("the file is not the jpg/png format");
+      return ResponseEntity.badRequest().body(responseApplicantDto);
+    }
+
+    if (photo.getSize() > 5 * 1024 * 1024) {
+      responseApplicantDto.setFailReason("Photo size exceeds the limit");
+      return ResponseEntity.badRequest().body(responseApplicantDto);
+    }
+
+    Applicant applicant = applicantService.findApplicantById(applicantId);
+    if (applicant == null) {
+      responseApplicantDto.setFailReason("cannot find applicant");
+      return ResponseEntity.badRequest().body(responseApplicantDto);
+    }
+
+
+    try {
+      String fileName = photo.getOriginalFilename();
+      byte[] photoBytes = photo.getBytes();
+      UpdateApplicantDto applicantDto = new UpdateApplicantDto();
+      applicantDto.setPhoto(photoBytes);
+      Applicant applicantRes = applicantService.updateApplicant(applicantDto,applicantId);
+    } catch (IOException e) {
+      return ResponseEntity.badRequest().body(
+              ResponseApplicantDto.builder().username(applicant.getUsername()).failReason("IO Exception" + e).build());
+    }
+
+    return ResponseEntity.ok().body(ResponseApplicantDto.builder().username(applicant.getUsername())
+            .applicantId(applicant.getID()).build());
+  }
+
+  @DeleteMapping("/photo")
+  public ResponseEntity<ResponseApplicantDto> deletePhoto(@RequestParam("applicantId") Long applicantId) {
+    ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
+    responseApplicantDto.setApplicantId(applicantId);
+
+    Applicant applicant = applicantService.findApplicantById(applicantId);
+    if (applicant == null || applicant.getPhoto() == null) {
+      responseApplicantDto.setFailReason("No photo to delete or applicant not found");
+      return ResponseEntity.badRequest().body(responseApplicantDto);
+    }
+
+    try {
+      applicant.setPhoto(null); // Remove photo from the database
+      UpdateApplicantDto newApplicant = new UpdateApplicantDto();
+      newApplicant.setPhoto(null);
+      applicantService.deleteFromApplicant(newApplicant, applicantId); // Save the change
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+              ResponseApplicantDto.builder().username(applicant.getUsername())
+                      .failReason("Error deleting photo: " + e.getMessage()).build());
+    }
+
+    return ResponseEntity.ok().body(ResponseApplicantDto.builder().username(applicant.getUsername())
+            .applicantId(applicant.getID()).build());
+  }
+
 
   @PostMapping("/resume")
   public ResponseEntity<ResponseApplicantDto> uploadResume(@RequestParam("applicantId") Long applicantId,
@@ -310,6 +391,14 @@ public class ApplicantController {
     responseProfileDto.appliedJobs = profile.getAppliedJobs().stream().map(this::mapToResponseJobPostDto)
         .collect(Collectors.toList());
     responseProfileDto.savedJobs = profile.getSavedJobs().stream().map(this::mapToResponseJobPostDto).collect(Collectors.toSet());
+    responseProfileDto.dateOfBirth = profile.getDateOfBirth();
+    responseProfileDto.education  = profile.getEducation();
+    responseProfileDto.experience = profile.getExperience();
+    responseProfileDto.gender = profile.getGender();
+    responseProfileDto.maritalStatus = profile.getMaritalStatus();
+    responseProfileDto.nationality = profile.getNationality();
+    responseProfileDto.website = profile.getWebsite();
+    responseProfileDto.title = profile.getTitle();
     return responseProfileDto;
   }
 

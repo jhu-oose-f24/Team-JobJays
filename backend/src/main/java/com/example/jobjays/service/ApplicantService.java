@@ -46,6 +46,17 @@ public class ApplicantService {
 
   }
 
+  public Applicant deleteFromApplicant(UpdateApplicantDto newApplicant,Long id) {
+    Applicant applicantToUpdate = applicantRepository.findById(id).orElse(null);
+    if (applicantToUpdate == null) {
+      return null;
+    }
+
+    applicantToUpdate.setPhoto(newApplicant.getPhoto());
+    return applicantRepository.save(applicantToUpdate);
+
+  }
+
 
   public Applicant updateApplicant(UpdateApplicantDto newApplicant, Long id) {
     Applicant applicantToUpdate = applicantRepository.findById(id).orElse(null);
@@ -53,11 +64,26 @@ public class ApplicantService {
     if (applicantToUpdate == null) {
       return null;
     }
-    applicantToUpdate.setEnabled(newApplicant.getEnabled());
-    ApplicantProfile profile = applicantToUpdate.getProfile();
+    if(newApplicant.getEnabled()!=null) {
+      applicantToUpdate.setEnabled(newApplicant.getEnabled());
+    }
+
 
     if (newApplicant.getResume() != null && !newApplicant.getResume().isEmpty()) {
       applicantToUpdate.setResume(newApplicant.getResume());
+    }
+
+    if(newApplicant.getPhoto()!=null){
+      applicantToUpdate.setPhoto(newApplicant.getPhoto());
+    }
+
+    ApplicantProfile profile = applicantToUpdate.getProfile();
+
+    if(newApplicant.getWebsite()!=null) {
+      profile.setWebsite(newApplicant.getWebsite());
+    }
+    if(newApplicant.getTitle()!=null) {
+      profile.setTitle(newApplicant.getTitle());
     }
 
     if (newApplicant.getBio() != null && !newApplicant.getBio().isEmpty()) {
@@ -67,6 +93,27 @@ public class ApplicantService {
     if (newApplicant.getName() != null && !newApplicant.getName().isEmpty()) {
       profile.setName(newApplicant.getName());
     }
+
+    if(newApplicant.getGender()!=null && !newApplicant.getGender().isEmpty()){
+      profile.setGender(newApplicant.getGender());
+    }
+
+    if(newApplicant.getExperience()!=null && !newApplicant.getExperience().isEmpty()){
+      profile.setExperience(newApplicant.getExperience());
+    }
+    if (newApplicant.getEducation()!=null && !newApplicant.getEducation().isEmpty()){
+      profile.setEducation(newApplicant.getEducation());
+    }
+    if (newApplicant.getDateOfBirth()!=null && !newApplicant.getDateOfBirth().isEmpty()){
+      profile.setDateOfBirth(newApplicant.getDateOfBirth());
+    }
+    if(newApplicant.getMaritalStatus()!=null && !newApplicant.getMaritalStatus().isEmpty()){
+      profile.setMaritalStatus(newApplicant.getMaritalStatus());
+    }
+    if (newApplicant.getNationality()!=null && !newApplicant.getNationality().isEmpty()){
+      profile.setNationality(newApplicant.getNationality());
+    }
+
 
     return applicantRepository.save(applicantToUpdate);
   }

@@ -16,6 +16,8 @@ public class ResponseApplicantDto {
 
   public ResponseProfileDto applicantProfile;
 
+  private byte[] photo;
+
   private ApplicantResume applicantResume;
   private List<ApplicantResume> resumes;
 

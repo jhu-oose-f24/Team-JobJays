@@ -21,9 +21,12 @@ public class Applicant implements User {
   private Long applicantId;
   private String resume;
 
-
   @Embedded
   private ApplicantProfile profile;
+
+  @Lob
+  @Basic(fetch = FetchType.LAZY)
+  private byte[] photo;
 
 
   public Applicant(
@@ -123,4 +126,12 @@ public class Applicant implements User {
   public void viewAppliedJobs() {
     //TODO: Implement
   }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
 }
