@@ -1,5 +1,7 @@
 package com.example.jobjays.auth;
 
+import com.example.jobjays.dto.employer.CreateEmployerDto;
+import com.example.jobjays.model.Employer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -36,6 +38,7 @@ public class JwtTokenProvider {
   public static String generateEnablementToken() { //TODO will remove this
     return UUID.randomUUID().toString();
   }
+
   public String generateToken(UserResponseDto userResponseDto) { //add roles to user login, response dtos
     Map<String, Object> claims = new HashMap<>();
     claims.put("id", userResponseDto.id());
@@ -52,6 +55,49 @@ public class JwtTokenProvider {
         .signWith(getSecretKey(), SignatureAlgorithm.HS256)
         .compact();
   }
+
+  public String generateEmployerToken(Employer employer) { //add roles to user login, response dtos
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("id", employer.getID());
+    claims.put("username", employer.getUsername());
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + 86400000);
+
+    return Jwts.builder()
+        .setSubject(employer.getUsername())
+        .setClaims(claims)
+        .setIssuedAt(now)
+        .setExpiration(expiryDate)
+        .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+        .compact();
+  }
+
+
+
+  public String generateEmployerEnablementToken(CreateEmployerDto createEmployerDto) { //add roles to user login, response dtos
+    Map<String, Object> claims = new HashMap<>();
+    claims.put("username", createEmployerDto.getUsername());
+    claims.put("email", createEmployerDto.getEmail());
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + 86400000);
+
+    return Jwts.builder()
+        .setSubject(createEmployerDto.getUsername())
+        .setClaims(claims)
+        .setIssuedAt(now)
+        .setExpiration(expiryDate)
+        .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+        .compact();
+  }
+
+  public Claims getEnablementTokenClaims(String token) {
+    return extractAllClaims(token);
+  }
+
+
+
+
+
 
   public String getUsernameFromToken(String token) {
     return Jwts.parserBuilder()
@@ -72,14 +118,25 @@ public class JwtTokenProvider {
     return username;
   }
 
-  public String extractId(String token) {
+  public Long extractId(String token) {
 
     final Claims claims = extractAllClaims(token);
-    Integer userId = claims.get("id", Integer.class);
+    Long userId = claims.get("id", Long.class);
     System.out.println("EXTRACT JWT userId: " + userId);
 
-    return userId != null ? userId.toString() : null;
+    return userId;
   }
+
+  public String extractRole(String token) {
+
+    final Claims claims = extractAllClaims(token);
+    String role = claims.get("role", String.class);
+    System.out.println("EXTRACT JWT userId: " + role);
+
+    return role;
+  }
+
+
 
 
   private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -97,14 +154,11 @@ public class JwtTokenProvider {
   }
 
 
-
   public Claims getClaimsFromToken(String token) {
-    return Jwts.parserBuilder()
-      .setSigningKey(getSecretKey())
-      .build()
-      .parseClaimsJws(token)
-      .getBody();
+    return extractAllClaims(token);
   }
+
+
 
   public boolean validateToken(String token, UserDetails userDetails) {
     final String userName = extractUserName(token);

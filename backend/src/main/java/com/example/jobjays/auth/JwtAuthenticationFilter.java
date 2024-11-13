@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     if (token != null && SecurityContextHolder.getContext().getAuthentication() == null) {
       String username = jwtTokenProvider.extractUserName(token);
-      String userId = jwtTokenProvider.extractId(token); // Extracting ID as Long or adjust if it's String
+      Long userId = jwtTokenProvider.extractId(token); // Extracting ID as Long or adjust if it's String
       //String role = jwtTokenProvider.extractRole(token); // Extracting role if you need it
 
       UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(username);
@@ -68,7 +68,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
         // Attach the ID and role as additional details
-        authentication.setDetails(new CustomAuthenticationDetails(userId));
+        authentication.setDetails(new CustomAuthenticationDetails(userId.toString()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
     }

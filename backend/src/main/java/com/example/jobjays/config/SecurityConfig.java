@@ -34,19 +34,17 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests((authorize) -> authorize
             // Open endpoints for unauthenticated access
-            .requestMatchers( new AntPathRequestMatcher("/api/users/**")).permitAll()
-            // Secure all other endpoints
+            .requestMatchers( new AntPathRequestMatcher("/api/auth/**")).permitAll()
+                .requestMatchers( "/api/companies/register", "/api/companies/verify", "api/auth/employer").permitAll()
+
+                // Secure all other endpoints
             .anyRequest().authenticated()
         )
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();
   }
-  @Bean
-  public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-    return config.getAuthenticationManager();
 
-  }
 
   @Bean
   public AuthenticationProvider authenticationProvider() {

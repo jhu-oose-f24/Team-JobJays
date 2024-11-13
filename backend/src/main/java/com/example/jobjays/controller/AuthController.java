@@ -1,5 +1,6 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.auth.AuthService;
 import com.example.jobjays.authentication.TokenGenerator;
 import com.example.jobjays.dto.applicant.LoginApplicationDto;
 import com.example.jobjays.dto.applicant.ResponseApplicantDto;
@@ -36,6 +37,9 @@ public class AuthController {
     @Autowired
     private EmployerService employerService;
 
+    @Autowired
+    private AuthService authService;
+
     private final HttpSession session;
 
     public AuthController(HttpSession session) {
@@ -51,30 +55,24 @@ public class AuthController {
         if (employer == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        ResponseEmployerDto employerDto = new ResponseEmployerDto();
-        employerDto.setUsername(employer.getUsername());
-        employerDto.setEmployer_id(employer.getID());
-
-        if(!employer.getPassword().equals(loginRequest.getPassword())) {
-            employerDto.setFailReason("Password is not correct!");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(employerDto);
+        String password = loginRequest.getPassword();
+        String token = authService.loginEmployer(employer, password);
+        if (token == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        ResponseEmployerDto employerDto = new ResponseEmployerDto();
+//        employerDto.setUsername(employer.getUsername());
+//        employerDto.setEmployer_id(employer.getID());
 
 
         if(employer.getEnabled()==null || !employer.getEnabled()) {
             employerDto.setFailReason("The account is not enabled! Please verify your email.");
+            System.out.println(employerDto.toString());
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(employerDto);
         }
-
-        //temporary ways to complete iteration 3
-//        if(true){
-            return ResponseEntity.ok(employerDto);
-//        }
-
-//        String token = TokenGenerator.generateToken(employer);
-//        return ResponseEntity.ok(new TokenResponseDto(token));
+            return ResponseEntity.ok(token);
     }
 
 

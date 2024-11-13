@@ -29,12 +29,9 @@ public class AuthService {
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-  @Autowired
-  private AuthenticationManager authenticationManager;
 
 
-  private final ApplicantService applicantService;
-  private final EmployerService employerService;
+
   private final JwtTokenProvider jwtTokenProvider;
 
 
@@ -44,8 +41,7 @@ public class AuthService {
                      JwtTokenProvider jwtTokenProvider) {
     //this.userLookupService = userLookupService;
     this.jwtTokenProvider = jwtTokenProvider;
-    this.applicantService = applicantService;
-    this.employerService = employerService;
+
   }
 
   public ResponseProfileDto mapToResponseProfileDto(Profile profile) {
@@ -67,17 +63,20 @@ public class AuthService {
     return new UserLoginDto(username, password, role);
   }
 
-  public UserResponseDto validateUser(UserLoginDto userLoginDto) {
-    User user = getUser(userLoginDto.username());
-    if (user == null) {
-      return null;
-    }
-    if (passwordEncoder.matches(userLoginDto.password(), user.getPassword())) {
-      return mapToUserResponseDto(user);
-    }
-    return null;
-  }
+//  public UserResponseDto validateUser(UserLoginDto userLoginDto) {
+//    User user = getUser(userLoginDto.username());
+//    if (user == null) {
+//      return null;
+//    }
+//    if (passwordEncoder.matches(userLoginDto.password(), user.getPassword())) {
+//      return mapToUserResponseDto(user);
+//    }
+//    return null;
+//  }
 
+  public String getEmployerEnablementToken(CreateEmployerDto createEmployerDto) {
+    return jwtTokenProvider.generateEmployerEnablementToken(createEmployerDto);
+  }
 
 
   //loginUser
@@ -89,106 +88,122 @@ public class AuthService {
 //    return jwtTokenProvider.generateToken(userResponseDto);
 //  }
 
-  public String loginUser(UserLoginDto userLoginDto) {
-//    UserResponseDto userResponseDto = validateUser(userLoginDto);
+//  public String loginUser(UserLoginDto userLoginDto) {
+////    UserResponseDto userResponseDto = validateUser(userLoginDto);
+//
+//    Authentication authentication = authenticationManager.authenticate(
+//        new UsernamePasswordAuthenticationToken(userLoginDto.username(), userLoginDto.password()));
+//    if (authentication.isAuthenticated()) {
+//      UserResponseDto userResponseDto = validateUser(userLoginDto);
+//      System.out.println("username: " + userResponseDto.username());
+//      return jwtTokenProvider.generateToken(userResponseDto);
+//    }
+//    return "fail";
+//  }
 
-    Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(userLoginDto.username(), userLoginDto.password()));
-    if (authentication.isAuthenticated()) {
-      UserResponseDto userResponseDto = validateUser(userLoginDto);
-      System.out.println("username: " + userResponseDto.username());
-      return jwtTokenProvider.generateToken(userResponseDto);
+  public String loginEmployer(Employer employer, String password) {
+    if (passwordEncoder.matches(password,employer.getPassword())) {
+      return jwtTokenProvider.generateEmployerToken(employer);
     }
-    return "fail";
+    return null;
   }
 
-  //decodeToken
-  public String decodeToken(String token) {
-    String username =  jwtTokenProvider.getUsernameFromToken(token);
-    Employer employer = getEmployer(username);
-    if (employer == null) {
-       Applicant applicant = getApplicant(username);
-       return applicant.getUsername();
-    }
-    return employer.getUsername();
-  }
+//  //decodeToken
+//  public String decodeToken(String token) {
+//    String username =  jwtTokenProvider.getUsernameFromToken(token);
+//    Employer employer = getEmployer(username);
+//    if (employer == null) {
+//       Applicant applicant = getApplicant(username);
+//       return applicant.getUsername();
+//    }
+//    return employer.getUsername();
+//  }
 
   public Claims getClaims(String token) {
     return jwtTokenProvider.getClaimsFromToken(token);
   }
-
-  public Applicant getApplicant(String username) {
-    return applicantService.findApplicantByUsername(username);
-  }
-  public Employer getEmployer(String username) {
-    return employerService.findEmployerByUsername(username);
+  public String extractRole(String token) {
+    return jwtTokenProvider.extractRole(token);
   }
 
-  public User getUser(String username) {
-    Applicant applicant = getApplicant(username);
-    if (applicant != null) {
-      return applicant;
-    }
-    Employer employer = getEmployer(username);
-    if (employer != null) {
-      return employer;
-    }
-    return null;
+  public String extractUsername(String token) {
+    return jwtTokenProvider.extractUserName(token);
   }
+
+  public Long extractId(String token) {
+    return jwtTokenProvider.extractId(token);
+  }
+
+
+//  public Applicant getApplicant(String username) {
+//    return applicantService.findApplicantByUsername(username);
+//  }
+//  public Employer getEmployer(String username) {
+//    return employerService.findEmployerByUsername(username);
+//  }
+
+//  public User getUser(String username) {
+//    Applicant applicant = getApplicant(username);
+//    if (applicant != null) {
+//      return applicant;
+//    }
+//    Employer employer = getEmployer(username);
+//    if (employer != null) {
+//      return employer;
+//    }
+//    return null;
+//  }
 
   //same as register
-  public UserResponseDto createUser(UserCreateDto userCreateDto) {
-    if (userCreateDto.role().equalsIgnoreCase("Applicant")) {
-      Applicant existingUser = getApplicant(userCreateDto.username());
-      if (existingUser != null) {
-        throw new IllegalArgumentException("User already exists");
-      }
+//  public UserResponseDto createUser(UserCreateDto userCreateDto) {
+//    if (userCreateDto.role().equalsIgnoreCase("Applicant")) {
+//      Applicant existingUser = getApplicant(userCreateDto.username());
+//      if (existingUser != null) {
+//        throw new IllegalArgumentException("User already exists");
+//      }
+//
+//      CreateApplicantDto user = new CreateApplicantDto();
+//      user.setUsername(userCreateDto.username());
+//      user.setPassword(passwordEncoder.encode(userCreateDto.password()));
+//      user.setEmail(userCreateDto.email());
+//      user.setApplicantInfo(userCreateDto.info());
+//      user.setApplicantName(userCreateDto.name());
+//      user.setEnabled(false); //needs to get email and login
+//      Applicant applicant = applicantService.addApplicant(user);
+//      System.out.println("Applicant:" + applicant.toString());
+//      return mapToUserResponseDto(applicant);
+//    } else if (userCreateDto.role().equalsIgnoreCase("Employer")) {
+//      Employer existingUser = getEmployer(userCreateDto.username());
+//      if (existingUser != null) {
+//        throw new IllegalArgumentException("User already exists");
+//      }
+//
+//      CreateEmployerDto user = new CreateEmployerDto();
+//      user.setUsername(userCreateDto.username());
+//      user.setPassword(passwordEncoder.encode(userCreateDto.password()));
+//      user.setEmail(userCreateDto.email());
+//      user.setEmployerName(userCreateDto.name());
+//      user.setEmployerInfo(userCreateDto.info());
+//      Employer employer = employerService.addEmployer(user);
+//      return mapToUserResponseDto(employer);
+//    }
+//    return null;
+//  }
 
-      CreateApplicantDto user = new CreateApplicantDto();
-      user.setUsername(userCreateDto.username());
-      user.setPassword(passwordEncoder.encode(userCreateDto.password()));
-      user.setEmail(userCreateDto.email());
-      user.setApplicantInfo(userCreateDto.info());
-      user.setApplicantName(userCreateDto.name());
-      user.setEnabled(false); //needs to get email and login
-      Applicant applicant = applicantService.addApplicant(user);
-      System.out.println("Applicant:" + applicant.toString());
-      return mapToUserResponseDto(applicant);
-    } else if (userCreateDto.role().equalsIgnoreCase("Employer")) {
-      Employer existingUser = getEmployer(userCreateDto.username());
-      if (existingUser != null) {
-        throw new IllegalArgumentException("User already exists");
-      }
-
-      CreateEmployerDto user = new CreateEmployerDto();
-      user.setUsername(userCreateDto.username());
-      user.setPassword(passwordEncoder.encode(userCreateDto.password()));
-      user.setEmail(userCreateDto.email());
-      user.setEmployerName(userCreateDto.name());
-      user.setEmployerInfo(userCreateDto.info());
-      Employer employer = employerService.addEmployer(user);
-      return mapToUserResponseDto(employer);
-    }
-    return null;
-  }
-
-  public String enableAccount(String token) {
-    Claims claims = getClaims(token);
-    String role = (String) claims.get("role");
-    System.out.println("Role: " + role);
-    String username = (String) claims.get("username");
-    System.out.println("Username: " + username);
-    if (role.equalsIgnoreCase("applicant")) {
-      Applicant applicant = getApplicant(username);
-      applicant.setEnabled(true);
-      applicantService.updateApplicantNoDto(applicant, applicant.getID());
-    } else {
-      Employer employer = getEmployer(username);
-      employer.setEnabled(true);
-      employerService.updateEmployerNoDto(employer, employer.getID());
-    }
-    return token;
-  }
+//  public String enableAccount(String token) {
+//    String role = jwtTokenProvider.extractRole(token);
+//    String username = jwtTokenProvider.extractUserName(token);
+//    if (role.equalsIgnoreCase("applicant")) {
+//      Applicant applicant = getApplicant(username);
+//      applicant.setEnabled(true);
+//      applicantService.updateApplicantNoDto(applicant, applicant.getID());
+//    } else {
+//      Employer employer = getEmployer(username);
+//      employer.setEnabled(true);
+//      employerService.updateEmployerNoDto(employer, employer.getID());
+//    }
+//    return token;
+//  }
 
 
 }
