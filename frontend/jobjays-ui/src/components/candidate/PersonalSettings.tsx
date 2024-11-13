@@ -8,7 +8,7 @@ interface DashboardPageProps {
     };
 }
 
-const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
+const PersonalSettings: React.FC<DashboardPageProps> = () => {
     const candidateId = Number(localStorage.getItem('applicantId'));
     console.log(candidateId);
     const [profilePicture, setProfilePicture] = useState(null);
@@ -20,7 +20,7 @@ const PersonalSettings: React.FC<DashboardPageProps> = ({ params }) => {
     });
 
     // Update state when input values change
-    const handleChange = (e) => {
+    const handleChange = (e: { preventDefault: () => void; target: { name: any; value: any; }; }) => {
         e.preventDefault();
         const { name, value } = e.target;
         setFormData((prevState) => ({
