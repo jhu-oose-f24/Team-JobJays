@@ -8,6 +8,8 @@ import java.util.List;
 @Repository
 public interface EmployerRepository extends JpaRepository<Employer, Long> {
 
+  Employer findByUsername(String username);
+
   List<Employer> findAllByEmployerNameContainingIgnoreCase(String name);
 
   List<Employer> findAllByEmailContainingIgnoreCase(String email);
