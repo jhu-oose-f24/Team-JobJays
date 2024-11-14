@@ -1,14 +1,15 @@
 "use client";
 
+
 import React from 'react';
 import { useGetSavedJobs } from "@/lib/api";
+
 import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
 import Link from "next/link";
+import {ApplicantProfile, JobPost} from "@/lib/types";
+
 
 const FavoriteJobs: React.FC = () => {
-    const applicantId = typeof window !== 'undefined' && localStorage.getItem('applicantId')
-        ? parseInt(localStorage.getItem('applicantId') as string)
-        : 0;
 
     const { savedJobs, isLoading, isError } = useGetSavedJobs();
 
@@ -49,3 +50,4 @@ const FavoriteJobs: React.FC = () => {
 };
 
 export default FavoriteJobs;
+

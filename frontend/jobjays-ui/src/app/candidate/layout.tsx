@@ -85,6 +85,7 @@ const CandidateLayout = ({ children }: { children: React.ReactNode }) => {
                     </button>
                 </div>
 
+
                 {/* Navigation */}
                 <nav className="flex-1 px-4 py-6">
                     <div className="space-y-2">
@@ -103,6 +104,7 @@ const CandidateLayout = ({ children }: { children: React.ReactNode }) => {
                             </Link>
                         ))}
                     </div>
+
                 </nav>
 
                 {/* Footer */}

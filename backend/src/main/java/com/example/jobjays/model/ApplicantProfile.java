@@ -16,6 +16,20 @@ public class ApplicantProfile implements Profile {
   private String name;
   private String bio;
 
+  private String nationality;
+
+  private String gender;
+
+  private String education;
+
+  private String dateOfBirth;
+
+  private String maritalStatus;
+  private String experience;
+  private String website;
+  private String title;
+
+
   @Transient
   private Applicant applicant;
   @ManyToMany(mappedBy = "applicants")
@@ -57,8 +71,74 @@ public class ApplicantProfile implements Profile {
     return bio;
   }
 
+
+  public String getTitle() {
+    return title;
+  }
+
+  public void setTitle(String title) {
+    this.title = title;
+  }
+
+  public String getWebsite() {
+    return website;
+  }
+
+  public void setWebsite(String website) {
+    this.website = website;
+  }
+
   public Set<JobPost> getAppliedJobs() {
     return this.appliedJobs;
+  }
+
+
+  public String getNationality() {
+    return nationality;
+  }
+
+  public String getGender() {
+    return gender;
+  }
+
+  public String getEducation() {
+    return education;
+  }
+
+  public String getDateOfBirth() {
+    return dateOfBirth;
+  }
+
+  public String getMaritalStatus() {
+    return maritalStatus;
+  }
+
+  public String getExperience() {
+    return experience;
+  }
+
+  public void setNationality(String nationality) {
+    this.nationality = nationality;
+  }
+
+  public void setGender(String gender) {
+    this.gender = gender;
+  }
+
+  public void setEducation(String education) {
+    this.education = education;
+  }
+
+  public void setDateOfBirth(String dateOfBirth) {
+    this.dateOfBirth = dateOfBirth;
+  }
+
+  public void setMaritalStatus(String maritalStatus) {
+    this.maritalStatus = maritalStatus;
+  }
+
+  public void setExperience(String experience) {
+    this.experience = experience;
   }
 
   public void editProfile(String name, String bio) {

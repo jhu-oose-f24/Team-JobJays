@@ -10,7 +10,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Use a lightweight OpenJDK 23 runtime image for the final stage
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:22-jre-alpine
 WORKDIR /app
 
 # Copy the built application JAR from the build stage

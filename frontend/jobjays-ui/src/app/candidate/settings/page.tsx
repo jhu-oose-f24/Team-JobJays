@@ -44,28 +44,24 @@ const ProfilePage: React.FC<DashboardPageProps> = ({ params }) => {
 
                 {tab === 'personal' && (
                     <div className={styles.tabContent}>
-                        <h3>Profile</h3>
                         <PersonalSettings  params={params}/> {/* No submit button here */}
                     </div>
                 )}
 
                 {tab === 'profile' && (
                     <div className={styles.tabContent}>
-                        <h4>Profile</h4>
                         <ProfileData /> {/* No submit button here */}
                     </div>
                 )}
 
                 {tab === 'social-media' && (
                     <div className={styles.tabContent}>
-                        <h4>Social Media Profile</h4>
                         <SocialMediaInfo />
                     </div>
                 )}
 
                 {tab === 'account-setting' && (
                     <div className={styles.tabContent}>
-                        <h4>Account Setting</h4>
                         <AccountSettings></AccountSettings>
                     </div>
                 )}

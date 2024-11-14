@@ -1,5 +1,7 @@
 "use client";
-import React, {useEffect, useState} from 'react';
+
+import React, { useState, useEffect } from 'react';
+
 import styles from '@/styles/dashboard.module.css';
 import useSWR from "swr";
 import {fetcher, useEmployer} from "@/lib/api";
@@ -7,17 +9,6 @@ import ErrorPage from "@/components/ui/ErrorPage";
 import {EmployerProfile} from "@/lib/types";
 
 const DashboardPage: React.FC = () => {
-    // const [token, setToken] = useState<string | null>(null);
-    // // Retrieve `employerId` from localStorage on the client side
-    // useEffect(() => {
-    //     if (typeof window !== 'undefined') {
-    //         const authToken = localStorage.getItem('token');
-    //         if (authToken) {
-    //             setToken(authToken);
-    //         }
-    //     }
-    // }, []);
-
     const { EmployerProfile, isLoading, isError } = useEmployer();
 
     if (isLoading) return <div>Loading...</div>;

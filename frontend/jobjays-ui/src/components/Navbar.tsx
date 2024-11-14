@@ -1,6 +1,6 @@
 // src/components/Navbar.tsx
 import Link from 'next/link';
-import styles from '@/styles/Navbar.module.css';
+import styles from '@/styles/navbar.module.css';
 
 const Navbar = () => {
     return (

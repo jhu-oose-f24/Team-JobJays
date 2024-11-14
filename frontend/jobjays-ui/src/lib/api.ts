@@ -48,6 +48,7 @@ export function useApplicant() {
     console.log("In use applicant");
     const { data, error, isLoading } = useSWR("http://localhost:8080/api/applicants/profile", fetcher);
 
+
     return {
         applicantProfile: data as ApplicantProfile,
         isLoading,

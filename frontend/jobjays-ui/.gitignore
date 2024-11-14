@@ -17,6 +17,10 @@
 /build
 pnpm-lock.yaml
 
+# Ignore target directory where build files are stored
+/target/
+*.class
+
 # misc
 .DS_Store
 *.pem

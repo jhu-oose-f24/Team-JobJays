@@ -2,15 +2,18 @@
 
 import React, {useEffect, useState } from 'react';
 import styles from '@/styles/my-jobs.module.css';
-import {JobPost} from "@/lib/types";
-import {addJobAttributes, useEmployer} from '@/lib/api';
 
+import {EmployerProfile, JobPost} from "@/lib/types";
+import {addJobAttributes, useEmployer} from '@/lib/api';
+import { useParams } from 'next/navigation';
+import Link from "next/link";
 import {useRouter} from "next/navigation";
 import SkeletonMyJobs from "@/components/employer/SkeletonMyJobs";
 
 
 const MyJobs: React.FC = () => {
     const { EmployerProfile, isLoading, isError} = useEmployer();
+
     const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
     const router = useRouter();
 
