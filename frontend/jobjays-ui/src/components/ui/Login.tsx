@@ -55,19 +55,24 @@ export default function Login() {
 
       if (response.ok) {
         console.log(response);
-        const employerData = await response.json();
-        console.log(employerData);
-        const employerId = employerData.employer_id;
+        const contentType = response.headers.get("content-type");
+        let employerData;
+        if (contentType && contentType.includes("application/json")) {
+          employerData = await response.json();
+        } else {
+          employerData = { token: await response.text() }; // wrap the token in an object
+        }
+
         //alert("Sign in successful!");
         toast({
           title: "Success",
           description: "Sign in successful!",
           variant: "default",
         });
-        localStorage.setItem("employerId", employerId);
+        localStorage.setItem("token", employerData.token);
+        console.log(employerData.token);
         router.push(`employer/dashboard`); // redirect to new user's dashboard
       } else {
-
         const errorData = await response.json();
         console.log(`Error: ${errorData.failReason}`);
       }

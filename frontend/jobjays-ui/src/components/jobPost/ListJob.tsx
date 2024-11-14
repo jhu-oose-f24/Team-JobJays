@@ -75,7 +75,6 @@ const ListJob = ({ query }: ListJobProps) => {
         return <div></div>;
     }
     if (query === "JOBS") { query = "";}
-    console.log(query);
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading all job details.</div>;
     if (!JobPosts) return <div>Jobs not found.</div>;
