@@ -42,8 +42,8 @@ public class WebSecurityConfig implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/api/**")
-        .allowedOrigins("http://localhost:3000", "https://jobjays.vercel.app")  // Your frontend origin
-       //.allowedOrigins("https://jobjays.vercel.app")  // Your frontend origin
+        .allowedOrigins("http://localhost:3000")  // Your frontend origin
+        .allowedOrigins("https://jobjays.vercel.app")  // Your frontend origin
         .allowedMethods("GET", "POST", "PUT", "DELETE")  // Allowed HTTP methods
         .allowedHeaders("*")  // Allowed headers
         .allowCredentials(true);  // Allow cookies or authentication headers
