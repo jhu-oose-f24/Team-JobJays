@@ -34,4 +34,15 @@ public class EmailSendWrapper {
 
         mailSender.send(message);
     }
+
+    public void sendUserVerificationEmail(String recipientEmail, String token){
+        String verificationLink = "http://localhost:8080/api/users/verify?token=" + token;
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(recipientEmail);
+        message.setSubject("Email Verification");
+        message.setText("Click the following link to verify your email: " + verificationLink);
+
+        mailSender.send(message);
+    }
 }

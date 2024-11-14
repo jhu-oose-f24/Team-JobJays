@@ -1,32 +1,15 @@
 "use client";
+
 import React, { useState, useEffect } from 'react';
+
 import styles from '@/styles/dashboard.module.css';
 import useSWR from "swr";
-import {fetcher} from "@/lib/api";
+import {fetcher, useEmployer} from "@/lib/api";
 import ErrorPage from "@/components/ui/ErrorPage";
 import {EmployerProfile} from "@/lib/types";
 
 const DashboardPage: React.FC = () => {
-    const [employerId, setEmployerId] = useState<number | null>(null);
-
-    useEffect(() => {
-        const isBrowser = typeof window !== "undefined";
-        if (isBrowser) {
-            setEmployerId(localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0);
-        }
-
-    }, []);
-
-    function useEmployerProfile() {
-        const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${employerId}`, fetcher);
-        return {
-            EmployerProfile: data as EmployerProfile,
-            isLoading,
-            isError: error
-        };
-    }
-
-    const { EmployerProfile, isLoading, isError } = useEmployerProfile();
+    const { EmployerProfile, isLoading, isError } = useEmployer();
 
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading employer profile.</div>;

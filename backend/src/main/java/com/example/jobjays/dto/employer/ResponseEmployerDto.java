@@ -2,8 +2,10 @@ package com.example.jobjays.dto.employer;
 
 import com.example.jobjays.dto.profile.ResponseProfileDto;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
+@ToString
 public class ResponseEmployerDto {
 
     public Long employer_id;

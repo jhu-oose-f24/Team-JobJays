@@ -6,6 +6,8 @@ import com.example.jobjays.model.*;
 import com.example.jobjays.repository.ApplicantRepository;
 import com.example.jobjays.repository.EmployerRepository;
 import com.example.jobjays.repository.JobPostRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,9 @@ public class EmployerService {
   private final EmployerRepository employerRepository;
   private final JobPostRepository jobPostRepository;
   private final ApplicantRepository applicantRepository;
+
+  @Autowired
+  private PasswordEncoder passwordEncoder;
 
   public EmployerService(EmployerRepository employerRepository, ApplicantRepository applicantRepository, JobPostRepository jobPostRepository) {
     this.employerRepository = employerRepository;
@@ -33,7 +38,8 @@ public class EmployerService {
 
     Employer newEmployer = new Employer(
       employer.getUsername(),
-      employer.getPassword(), employer.getEmail(),
+      passwordEncoder.encode(employer.getPassword()),
+        employer.getEmail(),
       employer.getEmployerName(),
       employer.getEmployerInfo(),
             employer.getEnabled(),
@@ -68,6 +74,27 @@ public class EmployerService {
     return employerRepository.save(employerToUpdate);
   }
 
+  public Employer updateEmployerNoDto(Employer employer, Long id) {
+    Employer employerToUpdate = employerRepository.findById(id).orElse(null);
+
+    if (employerToUpdate == null) {
+      return null;
+    }
+    EmployerProfile profile = employerToUpdate.getProfile();
+
+    if (employer.getProfile().getBio() != null && !employer.getProfile().getBio().isEmpty()) {
+      profile.setBio(employer.getProfile().getBio());
+    }
+    if (employer.getProfile().getName() != null && !employer.getProfile().getName().isEmpty()) {
+      profile.setName(employer.getProfile().getName());
+    }
+
+    if (employer.getEnabled() != null) {
+      employerToUpdate.setEnabled(employer.getEnabled());
+    }
+    return employerRepository.save(employerToUpdate);
+  }
+
   public void deleteEmployer(Long id) {
     EmployerProfile profile = Objects.requireNonNull(employerRepository.findById(id).orElse(null)).getProfile();
     if (profile != null) {
@@ -76,6 +103,7 @@ public class EmployerService {
         for (JobPost jobPost : jobPosts) {
           for (Applicant applicant : jobPost.getApplicants()) {
             applicant.getProfile().getAppliedJobs().remove(jobPost);
+            applicant.getProfile().getSavedJobs().remove(jobPost);
             applicantRepository.save(applicant);
           }
         }
@@ -107,7 +135,7 @@ public class EmployerService {
   }
 
   public Employer findEmployerByUsername(String username) {
-    return employerRepository.findByUsernameIs(username);
+    return employerRepository.findByUsernameIsIgnoreCase(username);
   }
 
 

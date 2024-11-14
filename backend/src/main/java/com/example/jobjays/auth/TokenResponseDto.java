@@ -1,4 +1,4 @@
-package com.example.jobjays.dto.auth;
+package com.example.jobjays.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

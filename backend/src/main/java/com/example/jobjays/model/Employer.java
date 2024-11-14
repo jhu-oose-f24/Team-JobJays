@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 
 @Entity
+@ToString
 public class Employer implements User {
   @Column(insertable=false, updatable=false)
   private String name;
@@ -65,9 +67,8 @@ public class Employer implements User {
     return this.username;
   }
 
-  String setUsername(String username) {
+  public void setUsername(String username) {
     this.username = username;
-    return username;
   }
 
   public String getPassword() {
@@ -75,9 +76,8 @@ public class Employer implements User {
   }
 
 
-  String setPassword(String password) {
+  public void setPassword(String password) {
     this.password = password;
-    return password;
   }
 
   public String getEmail() {
@@ -86,6 +86,11 @@ public class Employer implements User {
 
   @Override
   public Boolean getEnabled() {
+    return enabled;
+  }
+
+  @Override
+  public Boolean setEnabled(Boolean enabled) {
     return enabled;
   }
 

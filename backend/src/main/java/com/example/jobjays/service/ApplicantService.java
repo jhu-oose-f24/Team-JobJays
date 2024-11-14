@@ -1,5 +1,6 @@
 package com.example.jobjays.service;
 
+import com.amazonaws.services.dynamodbv2.xspec.L;
 import com.example.jobjays.dto.applicant.CreateApplicantDto;
 import com.example.jobjays.dto.applicant.UpdateApplicantDto;
 import com.example.jobjays.model.Applicant;
@@ -8,6 +9,9 @@ import com.example.jobjays.model.JobPost;
 import com.example.jobjays.repository.ApplicantRepository;
 import jakarta.validation.constraints.Email;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -22,8 +26,9 @@ public class ApplicantService {
     this.applicantRepository = applicantRepository;
   }
 
+  @Transactional(propagation = Propagation.REQUIRED)
   public Applicant addApplicant(CreateApplicantDto applicant) {
-
+    System.out.println("In service: " );
     Applicant newApplicant = new Applicant(
       applicant.getUsername(),
       applicant.getApplicantName(),
@@ -34,11 +39,19 @@ public class ApplicantService {
       applicant.getVerificationToken()
     );
     assert newApplicant.getProfile() != null;
+    System.out.println("Applicant: " + newApplicant.toString());
+
     ApplicantProfile profile = newApplicant.getProfile();
     profile.setName(applicant.getApplicantName());
     profile.setBio(applicant.getApplicantInfo());
 
-    return applicantRepository.save(newApplicant);
+    System.out.println("Profile: " + profile.toString());
+    System.out.println("Saving applicant: ");
+    Applicant savedApplicant = applicantRepository.save(newApplicant);
+    applicantRepository.flush();
+    System.out.println("Saved Applicant ID: " + savedApplicant.getID());
+    return savedApplicant;
+//    return applicantRepository.save(newApplicant);
   }
 
   public Applicant findByVerificationToken(String token){
@@ -118,6 +131,30 @@ public class ApplicantService {
     return applicantRepository.save(applicantToUpdate);
   }
 
+  public Applicant updateApplicantNoDto(Applicant applicant, Long id) {
+    Applicant applicantToUpdate = applicantRepository.findById(id).orElse(null);
+
+    if (applicantToUpdate == null) {
+      return null;
+    }
+    applicantToUpdate.setEnabled(applicant.getEnabled());
+    ApplicantProfile profile = applicantToUpdate.getProfile();
+
+    if (applicant.getResume() != null && !applicant.getResume().isEmpty()) {
+      applicantToUpdate.setResume(applicant.getResume());
+    }
+
+    if (applicant.getProfile().getBio() != null && !applicant.getProfile().getBio().isEmpty()) {
+      profile.setBio(applicant.getProfile().getBio());
+    }
+
+    if (applicant.getProfile().getName() != null && !applicant.getProfile().getName().isEmpty()) {
+      profile.setName(applicant.getProfile().getName());
+    }
+
+    return applicantRepository.save(applicantToUpdate);
+  }
+
   public void deleteApplicant(Long id) {
     ApplicantProfile profile = Objects.requireNonNull(applicantRepository.findById(id).orElse(null)).getProfile();
     applicantRepository.deleteById(id);
@@ -172,9 +209,12 @@ public class ApplicantService {
     return applicantRepository.findSavedJobsByApplicantId(applicantId);
   }
 
-  public void addSavedJob(ApplicantProfile applicantProfile, JobPost jobPost) {
+  public void addSavedJob(Applicant applicant, JobPost jobPost) {
 //    applicantRepository.findSavedJobsByApplicantId(applicantId).add(jobPost);
+    System.out.println("in add saved job in service!");
+    ApplicantProfile applicantProfile = applicant.getProfile();
     applicantProfile.addSavedJobs(jobPost);
+    applicantRepository.save(applicant);
   }
 //
 //

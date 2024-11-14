@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
       Use this information to assist the user with their queries.
       `;
 
-      // Prepare the conversation with the updated system prompt
+    // Prepare the conversation with the updated system prompt
     const conversation = [
       {
         role: 'system',
