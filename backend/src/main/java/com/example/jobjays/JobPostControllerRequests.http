@@ -1,0 +1,50 @@
+### CREATE A JOB POST
+POST http://localhost:8080/api/jobposts/add
+Content-Type: application/json
+
+{
+  "title": "new job post",
+  "description": "new description",
+  "location": "new location",
+  "salary": 1000000,
+  "closedDate": "2024-12-31T23:59:59",
+  "userId": 3
+}
+
+### UPDATE JOB POST
+PUT http://localhost:8080/api/jobposts/update/{{id}}
+Content-Type: application/json
+
+{
+  "title": "updated job post",
+  "description": "updated description",
+  "location": "updated location",
+  "salary": 1000000,
+  "closedDate": ""
+}
+
+### DELETE JOB POST
+
+###
+DELETE http://localhost:8080/api/jobposts/delete/{{id}}
+
+### GET ALL JOB POSTS
+###
+GET http://localhost:8080/api/jobposts/all
+
+### GET JOB POST BY ID
+###
+GET http://localhost:8080/api/jobposts/{{id}}
+
+
+### GET JOB POSTS BY EMPLOYER NAME
+###
+GET http://localhost:8080/api/jobposts/employer/{{employerName}}
+
+### GET JOB POSTS BY TITLE
+###
+GET http://localhost:8080/api/jobposts/title/{{title}}
+
+### GET JOB POSTS BY TITLE FUZZY
+###
+GET http://localhost:8080/api/jobposts/title/contains/{{title}}

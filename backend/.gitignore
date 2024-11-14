@@ -1,0 +1,101 @@
+#HELP.md
+#../target/
+#*/target
+#!.mvn/wrapper/maven-wrapper.jar
+#!**/src/main/**/target/
+#!**/src/test/**/target/
+#
+#### STS ###
+#.apt_generated
+#.classpath
+#.factorypath
+#.project
+#.settings
+#.springBeans
+#.sts4-cache
+#
+#### IntelliJ IDEA ###
+#.idea
+#*.iws
+#*.iml
+#*.ipr
+#
+#### NetBeans ###
+#/nbproject/private/
+#/nbbuild/
+#/dist/
+#/nbdist/
+#/.nb-gradle/
+#build/
+#!**/src/main/**/build/
+#!**/src/test/**/build/
+#
+#### VS Code ###
+#.vscode/
+#
+#
+#### Gradle
+#.gradle/
+#**/gradle-wrapper.jar
+HELP.md
+/target/
+**/target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+/out/
+/dist/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+# Ignore IDE and editor config directories
+
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+# Ignore compiled class files
+/out/
+/classes/
+/build/
+
+# Ignore Maven target directory
+/target/
+
+# Ignore IntelliJ IDEA specific files
+.idea/
+*.iml
+
+### Gradle ###
+.gradle/
+
+### Logs ###
+*.log
+
+### macOS ###
+.DS_Store
+
+### Linux ###
+*~

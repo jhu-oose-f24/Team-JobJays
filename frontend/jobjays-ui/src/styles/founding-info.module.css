@@ -1,0 +1,125 @@
+/* styles/founding-info.module.css */
+
+.container {
+    width: calc(100% - 48px);
+    margin: 0 24px 24px; /* Remove top margin */
+    padding: 24px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.headerIcon {
+    width: 32px;
+    height: 32px;
+    color: #000;
+}
+
+.headerContent {
+    flex: 1;
+}
+
+.title {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+    color: #000;
+}
+
+.description {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.formField {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+}
+
+.input,
+.select,
+.textarea {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+    outline: none;
+    border-color: #000;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+    color: #9ca3af;
+}
+
+.select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+}
+
+.textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.button {
+    width: fit-content;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: white;
+    background: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: #333;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: calc(100% - 32px);
+        margin: 16px;
+        padding: 16px;
+    }
+
+    .button {
+        width: 100%;
+    }
+}

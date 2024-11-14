@@ -1,0 +1,208 @@
+/* styles/account-settings.module.css */
+
+.container {
+    width: calc(100% - 48px);
+    margin: 0 24px 24px; /* Remove top margin */
+    padding: 24px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+}
+
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.headerIcon {
+    width: 24px;
+    height: 24px;
+    color: #000;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0;
+    color: #000;
+}
+
+.description {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.sectionHeader {
+    margin-bottom: 4px;
+}
+
+.sectionTitle {
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin: 0;
+}
+
+.sectionDescription {
+    font-size: 14px;
+    color: #6b7280;
+    margin: 4px 0 0;
+}
+
+.formGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.labelIcon {
+    color: #6b7280;
+}
+
+.input {
+    width: 100%;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #000;
+    box-shadow: 0 0 0 1px #000;
+}
+
+.phoneInput {
+    display: flex;
+    gap: 8px;
+}
+
+.countryCode {
+    width: 120px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: white;
+}
+
+.actionButtons {
+    display: flex;
+    justify-content: flex-start;
+    padding-top: 8px;
+}
+
+.saveButton {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: white;
+    background: #000;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.saveButton:hover {
+    background: #333;
+}
+
+.dangerSection {
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.dangerZone {
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+    border-radius: 6px;
+    padding: 16px;
+    margin-top: 12px;
+}
+
+.warningMessage {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.warningIcon {
+    color: #ef4444;
+    flex-shrink: 0;
+}
+
+.warningMessage p {
+    margin: 0;
+    font-size: 14px;
+    color: #ef4444;
+}
+
+.deleteButton {
+    padding: 8px 16px;
+    font-size: 14px;
+    color: white;
+    background: #ef4444;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.deleteButton:hover {
+    background: #dc2626;
+}
+
+@media (max-width: 640px) {
+    .formGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .phoneInput {
+        flex-direction: column;
+    }
+
+    .countryCode {
+        width: 100%;
+    }
+
+    .actionButtons {
+        flex-direction: column;
+    }
+
+    .saveButton,
+    .deleteButton {
+        width: 100%;
+    }
+}

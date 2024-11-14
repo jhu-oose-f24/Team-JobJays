@@ -1,0 +1,38 @@
+services:
+  job-jays-api:
+    build:
+        context: ../
+        dockerfile: Dockerfile
+    container_name: job-jays-api
+    ports:
+      - "8080:8080"
+  applicant-job-matcher:
+    build:
+      context: ../applicant_job_matcher
+      dockerfile: Dockerfile
+    container_name: applicant-job-matcher
+    depends_on:
+      - job-jays-api
+  preference-updater:
+    build:
+      context: ../preference_updater
+      dockerfile: Dockerfile
+    container_name: preference-updater
+    depends_on:
+      - job-jays-api
+  notification-sender:
+    build:
+      context: ../notification_sender
+      dockerfile: Dockerfile
+    container_name: notification-sender
+    depends_on:
+      - job-jays-api
+#  notification-logger:
+#    build:
+#      context: ../notification_logger
+#      dockerfile: Dockerfile
+#    container_name: notification-logger
+#    depends_on:
+#      - job-jays-api
+  ## Kafka and database runs on server
+  ## Have access to database but not kafka
