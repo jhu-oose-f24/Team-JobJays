@@ -39,6 +39,7 @@
 #**/gradle-wrapper.jar
 HELP.md
 /target/
+target/
 **/target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -77,16 +78,16 @@ build/
 ### VS Code ###
 .vscode/
 # Ignore compiled class files
-/out/
+#/out/
 /classes/
 /build/
 
 # Ignore Maven target directory
-/target/
-
-# Ignore IntelliJ IDEA specific files
-.idea/
-*.iml
+#/target/
+#
+## Ignore IntelliJ IDEA specific files
+#.idea/
+#*.iml
 
 ### Gradle ###
 .gradle/
