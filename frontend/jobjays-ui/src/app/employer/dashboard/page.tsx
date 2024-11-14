@@ -1,24 +1,24 @@
 "use client";
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styles from '@/styles/dashboard.module.css';
 import useSWR from "swr";
-import {fetcher} from "@/lib/api";
+import {fetcher, useEmployer} from "@/lib/api";
 import ErrorPage from "@/components/ui/ErrorPage";
 import {EmployerProfile} from "@/lib/types";
 
 const DashboardPage: React.FC = () => {
-    const employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : <ErrorPage/>;
+    // const [token, setToken] = useState<string | null>(null);
+    // // Retrieve `employerId` from localStorage on the client side
+    // useEffect(() => {
+    //     if (typeof window !== 'undefined') {
+    //         const authToken = localStorage.getItem('token');
+    //         if (authToken) {
+    //             setToken(authToken);
+    //         }
+    //     }
+    // }, []);
 
-    function useEmployerProfile() {
-        const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${employerId}`, fetcher);
-        return {
-            EmployerProfile: data as EmployerProfile,
-            isLoading,
-            isError: error
-        };
-    }
-
-    const { EmployerProfile, isLoading, isError } = useEmployerProfile();
+    const { EmployerProfile, isLoading, isError } = useEmployer();
 
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading employer profile.</div>;

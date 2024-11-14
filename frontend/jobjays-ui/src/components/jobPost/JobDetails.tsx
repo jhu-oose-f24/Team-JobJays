@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog"
 import {useToast} from "@/hooks/use-toast";
 import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
-import { JobPost } from '@/lib/types';
 
 
 import { Button } from "@/components/ui/button"
@@ -27,12 +26,10 @@ const JobDetails = () => {
     const { toast } = useToast();
 
     const  handleJobFormSubmit = async (data: any) => {
-
         //We need to send the filteredData with proper attributes to backend for now until we have type in backend
         const {jobType, ...filteredData} = data;
         JobPost.type = data.type;
-        const employer_id = 1; //TODO replace hardcoded 1 with employer id from state managed employer
-        const result = await updateJobPost(Number(id), employer_id, filteredData, mutate, data);
+        const result = await updateJobPost(Number(id), filteredData, mutate, data);
         if (result.success) {
             setOpen(false);
             toast({

@@ -8,13 +8,13 @@ import RelatedJobs from "@/components/jobPost/RelatedJobs";
 // import ContactUs from "@/components/ContactUs";
 import Link from "next/link";
 import {useParams} from "next/navigation";
-import {incrementJobPostView} from "@/lib/api";
+import {addImpressionEvent} from "@/lib/api";
 
 const JobDetailPage: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     useEffect(() => {
         // Call the API to increment the view count whenever this page loads
-        incrementJobPostView(Number(id));
+        addImpressionEvent(Number(id));
     }, [id]);
 
     return (

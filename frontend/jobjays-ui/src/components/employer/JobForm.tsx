@@ -33,8 +33,8 @@ const jobFormSchema = z.object({
     }),
     jobType: z.string().nonempty("Job type is required"), // On-site, Remote, Hybrid
     workTiming: z.string().nonempty("Work timing is required"), // Full-time, Part-time, Flexible
-    minSalary: z.number().transform((val) => Number(val)),
-    maxSalary: z.number().transform((val) => Number(val)),
+    minSalary: z.string().transform((val) => Number(val)),
+    maxSalary: z.string().transform((val) => Number(val)),
     closedDate: z.string().transform((val) => new Date(val).toISOString()),
     skillsRequired: z.array(z.string()).min(1, "At least one skill is required")
 });
