@@ -1,3 +1,4 @@
+"use client";
 import ApplicantProfileCard from "@/components/ui/ApplicantProfileCard";
 import { useEffect, useState } from "react";
 import { JobPost } from "@/lib/types";

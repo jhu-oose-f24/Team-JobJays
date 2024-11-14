@@ -9,8 +9,18 @@ interface DashboardPageProps {
 }
 
 const PersonalSettings: React.FC<DashboardPageProps> = () => {
-    const candidateId = Number(localStorage.getItem('applicantId'));
-    console.log(candidateId);
+    const [candidateId, setCandidateId] = useState<number | null>(null);
+
+
+    useEffect(() => {
+    const isBrowser = typeof window !== "undefined";
+    if (isBrowser && localStorage.getItem('applicantId')) {
+        setCandidateId(Number(localStorage.getItem('applicantId')));
+        console.log(candidateId);
+    }
+    }, []);
+
+
     const [profilePicture, setProfilePicture] = useState(null);
     const [resumeFiles, setResumeFiles] = useState([]);
     const [formData, setFormData] = useState({
