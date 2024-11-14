@@ -1,5 +1,6 @@
 package com.example.jobjays.controller;
 
+import com.example.jobjays.auth.AuthService;
 import com.example.jobjays.auth.CustomAuthenticationDetails;
 import com.example.jobjays.authentication.TokenGenerator;
 import com.example.jobjays.dto.applicant.*;
@@ -41,6 +42,7 @@ public class ApplicantController {
   private final ApplicantService applicantService;
   private final JobPostService jobPostService;
   private final ResponseMapperService responseMapperService;
+  private final AuthService authService;
 
   // Define the email pattern
   private static final String EMAIL_REGEX = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
@@ -53,10 +55,11 @@ public class ApplicantController {
   @Autowired
   private ApplicantRepository applicantRepository;
 
-  public ApplicantController(ApplicantService applicantService, JobPostService jobPostService, ResponseMapperService responseMapperService) {
+  public ApplicantController(ApplicantService applicantService, JobPostService jobPostService, ResponseMapperService responseMapperService, AuthService authService) {
     this.applicantService = applicantService;
     this.jobPostService = jobPostService;
     this.responseMapperService = responseMapperService;
+    this.authService = authService;
   }
 
   // Method to validate email
@@ -70,13 +73,15 @@ public class ApplicantController {
 
   @GetMapping("/verify")
   public RedirectView verifyUser(@RequestParam("token") String token) {
-    Applicant applicant = applicantService.findByVerificationToken(token);
+    String username = authService.extractUsername(token);
+    Applicant applicant = applicantService.findApplicantByUsername(username);
     UpdateApplicantDto user = new UpdateApplicantDto();
 
     if (applicant == null) {
-      RedirectView redirectView = new RedirectView("http://localhost:3000/invalid-token");
-      redirectView.setExposeModelAttributes(false);
-      return redirectView;
+      return new RedirectView("http://localhost:3000/invalid-token");
+//      RedirectView redirectView = new RedirectView("http://localhost:3000/invalid-token");
+//      redirectView.setExposeModelAttributes(false);
+//      return redirectView;
     }
 
     user.setEnabled(true); // Enable the user
@@ -88,52 +93,51 @@ public class ApplicantController {
     return redirectView;
   }
 
-  @PostMapping
-  public ResponseEntity<?> addApplicant(@RequestBody CreateApplicantDto createApplicantDto) {
-    // check the email formation
-    if (!isValidEmail(createApplicantDto.getEmail())) {
-      throw new ServiceException("Email format is wrong");
-    }
-
+  @PostMapping("/register")
+  public ResponseEntity<ResponseApplicantDto> addApplicant(@RequestBody CreateApplicantDto createApplicantDto) {
+//    // check the email formation
+//    if (!isValidEmail(createApplicantDto.getEmail())) {
+//      throw new ServiceException("Email format is wrong");
+//    }
+//
+//    createApplicantDto.setEnabled(false);
+//    String token = TokenGenerator.generateToken();
+//    createApplicantDto.setVerificationToken(token);
+//    createApplicantDto.setEnabled(false); // User is disabled until they v
+//    // rify
+//    // Before adding the applicant, check if the email is already in use
+//    // Synchronize on the email or use a unique constraint to prevent race
+//    // conditions
+//    synchronized (this) {
+//      // Before adding the applicant, check if the email is already in use
+//      if (applicantService.isEmailInUse(createApplicantDto.getEmail())) {
+//        Map<String, String> response = new HashMap<>();
+//        response.put("message", "Email is already in use.");
+//        response.put("status", "BAD_REQUEST");
+//        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+//      }
+//    }
     createApplicantDto.setEnabled(false);
-    String token = TokenGenerator.generateToken();
-    createApplicantDto.setVerificationToken(token);
-    createApplicantDto.setEnabled(false); // User is disabled until they v
-    // rify
-    // Before adding the applicant, check if the email is already in use
-    // Synchronize on the email or use a unique constraint to prevent race
-    // conditions
-    synchronized (this) {
-      // Before adding the applicant, check if the email is already in use
-      if (applicantService.isEmailInUse(createApplicantDto.getEmail())) {
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Email is already in use.");
-        response.put("status", "BAD_REQUEST");
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-      }
-    }
+    String token = authService.getApplicantEnablementToken(createApplicantDto);
+    createApplicantDto.setEnabled(false);
     Applicant applicant = applicantService.addApplicant(createApplicantDto);
     emailSendWrapper.sendVerificationEmail(applicant.getEmail(), token);
     ResponseApplicantDto responseApplicantDto = mapToResponseApplicantDto(applicant);
     return new ResponseEntity<>(responseApplicantDto, HttpStatus.CREATED);
   }
 
-  @PutMapping("/profile/{id}")
-  public ResponseEntity<ResponseApplicantDto> updateApplicant(@RequestBody UpdateApplicantDto updateApplicantDto,
-                                                              @PathVariable Long id) {
+  @PutMapping("/profile")
+  public ResponseEntity<ResponseApplicantDto> updateApplicant(@RequestBody UpdateApplicantDto updateApplicantDto) {
     // Retrieve authentication details
     System.out.println("In Update!!!");
     String currentUserId = getCurrentUserId();
     System.out.println("Current User Id" + currentUserId);
-    System.out.println("Applicant Id" + id);
-    if (currentUserId == null || !currentUserId.equals(id.toString())) {
-      System.out.println("Failure!");
-      return ResponseEntity.status(HttpStatus.FORBIDDEN).build(); // Prevents access to another user's data
-    }
+//    System.out.println("Applicant Id" + id);
+
 
     System.out.println("going to update applicat service");
     // Proceed with the update if authorized
-    Applicant updatedApplicant = applicantService.updateApplicant(updateApplicantDto, id);
+    Applicant updatedApplicant = applicantService.updateApplicant(updateApplicantDto, Long.valueOf(currentUserId));
     if (updatedApplicant == null) {
       return ResponseEntity.notFound().build();
     }
@@ -146,9 +150,10 @@ public class ApplicantController {
     return details != null ? details.getUserId() : null;
   }
 
-  @DeleteMapping("/profile/{id}")
-  public ResponseEntity<Void> deleteApplicant(@PathVariable Long id) {
-    applicantService.deleteApplicant(id);
+  @DeleteMapping("/profile")
+  public ResponseEntity<Void> deleteApplicant() {
+    String currentUserId = getCurrentUserId();
+    applicantService.deleteApplicant(Long.valueOf(currentUserId));
     return ResponseEntity.noContent().build();
   }
 
@@ -171,9 +176,11 @@ public class ApplicantController {
     return ResponseEntity.ok(responseList);
   }
 
-  @GetMapping("/profile/{id}")
-  public ResponseEntity<ResponseProfileDto> getApplicantProfileById(@PathVariable Long id) {
-    ApplicantProfile applicantProfile = applicantService.findApplicantProfileById(id);
+  @GetMapping("/profile")
+  public ResponseEntity<ResponseProfileDto> getApplicantProfileById() {
+    String currentUserId = getCurrentUserId();
+    System.out.println("in applicant controller get by id" + currentUserId);
+    ApplicantProfile applicantProfile = applicantService.findApplicantProfileById(Long.valueOf(currentUserId));
     if (applicantProfile == null) {
       return ResponseEntity.notFound().build();
     }
@@ -277,31 +284,43 @@ public class ApplicantController {
     return ResponseEntity.ok(responseList);
   }
 
-  @GetMapping("/profile/{applicantId}/saved-jobs")
-  public ResponseEntity<Set<ResponseJobPostDto>> getSavedJobsByApplicantId(@PathVariable Long applicantId) {
-    Set<JobPost> savedJobs = applicantService.findSavedJobsByApplicantId(applicantId);
+  @GetMapping("/profile/saved-jobs")
+  public ResponseEntity<Set<ResponseJobPostDto>> getSavedJobsByApplicantId() {
+    String currentUserId = getCurrentUserId();
+    Set<JobPost> savedJobs = applicantService.findSavedJobsByApplicantId(Long.valueOf(currentUserId));
     Set<ResponseJobPostDto> responseList = savedJobs.stream()
         .map(this::mapToResponseJobPostDto)
         .collect(Collectors.toSet());
     return ResponseEntity.ok(responseList);
   }
 
-  @PutMapping("/profile/{applicantId}/saved-jobs/{jobId}")
-  public ResponseEntity<ResponseApplicantProfileDto> saveJob(@PathVariable Long applicantId, @PathVariable Long jobId) {
-    Applicant applicant = applicantService.findApplicantById(applicantId);
+  @PutMapping("/profile/saved-jobs/{jobId}")
+  public ResponseEntity<ResponseApplicantProfileDto> saveJob(@PathVariable Long jobId) {
+    String currentUserId = getCurrentUserId();
+    Applicant applicant = applicantService.findApplicantById(Long.valueOf(currentUserId));
     JobPost jobPost = jobPostService.getJobPostById(jobId);
     if (applicant == null || jobPost == null) {
       return ResponseEntity.badRequest().build();
     }
     ApplicantProfile applicantProfile = applicant.getProfile();
-    applicantService.addSavedJob(applicantProfile, jobPost);
-
+    applicantService.addSavedJob(applicant, jobPost);
     applicantRepository.save(applicant);
     //return ResponseEntity.ok(mapToResponseProfileDto(applicantProfile));
     return ResponseEntity.ok().build();
   }
 
-
+  @PutMapping("/apply/{jobID}")
+  public ResponseEntity<ResponseJobPostDto> applyForJob(@PathVariable Long jobID) {
+    String currentUserId = getCurrentUserId();
+    JobPost jobPost = jobPostService.getJobPostById(jobID);
+    Applicant applicant = applicantService.findApplicantById(Long.valueOf(currentUserId));
+    if (jobPost == null || applicant == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    JobPost updatedJobPost = jobPostService.addApplicantToJobPost(jobPost, applicant);
+    //return ResponseEntity.ok(responseMapperService.mapToResponseJobPostDto(updatedJobPost));
+    return ResponseEntity.ok().build();
+  }
 
   // TODO: refactor into class
   public ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {

@@ -1,105 +1,51 @@
-"use client";  // Add this directive at the top
+"use client";
 
 import React from 'react';
-import styles from '@/styles/my-jobs.module.css';
-import {getSavedJobs} from "@/lib/api";
-import {useParams} from "next/navigation";
+import { useGetSavedJobs } from "@/lib/api";
 import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
 import Link from "next/link";
 
 const FavoriteJobs: React.FC = () => {
-    const { id } = useParams<{ id: string }>(); // Get the job ID from the route
-    const {ApplicantProfile, isLoading, isError} = getSavedJobs(Number(id));
-    const savedJobs = ApplicantProfile.savedJobs;
-    if (isLoading) return <SkeletonJobDetails/>;
+    const applicantId = typeof window !== 'undefined' && localStorage.getItem('applicantId')
+        ? parseInt(localStorage.getItem('applicantId') as string)
+        : 0;
+
+    const { savedJobs, isLoading, isError } = useGetSavedJobs();
+
+    if (isLoading) return <SkeletonJobDetails />;
     if (isError) return <div>Error loading job details.</div>;
-    if (!savedJobs) return <div>Jobs not found.</div>;
+    if (!savedJobs || savedJobs.length === 0) return <div>No saved jobs found.</div>;
 
     return (
-        <div className={styles.jobListGrid}>
-            {savedJobs.map((jobListing) => (
-                <Link
-                    key={jobListing.id}
-                    href={`http://localhost:3000/post/jobs/${jobListing.id}`}
-                    className={styles.jobBox} // This applies styling to the entire box
-                >
-                    <div>
-                        <h1>{jobListing.title}</h1>
-                        <div className={styles.flexContainer}>
-                            <div className={styles.typeBox}>
-                                <span className={styles.typeText}>{jobListing.type}</span>
-                            </div>
-                            <div className="justify-between">
-                                <p>Location: {jobListing.location.city},{jobListing.location.state},{jobListing.location.country} </p>
-                                <p>Salary: ${jobListing.minSalary.toLocaleString()} - ${jobListing.maxSalary.toLocaleString()}</p>
+        <div className="container mx-auto px-4 py-8">
+            <h1 className="text-3xl font-semibold mb-6">My Saved Jobs</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {savedJobs.map((jobListing) => (
+                    <Link
+                        key={jobListing.id}
+                        href={`/post/jobs/${jobListing.id}`}
+                        className="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
+                    >
+                        <h2 className="text-xl font-bold text-blue-600 mb-2">{jobListing.title}</h2>
+                        <p className="text-gray-600 mb-4">{jobListing.description.slice(0, 100)}</p>
+                        <div className="flex items-center justify-between">
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                                {jobListing.type}
+                            </span>
+                            <div className="text-right">
+                                <p className="text-gray-700">
+                                    {jobListing.location.city}, {jobListing.location.state}, {jobListing.location.country}
+                                </p>
+                                <p className="text-gray-700">
+                                    Salary: ${jobListing.minSalary.toLocaleString()} - ${jobListing.maxSalary.toLocaleString()}
+                                </p>
                             </div>
                         </div>
-                    </div>
-                </Link>
-            ))}
+                    </Link>
+                ))}
+            </div>
         </div>
     );
-    // return (
-    //     <div className={styles.container}>
-    //
-    //         {/* Main Content */}
-    //         <main className={styles.main}>
-    //             <div className={styles.header}>
-    //                 <h2>Favorite Jobs</h2>
-    //                 <div className={styles.filter}>
-    //                     <label htmlFor="jobStatus">Job status:</label>
-    //                     <select
-    //                         id="jobStatus"
-    //                         value={jobStatusFilter}
-    //                         onChange={handleStatusChange}
-    //                     >
-    //                         <option value="all">All Jobs</option>
-    //                         <option value="active">Active</option>
-    //                         <option value="expire">Expired</option>
-    //                     </select>
-    //                 </div>
-    //             </div>
-    //
-    //             {/* Job List */}
-    //             <div className={styles.jobList}>
-    //                 {filteredJobs.map((job) => (
-    //                     <div key={job.id} className={styles.jobRow}>
-    //                         <div className={styles.jobDetails}>
-    //                             <h4>{job.title}</h4>
-    //                             <p>{job.type} &bull; {job.daysRemaining > 0 ? `${job.daysRemaining} days remaining` : 'Expired'}</p>
-    //                         </div>
-    //                         <div className={styles.jobStatus}>
-    //                             {job.status === 'Active' ? (
-    //                                 <span className={styles.activeStatus}>Active</span>
-    //                             ) : (
-    //                                 <span className={styles.expiredStatus}>Expired</span>
-    //                             )}
-    //                         </div>
-    //                         <div className={styles.jobActions}>
-    //                             <button className={styles.viewApplicationsButton}>
-    //                                 View Detail
-    //                             </button>
-    //                             <div className={styles.moreActions}>
-    //                                 <button className={styles.moreActionsButton}>⋮</button>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 ))}
-    //             </div>
-    //
-    //             {/* Pagination */}
-    //             <div className={styles.pagination}>
-    //                 <button>&lt;</button>
-    //                 <button className={styles.active}>01</button>
-    //                 <button>02</button>
-    //                 <button>03</button>
-    //                 <button>04</button>
-    //                 <button>05</button>
-    //                 <button>&gt;</button>
-    //             </div>
-    //         </main>
-    //     </div>
-    // );
 };
 
 export default FavoriteJobs;

@@ -9,6 +9,9 @@ import com.example.jobjays.model.JobPost;
 import com.example.jobjays.repository.ApplicantRepository;
 import jakarta.validation.constraints.Email;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,6 +26,7 @@ public class ApplicantService {
     this.applicantRepository = applicantRepository;
   }
 
+  @Transactional(propagation = Propagation.REQUIRED)
   public Applicant addApplicant(CreateApplicantDto applicant) {
     System.out.println("In service: " );
     Applicant newApplicant = new Applicant(
@@ -43,7 +47,11 @@ public class ApplicantService {
 
     System.out.println("Profile: " + profile.toString());
     System.out.println("Saving applicant: ");
-    return applicantRepository.save(newApplicant);
+    Applicant savedApplicant = applicantRepository.save(newApplicant);
+    applicantRepository.flush();
+    System.out.println("Saved Applicant ID: " + savedApplicant.getID());
+    return savedApplicant;
+//    return applicantRepository.save(newApplicant);
   }
 
   public Applicant findByVerificationToken(String token){
@@ -154,9 +162,12 @@ public class ApplicantService {
     return applicantRepository.findSavedJobsByApplicantId(applicantId);
   }
 
-  public void addSavedJob(ApplicantProfile applicantProfile, JobPost jobPost) {
+  public void addSavedJob(Applicant applicant, JobPost jobPost) {
 //    applicantRepository.findSavedJobsByApplicantId(applicantId).add(jobPost);
+    System.out.println("in add saved job in service!");
+    ApplicantProfile applicantProfile = applicant.getProfile();
     applicantProfile.addSavedJobs(jobPost);
+    applicantRepository.save(applicant);
   }
 //
 //

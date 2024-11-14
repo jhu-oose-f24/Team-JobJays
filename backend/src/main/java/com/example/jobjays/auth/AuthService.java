@@ -78,6 +78,10 @@ public class AuthService {
     return jwtTokenProvider.generateEmployerEnablementToken(createEmployerDto);
   }
 
+  public String getApplicantEnablementToken(CreateApplicantDto createApplicantDto) {
+    return jwtTokenProvider.generateApplicantEnablementToken(createApplicantDto);
+  }
+
 
   //loginUser
 //  public String loginUser(UserLoginDto userLoginDto) {
@@ -104,6 +108,13 @@ public class AuthService {
   public String loginEmployer(Employer employer, String password) {
     if (passwordEncoder.matches(password,employer.getPassword())) {
       return jwtTokenProvider.generateEmployerToken(employer);
+    }
+    return null;
+  }
+
+  public String loginApplicant(Applicant applicant, String password) {
+    if (passwordEncoder.matches(password,applicant.getPassword())) {
+      return jwtTokenProvider.generateApplicantToken(applicant);
     }
     return null;
   }

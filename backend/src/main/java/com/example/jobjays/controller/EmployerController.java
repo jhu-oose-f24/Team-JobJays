@@ -45,7 +45,6 @@ public class EmployerController {
     this.employerService = employerService;
     this.responseMapperService = responseMapperService;
     this.authService = authService;
-
   }
 
   private String getCurrentUserId() {

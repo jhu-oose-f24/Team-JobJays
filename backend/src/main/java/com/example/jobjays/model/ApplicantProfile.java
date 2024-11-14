@@ -90,6 +90,7 @@ public class ApplicantProfile implements Profile {
   }
 
   public void addSavedJobs(JobPost jobPost) {
+    System.out.println("About to addsavedjobs in profile");
     savedJobs.add(jobPost);
   }
 }

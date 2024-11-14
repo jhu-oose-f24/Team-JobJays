@@ -1,6 +1,8 @@
 package com.example.jobjays.auth;
 
+import com.example.jobjays.dto.applicant.CreateApplicantDto;
 import com.example.jobjays.dto.employer.CreateEmployerDto;
+import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.Employer;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -72,6 +74,24 @@ public class JwtTokenProvider {
         .compact();
   }
 
+    public String generateApplicantToken(Applicant applicant) { //add roles to user login, response dtos
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("id", applicant.getID());
+        claims.put("username", applicant.getUsername());
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + 86400000);
+
+        return Jwts.builder()
+                .setSubject(applicant.getUsername())
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+
+
 
 
   public String generateEmployerEnablementToken(CreateEmployerDto createEmployerDto) { //add roles to user login, response dtos
@@ -89,6 +109,23 @@ public class JwtTokenProvider {
         .signWith(getSecretKey(), SignatureAlgorithm.HS256)
         .compact();
   }
+
+    public String generateApplicantEnablementToken(CreateApplicantDto createApplicantDto) { //add roles to user login, response dtos
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("username", createApplicantDto.getUsername());
+        claims.put("email", createApplicantDto.getEmail());
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + 86400000);
+
+        return Jwts.builder()
+                .setSubject(createApplicantDto.getUsername())
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
 
   public Claims getEnablementTokenClaims(String token) {
     return extractAllClaims(token);
@@ -171,9 +208,6 @@ public class JwtTokenProvider {
     Date expiry = claims.getExpiration();
     return expiry.before(new Date());
   }
-
-
-
 
 }
 

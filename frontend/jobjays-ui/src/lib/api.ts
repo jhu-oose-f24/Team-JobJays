@@ -18,22 +18,6 @@ export const fetcher = (url: string) => {
     }).then((res) => res.json());
 };
 
-// const fetchWithAuth = (url: string) => {
-//     const token = localStorage.getItem("token"); // Or wherever you store your token
-//     return fetch(url, {
-//         method: 'GET',
-//         headers: {
-//             'Authorization': `Bearer ${token}`,
-//             'Content-Type': 'application/json',
-//         },
-//     }).then(res => {
-//         if (!res.ok) {
-//             throw new Error('Network response was not ok');
-//         }
-//         return res.json();
-//     });
-// };
-
 
 
 // Function to calculate days remaining until the job post is closed
@@ -60,9 +44,9 @@ export function addJobAttributes(job: JobPost): JobPost {
 }
 
 // Hook to fetch the ApplicantProfile
-export function useApplicant(applicantId: number) {
-    applicantId = localStorage.getItem('applicantId') ? parseInt(localStorage.getItem('applicantId') as string) : 0;
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/profile/${applicantId}`, fetcher);
+export function useApplicant() {
+    console.log("In use applicant");
+    const { data, error, isLoading } = useSWR("http://localhost:8080/api/applicants/profile", fetcher);
 
     return {
         applicantProfile: data as ApplicantProfile,
@@ -226,13 +210,13 @@ export const updateJobPost = async (
 }
 
 export const applyToJob = async (
-    applicantId: number,
-    id: number,
+    id: number
 ) => {
-
-    const response = await fetch(`http://localhost:8080/api/apply/${id}/${applicantId}`, {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`http://localhost:8080/api/applicants/apply/${id}`, {
         method: 'PUT',
         headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
     });
@@ -274,10 +258,12 @@ export const addImpressionEvent = async (id: number) => {
 }
 
 //add a job to Saved
-export const saveJob = async (applicantId: number, jobId:number) => {
-    const response = await fetch(`http://localhost:8080/api/applicants/profile/${applicantId}/saved-jobs/${jobId}`, {
+export const saveJob = async (jobId:number) => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`http://localhost:8080/api/applicants/profile/saved-jobs/${jobId}`, {
         method: 'PUT',
         headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
     });
@@ -307,6 +293,26 @@ export function getSavedJobs(applicantId:number) {
         ApplicantProfile: processedApplicantProfile as ApplicantProfile,
         isLoading,
         isError: error
+    };
+
+
+}
+
+export function useGetSavedJobs() {
+    const { data, error, isLoading } = useSWR(
+        `http://localhost:8080/api/applicants/profile/saved-jobs`,
+        fetcher
+    );
+
+    // Process the data
+    const savedJobs = data
+        ? data.map((job: JobPost) => addJobAttributes(job))
+        : [];
+
+    return {
+        savedJobs,
+        isLoading,
+        isError: error,
     };
 }
 

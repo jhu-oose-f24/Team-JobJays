@@ -47,8 +47,9 @@ const JobDetails = () => {
     }
 
     const handleApply = async () => {
-        const applicantId = 1; //TODO replace hardcoded 1 with actual applicant id
-        const result = await applyToJob(Number(id), applicantId);
+        console.log("Hello", id);
+        //const applicantId = 1; //TODO replace hardcoded 1 with actual applicant id
+        const result = await applyToJob(Number(id));
         if (result.success) {
             toast({
                 title: "Success",
@@ -65,9 +66,7 @@ const JobDetails = () => {
     }
 
     const handleSave = async () => {
-        const applicantId = 802; //TODO replace hardcoded  with actual applicant id
-
-        const result = await saveJob(applicantId, Number(id));
+        const result = await saveJob(Number(id));
         if (result.success) {
             toast({
                 title: "Success",
@@ -116,7 +115,7 @@ const JobDetails = () => {
                     {/*)}*/}
                     <div className="flex flex-col space-y-2">
                         <button onClick={handleApply}
-                            className="px-4 py-2 bg-blue-400 text-white rounded-md">Apply Now</button>
+                                className="px-4 py-2 bg-blue-400 text-white rounded-md">Apply Now</button>
                         <Dialog modal={false} open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
                                 <Button onClick={() => setOpen(true)}
@@ -183,4 +182,3 @@ const JobDetails = () => {
 
 };
 export default JobDetails;
-

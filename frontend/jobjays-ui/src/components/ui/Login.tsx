@@ -99,25 +99,36 @@ export default function Login() {
         })
       });
 
-
       if (response.ok) {
         console.log(response);
-        const applicantData = await response.json();
-        console.log(applicantData);
-        const applicantId = applicantData.applicantId;
-        // alert("Sign in successful!");
+        console.log("hello!!!!!");
+        const contentType = response.headers.get("content-type");
+        let applicantData;
+        if (contentType && contentType.includes("application/json")) {
+          applicantData = await response.json();
+        } else {
+          applicantData = { token: await response.text() }; // wrap the token in an object
+        }
+
+        console.log("hello!!!!!");
+        const token = applicantData.token;
+
+        // Display a success message
         toast({
           title: "Success",
           description: "Sign in successful!",
           variant: "default",
         });
-        // so we can retrieve it for other pages - but not good approach
-        localStorage.setItem("applicantId", applicantId);
-        router.push(`candidate/dashboard`); // redirect to new user's dashboard
+
+        // Store the token in localStorage
+        localStorage.setItem("token", token);
+
+        // Redirect to the dashboard
+        router.push(`candidate/dashboard`);
       } else {
         const errorData = await response.json();
 
-        if (response.status == 404) {
+        if (response.status === 404) {
           alert("Invalid username or password");
         }
         console.log(`Error: ${errorData.failReason}`);
@@ -126,6 +137,7 @@ export default function Login() {
       alert(`An error occurred: ${error}`);
     }
   };
+
 
 
 

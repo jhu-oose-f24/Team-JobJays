@@ -177,18 +177,7 @@ public class JobPostController {
     return ResponseEntity.ok(responseApplicants);
   }
 
-  @PutMapping("/apply/{jobID}/{applicantId}")
-  public ResponseEntity<ResponseJobPostDto> applyForJob(@PathVariable Long jobID, @PathVariable Long applicantId) {
-    JobPost jobPost = jobPostService.getJobPostById(jobID);
-    Applicant applicant = applicantService.findApplicantById(applicantId);
-    if (jobPost == null || applicant == null) {
-      return ResponseEntity.badRequest().build();
-    }
-    JobPost updatedJobPost = jobPostService.addApplicantToJobPost(jobPost, applicant);
-    //return ResponseEntity.ok(responseMapperService.mapToResponseJobPostDto(updatedJobPost));
-    return ResponseEntity.ok().build();
 
-  }
 
 
   ResponseApplicantProfileDto mapToResponseProfileDto(ApplicantProfile profile) {

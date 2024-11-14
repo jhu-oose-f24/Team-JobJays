@@ -1,90 +1,64 @@
-"use client";  // Add this directive at the top
+"use client";
 
-import React, { useState } from 'react';
-import styles from '@/styles/my-jobs.module.css';
+import React from 'react';
+import { useApplicant, addJobAttributes } from "@/lib/api";
+import Link from 'next/link';
 
 const AppliedJobs: React.FC = () => {
-    const [jobStatusFilter, setJobStatusFilter] = useState('all');
-    const [jobs] = useState([
-        {
-            id: 1,
-            title: 'UI/UX Designer',
-            type: 'Full Time',
-            status: 'Active',
-        },
-        {
-            id: 2,
-            title: 'Senior UX Designer',
-            type: 'Internship',
-            status: 'Active',
-        },
-        {
-            id: 3,
-            title: 'Junior Graphic Designer',
-            type: 'Full Time',
-            status: 'Active',
-        },
-        {
-            id: 5,
-            title: 'Technical Support Specialist',
-            type: 'Part Time',
-            status: 'Active',
-        },
-        // Add more job objects as needed
-    ]);
+    // Retrieve applicantId from localStorage
 
-    const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setJobStatusFilter(event.target.value);
-    };
+    // Fetch applicant profile
+    const { applicantProfile, isLoading, isError } = useApplicant();
 
-    const filteredJobs = jobs.filter((job) =>
-        jobStatusFilter === 'all' ? true : job.status.toLowerCase() === jobStatusFilter
-    );
+    // Handle loading and error states
+    if (isLoading) return <div>Loading...</div>;
+    if (isError) return <div>Error loading applicant data.</div>;
+    if (!applicantProfile) return <div>No applicant profile found.</div>;
 
-    const handleActionClick = (jobId: number, action: string) => {
-        console.log(`Job ${jobId} action: ${action}`);
-    };
+    const appliedJobs = applicantProfile.appliedJobs || [];
+
+    // Handle case when no applied jobs
+    if (appliedJobs.length === 0) {
+        return <div>You have not applied to any jobs yet.</div>;
+    }
+
+    // Process applied jobs to add additional attributes
+    const processedAppliedJobs = appliedJobs.map((job) => addJobAttributes(job));
 
     return (
-        <div className={styles.container}>
-
-            {/* Main Content */}
-            <main className={styles.main}>
-                <div className={styles.header}>
-                    <h2>Applied Jobs</h2>
-                </div>
-
-                {/* Job List */}
-                <div className={styles.jobList}>
-                    {filteredJobs.map((job) => (
-                        <div key={job.id} className={styles.jobRow}>
-                            <div className={styles.jobDetails}>
-                                <h4>{job.title}</h4>
-                                <p>{job.type}</p>
-                            </div>
-                            <div className={styles.jobStatus}>
-                                    <span className={styles.activeStatus}>Active</span>
-                            </div>
-                            <div className={styles.jobActions}>
-                                <button className={styles.viewApplicationsButton}>
-                                    View Details
-                                </button>
+        <div className="container mx-auto px-4 py-8">
+            <h2 className="text-3xl font-semibold mb-6">Applied Jobs</h2>
+            {/* Job List */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {processedAppliedJobs.map((job) => (
+                    <Link
+                        key={job.id}
+                        href={`/post/jobs/${job.id}`}
+                        className="block p-6 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200"
+                    >
+                        {/* Job Title */}
+                        <h2 className="text-xl font-bold text-blue-600 mb-2">{job.title}</h2>
+                        {/* Job Description Preview */}
+                        <p className="text-gray-600 mb-4">{job.description.slice(0, 100)}</p>
+                        {/* Job Details */}
+                        <div className="flex items-center justify-between">
+                            {/* Job Type Bubble */}
+                            <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
+                                {job.type}
+                            </span>
+                            {/* Location and Salary */}
+                            <div className="text-right">
+                                <p className="text-gray-700">
+                                    {job.location.city}, {job.location.state}, {job.location.country}
+                                </p>
+                                <p className="text-gray-700">
+                                    Salary: ${job.minSalary.toLocaleString()} - ${job.maxSalary.toLocaleString()}
+                                </p>
                             </div>
                         </div>
-                    ))}
-                </div>
-
-                {/* Pagination */}
-                <div className={styles.pagination}>
-                    <button>&lt;</button>
-                    <button className={styles.active}>01</button>
-                    <button>02</button>
-                    <button>03</button>
-                    <button>04</button>
-                    <button>05</button>
-                    <button>&gt;</button>
-                </div>
-            </main>
+                    </Link>
+                ))}
+            </div>
         </div>
     );
 };
