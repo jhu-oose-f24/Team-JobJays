@@ -37,7 +37,7 @@ export default function Login() {
     console.log(formData);
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/employer", {
+      const response = await fetch("http://74.179.58.106:8080/api/auth/employer", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
