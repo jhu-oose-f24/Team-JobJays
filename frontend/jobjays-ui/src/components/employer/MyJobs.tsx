@@ -3,7 +3,7 @@
 import React, {useEffect, useState } from 'react';
 import styles from '@/styles/my-jobs.module.css';
 import {EmployerProfile, JobPost} from "@/lib/types";
-import {addJobAttributes, useUser} from '@/lib/api';
+import {addJobAttributes, useEmployer} from '@/lib/api';
 import { useParams } from 'next/navigation';
 import Link from "next/link";
 import {useRouter} from "next/navigation";
@@ -12,7 +12,7 @@ import SkeletonMyJobs from "@/components/employer/SkeletonMyJobs";
 
 const MyJobs: React.FC = () => {
     const { employerId } = useParams<{employerId:string;}>();
-    const { EmployerProfile, isLoading, isError} = useUser(Number(employerId));
+    const { EmployerProfile, isLoading, isError} = useEmployer(Number(employerId));
     const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
     const router = useRouter();
 
