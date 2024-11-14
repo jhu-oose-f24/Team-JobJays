@@ -9,7 +9,6 @@ import JobForm from "@/components/employer/JobForm";
 import { ArrowLeft, Building2 } from "lucide-react";
 
 const PostJob = () => {
-  const { employerId } = useParams<{ employerId: string }>();
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -20,7 +19,7 @@ const PostJob = () => {
       //We need to send the filteredData with proper attributes to backend for now until we have type in backend
       //JobPost.type = data.type;
 
-      const result = await createJobPost(Number(employerId), data);
+      const result = await createJobPost(data);
       if (result.success) {
         setOpen(false);
         console.log(result.data.id)
@@ -34,9 +33,9 @@ const PostJob = () => {
           duration: 2000,
         });
 
-        setTimeout(() => {
-          router.push(`/post/jobs/${result.data.id}`);
-        }, 2000);
+        // setTimeout(() => {
+        //   router.push(`/post/jobs/${result.data.id}`);
+        // }, 2000);
       } else {
         Object.entries(result.error).forEach(([field, message]) => {
           toast({
@@ -50,7 +49,7 @@ const PostJob = () => {
     catch (error) {
       toast({
         title: "Error",
-        description: "Something went wrong. Please try again.",
+        description: "Something went wrong. Please try again. Error: " + error,
         variant: "destructive",
       });
     }

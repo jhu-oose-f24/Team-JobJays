@@ -11,4 +11,5 @@ public interface User {
   String getToken();
   Profile getProfile();
   Long getID();
+  Boolean setEnabled(Boolean enabled);
 }

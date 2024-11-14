@@ -1,9 +1,11 @@
 package com.example.jobjays.dto.jobPost;
 
 import com.example.jobjays.model.Location;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 public class ResponseJobPostDto {
   public Long id;
   public String companyName;

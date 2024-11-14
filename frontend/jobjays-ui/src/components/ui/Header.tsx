@@ -135,7 +135,7 @@ export default function Header() {
           <div className="flex gap-4 font-[family-name:var(--font-geist-sans)]">
               <button className="px-4 py-2 border rounded-md" onClick={() => router.push('/signup')}>Sign Up</button>
               <button className="px-4 py-2 bg-blue-400 text-white rounded-md"
-                      onClick={() => router.push('http://localhost:3000/signin')}>Log In
+                      onClick={() => router.push('/signin')}>Log In
               </button>
           </div>
       </header>

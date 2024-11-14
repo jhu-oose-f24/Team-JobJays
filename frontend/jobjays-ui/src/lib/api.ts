@@ -1,9 +1,23 @@
-
 import useSWR from 'swr' ;
 import {Applicant, ApplicantProfile, Employer, EmployerProfile, JobPost} from './types'; // Ensure you have the correct types for your data
 
 // Fetcher function
-export const fetcher = (url: string) => fetch(url).then((res) => res.json());
+export const fetcher = (url: string) => {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    // const headersTest = new Headers();
+    // headersTest.set("Authorization", `Bea`)
+
+    const headers = {
+        "Authorization": `Bearer ${token}`
+    };
+    console.log("Headers being sent:", headers);
+    return fetch(url, {
+        method: "GET",
+        headers: headers,
+    }).then((res) => res.json());
+};
+
+
 
 // Function to calculate days remaining until the job post is closed
 export function calculateDaysRemaining(endDate: string): number {
@@ -29,12 +43,10 @@ export function addJobAttributes(job: JobPost): JobPost {
 }
 
 // Hook to fetch the ApplicantProfile
-export function useApplicant(applicantId: number) {
-    const isBrowser = typeof window !== "undefined";
-    if (isBrowser) {
-        applicantId = localStorage.getItem('applicantId') ? parseInt(localStorage.getItem('applicantId') as string) : 0;
-    }
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/profile/${applicantId}`, fetcher);
+export function useApplicant() {
+    console.log("In use applicant");
+    const { data, error, isLoading } = useSWR("http://localhost:8080/api/applicants/profile", fetcher);
+
 
     return {
         applicantProfile: data as ApplicantProfile,
@@ -44,9 +56,9 @@ export function useApplicant(applicantId: number) {
 }
 
 // Hook to fetch the EmployerProfile and process job posts
-export function useEmployer(employerId: number) {
+export function useEmployer() {
     // employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0;
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile/${employerId}`, fetcher);
+    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile`, fetcher);
 
     // Process job posts if data is available
     const processedEmployerProfile = data && data.jobPosts ? {
@@ -134,42 +146,51 @@ export function fetchAllCompanies() {
 
 
 export const createJobPost = async (
-    employerId: number,
     jobData: any,
 ) => {
-    const isBrowser = typeof window !== "undefined";
-    if (isBrowser) {
-        employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0;
-    }
-    const response = await fetch(`http://localhost:8080/api/companies/profile/${employerId}/post`, {
+
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": 'application/json',
+    };
+    const response = await fetch(`http://localhost:8080/api/companies/profile/post`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: headers,
         body: JSON.stringify(jobData),
     });
+
+    // const headersTest = new Headers();
+    // headersTest.set("Authorization", `Bea`)
+
+    console.log("in create job post");
     if (!response.ok) {
+        // console.log("Response Content-Type:", response.headers.get('content-type'));
         const error = await response.json();
-        // console.log(error);
+        // console.log(error)
+
         return { success: false, error };
     }
+    // console.log(response.json())
     const data = await response.json();
     return {success: true, data: data};
 }
 
 export const updateJobPost = async (
     id: number,
-    employer_id: number,
     updatedData: any,
     mutate:any,
     jobPost:JobPost
 ) => {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": 'application/json',
+    };
     try {
-        const response = await fetch(`http://localhost:8080/api/companies/profile/${employer_id}/post/${id}`, { //TODO replace hardcoded 1 with employer id from state managed employer
+        const response = await fetch(`http://localhost:8080/api/companies/profile/post/${id}`, {
             method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(updatedData),
         });
         if (response.ok) {
@@ -189,13 +210,13 @@ export const updateJobPost = async (
 }
 
 export const applyToJob = async (
-    applicantId: number,
-    id: number,
+    id: number
 ) => {
-
-    const response = await fetch(`http://localhost:8080/api/apply/${id}/${applicantId}`, {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`http://localhost:8080/api/applicants/apply/${id}`, {
         method: 'PUT',
         headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
     });
@@ -208,19 +229,16 @@ export const applyToJob = async (
     return { success: true };
 }
 
-export const incrementJobPostView = async (id: number) => {
-    // const response = await fetch(`http://localhost:8080/api/posts/jobs/${id}/increment-view`, {
-    //     method: 'POST',
-    // });
-    // if (!response.ok) {
-    //     const error = await response.json();
-    //     console.log(error);
-    //     return { success: false, error };
-    // }
-    // return { success: true };
+export const addImpressionEvent = async (id: number) => {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": 'application/json',
+    };
     try {
-        const response = await fetch(`http://localhost:8080/api//api/job-posts/${id}/increment-view`, {
+        const response = await fetch(`http://localhost:8080/api/metrics/impressions/${id}`, {
             method: 'POST',
+            headers: headers
         });
         if (!response.ok) {
            console.error(`Error incrementing view count: ${response.statusText}`);
@@ -231,10 +249,12 @@ export const incrementJobPostView = async (id: number) => {
 }
 
 //add a job to Saved
-export const saveJob = async (applicantId: number, jobId:number) => {
-    const response = await fetch(`http://localhost:8080/api/applicants/profile/${applicantId}/saved-jobs/${jobId}`, {
+export const saveJob = async (jobId:number) => {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`http://localhost:8080/api/applicants/profile/saved-jobs/${jobId}`, {
         method: 'PUT',
         headers: {
+            'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
     });
@@ -265,6 +285,30 @@ export function getSavedJobs(applicantId:number) {
         isLoading,
         isError: error
     };
+
+
+}
+
+export function useGetSavedJobs() {
+    const { data, error, isLoading } = useSWR(
+        `http://localhost:8080/api/applicants/profile/saved-jobs`,
+        fetcher
+    );
+
+    // Process the data
+    const savedJobs = data
+        ? data.map((job: JobPost) => addJobAttributes(job))
+        : [];
+
+    return {
+        savedJobs,
+        isLoading,
+        isError: error,
+    };
+}
+
+export function logout() {
+    localStorage.removeItem("token");
 }
 
 

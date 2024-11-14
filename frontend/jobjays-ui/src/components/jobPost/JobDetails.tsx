@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog"
 import {useToast} from "@/hooks/use-toast";
 import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
-import { JobPost } from '@/lib/types';
 
 
 import { Button } from "@/components/ui/button"
@@ -27,12 +26,10 @@ const JobDetails = () => {
     const { toast } = useToast();
 
     const  handleJobFormSubmit = async (data: any) => {
-
         //We need to send the filteredData with proper attributes to backend for now until we have type in backend
         const {jobType, ...filteredData} = data;
         JobPost.type = data.type;
-        const employer_id = 1; //TODO replace hardcoded 1 with employer id from state managed employer
-        const result = await updateJobPost(Number(id), employer_id, filteredData, mutate, data);
+        const result = await updateJobPost(Number(id), filteredData, mutate, data);
         if (result.success) {
             setOpen(false);
             toast({
@@ -50,8 +47,9 @@ const JobDetails = () => {
     }
 
     const handleApply = async () => {
-        const applicantId = 1; //TODO replace hardcoded 1 with actual applicant id
-        const result = await applyToJob(Number(id), applicantId);
+        console.log("Hello", id);
+        //const applicantId = 1; //TODO replace hardcoded 1 with actual applicant id
+        const result = await applyToJob(Number(id));
         if (result.success) {
             toast({
                 title: "Success",
@@ -68,9 +66,7 @@ const JobDetails = () => {
     }
 
     const handleSave = async () => {
-        const applicantId = 802; //TODO replace hardcoded  with actual applicant id
-
-        const result = await saveJob(applicantId, Number(id));
+        const result = await saveJob(Number(id));
         if (result.success) {
             toast({
                 title: "Success",
@@ -119,7 +115,7 @@ const JobDetails = () => {
                     {/*)}*/}
                     <div className="flex flex-col space-y-2">
                         <button onClick={handleApply}
-                            className="px-4 py-2 bg-blue-400 text-white rounded-md">Apply Now</button>
+                                className="px-4 py-2 bg-blue-400 text-white rounded-md">Apply Now</button>
                         <Dialog modal={false} open={open} onOpenChange={setOpen}>
                             <DialogTrigger asChild>
                                 <Button onClick={() => setOpen(true)}
@@ -186,4 +182,3 @@ const JobDetails = () => {
 
 };
 export default JobDetails;
-

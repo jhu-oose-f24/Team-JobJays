@@ -155,6 +155,9 @@ To run the backend, navigate to the `backend` directory and run the following co
 
 It should be running on port 8080
 
+#Front-End Deployment
+URL_Link:https://jobjays-460j77ru6-samuel-muzacs-projects.vercel.app 
+
 ## Frontend
 run the commands:
 ```pnpm install```

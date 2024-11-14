@@ -13,6 +13,8 @@ import java.util.Set;
 @Repository
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
+  Applicant findByUsername(String username);
+
   List<Applicant> findAllByUsernameContainingIgnoreCase(String name);
 
   @Query("select a from Applicant a where upper(a.profile.name) like upper(concat('%', :name, '%'))")
@@ -21,13 +23,7 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
   Applicant findByUsernameIsIgnoreCase(String username);
 
   Applicant findByToken(String token);
-  // TODO CREATE A JOB APPLICATION REPOSITORY
 
-  // @Query("select sj from JobPost sj where :applicantID MEMBER of
-  // sj.applicants")
-  // Set<JobPost> findSavedJobsByApplicantId(Long applicantId);
-  // Optional<JobPost> findJobPostByApplicantIdandJobId(Long applicantId, Long
-  // jobPostId);
   @Query("select a.profile.savedJobs from Applicant a where a.applicantId = :applicantId")
   Set<JobPost> findSavedJobsByApplicantId(Long applicantId);
 

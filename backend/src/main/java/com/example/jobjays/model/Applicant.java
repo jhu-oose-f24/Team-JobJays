@@ -1,12 +1,12 @@
 package com.example.jobjays.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.ToString;
 
 
 @Entity
-public class Applicant implements User {
+@ToString
+public class Applicant implements User  {
 
   private String username;
   @Column(insertable=false, updatable=false)
@@ -62,9 +62,8 @@ public class Applicant implements User {
     return this.username;
   }
 
-  public String setUsername(String username) {
+  public void setUsername(String username) {
     this.username = username;
-    return username;
   }
 
   public Boolean getEnabled() {
@@ -90,9 +89,8 @@ public class Applicant implements User {
     return this.password;
   }
 
-  public String setPassword(String password) {
+  public void setPassword(String password) {
     this.password = password;
-    return password;
   }
 
 
