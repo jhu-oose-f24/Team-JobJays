@@ -1,4 +1,3 @@
-
 import useSWR from 'swr' ;
 import {Applicant, ApplicantProfile, Employer, EmployerProfile, JobPost} from './types'; // Ensure you have the correct types for your data
 
@@ -231,15 +230,6 @@ export const applyToJob = async (
 }
 
 export const addImpressionEvent = async (id: number) => {
-    // const response = await fetch(`http://localhost:8080/api/posts/jobs/${id}/increment-view`, {
-    //     method: 'POST',
-    // });
-    // if (!response.ok) {
-    //     const error = await response.json();
-    //     console.log(error);
-    //     return { success: false, error };
-    // }
-    // return { success: true };
     const token = localStorage.getItem("token"); // Retrieve token from localStorage
     const headers = {
         "Authorization": `Bearer ${token}`,
@@ -315,6 +305,10 @@ export function useGetSavedJobs() {
         isLoading,
         isError: error,
     };
+}
+
+export function logout() {
+    localStorage.removeItem("token");
 }
 
 

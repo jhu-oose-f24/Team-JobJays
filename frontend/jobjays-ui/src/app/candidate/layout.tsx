@@ -1,24 +1,23 @@
 'use client';
 import React from 'react';
 import Link from "next/link";
-import {useParams, useRouter} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {
-    LayoutDashboard,
     UserCircle,
     Briefcase,
     BookmarkPlus,
-    Users,
     ChevronLeft,
     LogOut,
     Eye,
     Brain
 } from "lucide-react";
+import {logout} from "@/lib/api";
 
 const CandidateLayout = ({ children }: { children: React.ReactNode }) => {
-    const { employerId } = useParams();
     const router = useRouter();
-    const applicantId = localStorage.getItem('applicantId') ? parseInt(localStorage.getItem('applicantId') as string) : 0;
     const [collapsed, setCollapsed] = React.useState(false);
+
+
 
     const navItems = [
         // {
@@ -110,7 +109,7 @@ const CandidateLayout = ({ children }: { children: React.ReactNode }) => {
                 {/* Footer */}
                 <div className="p-4 border-t border-gray-200">
                     <button className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors w-full" onClick={() => {
-                        localStorage.removeItem("token");
+                        logout();
                         router.push("/signin");
                     }}>
                         <LogOut className="w-5 h-5" />
