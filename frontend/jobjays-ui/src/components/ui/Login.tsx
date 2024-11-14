@@ -124,7 +124,7 @@ export default function Login() {
         localStorage.setItem("token", token);
 
         // Redirect to the dashboard
-        router.push(`candidate/dashboard`);
+        router.push(`candidate/profile`);
       } else {
         const errorData = await response.json();
 

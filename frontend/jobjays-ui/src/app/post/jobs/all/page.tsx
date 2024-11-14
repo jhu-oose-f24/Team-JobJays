@@ -1,21 +1,13 @@
-"use client";
-import ListJob from "@/components/jobPost/ListJob";
-import Header from "@/components/ui/Header";
-import RelatedJobs from "@/components/jobPost/RelatedJobs";
-import {useSearchParams} from "next/navigation";
-import ListCompany from "@/components/employer/ListCompany";
+import {Suspense} from "react";
+import Search from "@/components/ui/Search";
 
-    const ListJobPage = () => {
-        const searchParams = useSearchParams();
-        const query = searchParams.get("query") || "" || "JOBS" || "EMPLOYERS" || "CANDIDATES";
+const ListJobPage = () => {
+
         return (
         <>
-            <Header />
-            <div className={"py-4"}>
-                <ListCompany query={query} />
-                <ListJob query={query} />
-                <RelatedJobs/>
-            </div>
+            <Suspense fallback={<div>Loading...</div>}>
+                <Search />
+            </Suspense>
         </>
         );
     };
