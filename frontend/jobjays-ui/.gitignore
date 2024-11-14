@@ -15,7 +15,6 @@
 
 # production
 /build
-pnpm-lock.yaml
 
 # Ignore target directory where build files are stored
 /target/
