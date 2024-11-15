@@ -2,8 +2,8 @@ package org.example.applicant_matcher.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.applicant_matcher.dto.JobDTO;
 import org.example.applicant_matcher.dto.ApplicantPreferenceDTO;
+import org.example.applicant_matcher.dto.MatchDTO;
 import org.example.applicant_matcher.kafka.MatchedJobPublisher;
-import org.example.applicant_matcher.service.PreferencesStreamService;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class JobCompanyMatcherService {
             System.out.println("Consumed new job post: " + jobPost.getTitle());
 
             Map<String, ApplicantPreferenceDTO> preferences = preferencesStreamService.getAllPreferences();
-            List<ApplicantPreferenceDTO> matchedApplicants = matchJobToApplicants(jobPost, preferences);
+            List<MatchDTO> matchedApplicants = matchJobToApplicants(jobPost, preferences);
 
             if (!matchedApplicants.isEmpty()) {
                 matchedJobPublisher.publishMatchedApplicantToCompany(jobPost, matchedApplicants);
@@ -44,27 +44,54 @@ public class JobCompanyMatcherService {
             System.err.println("Failed to process job post: " + message);
         }
     }
-
-    private List<ApplicantPreferenceDTO> matchJobToApplicants(JobDTO jobPost, Map<String, ApplicantPreferenceDTO> preferences) {
-        List<ApplicantPreferenceDTO> matchedApplicants = new ArrayList<>();
+    private List<MatchDTO> matchJobToApplicants(JobDTO jobPost, Map<String, ApplicantPreferenceDTO> preferences) {
+        List<MatchDTO> matchedApplicants = new ArrayList<>();
 
         for (Map.Entry<String, ApplicantPreferenceDTO> entry : preferences.entrySet()) {
             ApplicantPreferenceDTO preference = entry.getValue();
             double matchPercentage = calculateSkillMatchPercentage(jobPost.getSkillsRequired(), preference.getSkills());
 
+            // 只有当匹配度达到或超过 60% 时，才将候选人添加到匹配列表中
             if (matchPercentage >= 60.0) {
-                matchedApplicants.add(preference);
+                MatchDTO match = new MatchDTO(
+                        jobPost.getJobId(),
+                        entry.getKey(), // applicantId
+                        matchPercentage,
+                        jobPost.getTitle(),
+                        jobPost.getEmployerName(),
+                        preference.getEmail(),
+                        preference.getName(),
+                        jobPost.getEmployerEmail()
+                );
+                matchedApplicants.add(match);
             }
         }
 
         return matchedApplicants;
     }
 
+//
+//    private List<ApplicantPreferenceDTO> matchJobToApplicants(JobDTO jobPost, Map<String, ApplicantPreferenceDTO> preferences) {
+//        List<ApplicantPreferenceDTO> matchedApplicants = new ArrayList<>();
+//
+//        for (Map.Entry<String, ApplicantPreferenceDTO> entry : preferences.entrySet()) {
+//            ApplicantPreferenceDTO preference = entry.getValue();
+//            double matchPercentage = calculateSkillMatchPercentage(jobPost.getSkillsRequired(), preference.getSkills());
+//
+//            if (matchPercentage >= 60.0) {
+//                matchedApplicants.add(preference);
+//            }
+//        }
+//
+//        return matchedApplicants;
+//    }
+
+
+
     private double calculateSkillMatchPercentage(List<String> requiredSkills, List<String> applicantSkills) {
         long matchingSkillsCount = requiredSkills.stream()
                 .filter(applicantSkills::contains)
                 .count();
-        //System.out.println("在计算！！！！！！！！！！！在计算！！！！！！在计算！！！！！！！！！！！在计算！！！！！！在计算！！！！！！！！！！！在计算！！！！！！在计算！！！！！！！！！！！在计算！！！！！！在计算！！！！！！！！！！！在计算！！！！！！在计算！！！！！！！！！！！在计算！！！！！！在计算！！！！！！！！！！！在计算！！！！！！在计算！！！！！！！！！！！在计算！！！！！！在计算！！！！！！！！！！！在计算！！！！！！");
         return (double) matchingSkillsCount / requiredSkills.size() * 100;
     }
 }

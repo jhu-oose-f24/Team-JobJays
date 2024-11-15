@@ -3,6 +3,7 @@ package org.example.applicant_matcher.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.applicant_matcher.dto.CompanyNotificationDTO;
 import org.example.applicant_matcher.dto.ApplicantPreferenceDTO;
+import org.example.applicant_matcher.dto.MatchDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.mail.SimpleMailMessage;
@@ -44,9 +45,9 @@ public class CompanyNotificationService {
 
     private String generateEmailContent(CompanyNotificationDTO notification) {
         StringBuilder content = new StringBuilder("The following applicants matched your job: " + notification.getJobTitle() + "\n\n");
-        for (ApplicantPreferenceDTO applicant : notification.getMatchedApplicants()) {
-            content.append("Name: ").append(applicant.getName())
-                    .append(", Email: ").append(applicant.getEmail()).append("\n");
+        for (MatchDTO applicant : notification.getMatchedApplicants()) {
+            content.append("Name: ").append(applicant.getApplicantName())
+                    .append(", Email: ").append(applicant.getApplicantEmail()).append("\n");
         }
         return content.toString();
     }
