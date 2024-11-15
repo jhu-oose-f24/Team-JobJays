@@ -2,9 +2,12 @@ package com.example.jobjays.dto.jobPost;
 
 import com.example.jobjays.model.Location;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
+@Getter
 public class UpdateJobPostDto {
 
 
@@ -21,32 +24,19 @@ public class UpdateJobPostDto {
   Double maxSalary;
 
   @Future
-  LocalDateTime closedDate; // Needs to be converted to LocalDateTime on frontend before passed
+  LocalDateTime closedDate;
+
+  String jobType;
+
+  String industry;
+
+  String workTiming;
+
+  List<String> tags;
+
+  List<String> skillsRequired;
 
 
-  public String getTitle() {
-    return title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public Location getLocation() {
-    return location;
-  }
-
-  public Double getMinSalary() {
-    return minSalary;
-  }
-
-  public Double getMaxSalary() {
-    return maxSalary;
-  }
-
-  public LocalDateTime getClosedDate() {
-    return closedDate;
-  }
 
 
 

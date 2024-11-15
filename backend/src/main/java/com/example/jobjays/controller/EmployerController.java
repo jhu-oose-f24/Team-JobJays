@@ -18,6 +18,7 @@ import com.example.jobjays.model.JobPost;
 import com.example.jobjays.service.EmployerService;
 import com.example.jobjays.service.ResponseMapperService;
 import com.example.jobjays.wrapper.EmailSendWrapper;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -83,27 +84,27 @@ public class EmployerController {
 
   //THE SAME AS REGISTERING
   @PostMapping("/register")
-  public ResponseEntity<ResponseEmployerDto> addEmployer(@RequestBody CreateEmployerDto createEmployerDto) {
+  public ResponseEntity<ResponseEmployerDto> addEmployer(@Valid @RequestBody CreateEmployerDto createEmployerDto) {
     createEmployerDto.setEnabled(false);
     String token = authService.getEmployerEnablementToken(createEmployerDto);
     createEmployerDto.setEnabled(false); // User is disabled until they verify
 
     Employer employer = employerService.addEmployer(createEmployerDto);
     emailSendWrapper.sendVerificationEmailForEmployer(employer.getEmail(), token);
-    ResponseEmployerDto responseEmployerDto = mapToResponseEmployerDto(employer);
+    ResponseEmployerDto responseEmployerDto = responseMapperService.mapToResponseEmployerDto(employer);
     return new ResponseEntity<>(responseEmployerDto, HttpStatus.CREATED);
   }
 
   //REQUIRES USER TO BE SIGNED
   //REQUIRES USER TO BE OWNER OF THE PROFILE
   @PutMapping("/profile")
-  public ResponseEntity<ResponseEmployerDto> updateEmployer(@RequestBody UpdateEmployerDto updateEmployerDto) {
+  public ResponseEntity<ResponseEmployerDto> updateEmployer(@Valid @RequestBody UpdateEmployerDto updateEmployerDto) {
     Long userId = parsedUserId();
     Employer updatedEmployer = employerService.updateEmployer(updateEmployerDto, userId);
     if (updatedEmployer == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(mapToResponseEmployerDto(updatedEmployer));
+    return ResponseEntity.ok(responseMapperService.mapToResponseEmployerDto(updatedEmployer));
   }
 
   //REQUIRES USER TO BE SIGNED
@@ -124,7 +125,7 @@ public class EmployerController {
     if (employerProfile == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(mapToResponseProfileDto(employerProfile));
+    return ResponseEntity.ok(responseMapperService.mapToResponseEmployerProfileDto(employerProfile));
   }
 
 
@@ -138,7 +139,7 @@ public class EmployerController {
   public ResponseEntity<List<ResponseProfileDto>> getAllEmployerProfiles() {
     List<EmployerProfile> employerProfiles = employerService.findAllEmployerProfiles();
     List<ResponseProfileDto> responseList = employerProfiles.stream()
-        .map(this::mapToResponseProfileDto)
+        .map(responseMapperService::mapToResponseEmployerProfileDto)
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
@@ -147,7 +148,7 @@ public class EmployerController {
   public ResponseEntity<List<ResponseEmployerDto>> getAllEmployers() {
     List<Employer> employers = employerService.findAllEmployers();
     List<ResponseEmployerDto> responseList = employers.stream()
-        .map(this::mapToResponseEmployerDto)
+        .map(responseMapperService::mapToResponseEmployerDto)
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
@@ -161,7 +162,7 @@ public class EmployerController {
     if (employerProfile == null) {
       return ResponseEntity.notFound().build();
     }
-    ResponseEmployerProfileDto responseEmployerProfileDto = mapToResponseProfileDto(employerProfile);
+    ResponseEmployerProfileDto responseEmployerProfileDto = responseMapperService.mapToResponseEmployerProfileDto(employerProfile);
     return new ResponseEntity<>(responseEmployerProfileDto, HttpStatus.OK);
   }
 
@@ -180,7 +181,7 @@ public class EmployerController {
   public ResponseEntity<List<ResponseEmployerDto>> getEmployersByName(@RequestParam("name") String name) {
     List<Employer> employers = employerService.findEmployersByName(name);
     List<ResponseEmployerDto> responseList = employers.stream()
-        .map(this::mapToResponseEmployerDto)
+        .map(responseMapperService::mapToResponseEmployerDto)
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
@@ -188,22 +189,7 @@ public class EmployerController {
 
 
 
-  private ResponseEmployerProfileDto mapToResponseProfileDto(EmployerProfile profile) {
-    ResponseEmployerProfileDto responseProfileDto = new ResponseEmployerProfileDto();
-    responseProfileDto.name = profile.getName();
-    responseProfileDto.bio = profile.getBio();
-    responseProfileDto.jobPostsSize = profile.getJobPosts().size();
-    responseProfileDto.jobPosts = profile.getJobPosts().stream().map(responseMapperService::mapToResponseJobPostDto).collect(Collectors.toList());
-    return responseProfileDto;
-  }
 
 
-  // Utility method to map Employer entity to ResponseEmployerDto
-  private ResponseEmployerDto mapToResponseEmployerDto(Employer employer) {
-    ResponseEmployerDto responseEmployerDto = new ResponseEmployerDto();
-    responseEmployerDto.employer_id = employer.getID();
-    responseEmployerDto.username = employer.getUsername();
-    responseEmployerDto.employerProfile = mapToResponseProfileDto(employer.getProfile());
-    return responseEmployerDto;
-  }
+
 }

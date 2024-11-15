@@ -40,11 +40,21 @@ public class SecurityConfig {
         .authorizeHttpRequests((authorize) -> authorize
             // Open endpoints for unauthenticated access
             .requestMatchers( new AntPathRequestMatcher("/api/auth/**")).permitAll()
-                .requestMatchers( "/api/companies/register", "/api/companies/verify", "api/auth/employer").permitAll()
+                .requestMatchers( "/api/companies/register", "/api/companies/verify", "api/applicants/register", "api/applicants/verify").permitAll()
 
                 // Secure all other endpoints
             .anyRequest().authenticated()
         )
+        .logout(logout -> logout
+            .logoutUrl("/api/auth/logout")
+            .invalidateHttpSession(true)
+            .deleteCookies("JSESSIONID")
+        )
+//        .rememberMe(rememberMe -> rememberMe
+//            .key("remember-me")
+//            .tokenValiditySeconds(604800) // 1 week
+//        )
+
         .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();

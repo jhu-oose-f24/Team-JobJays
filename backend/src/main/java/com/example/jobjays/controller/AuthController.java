@@ -12,6 +12,7 @@ import com.example.jobjays.service.ApplicantService;
 import com.example.jobjays.service.EmployerService;
 import com.example.jobjays.wrapper.EmailSendWrapper;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,7 +49,7 @@ public class AuthController {
 
 
     @PostMapping("/employer")
-    public ResponseEntity<?> login(@RequestBody LoginApplicationDto loginRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginApplicationDto loginRequest) {
 
         Employer employer = employerService.findEmployerByUsername(loginRequest.getUsername());
         //Applicant applicant = applicantService.findApplicantByUsername(loginRequest.getUsername());
@@ -61,7 +62,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        ResponseEmployerDto employerDto = new ResponseEmployerDto();
+        //ResponseEmployerDto employerDto = new ResponseEmployerDto();
 //        employerDto.setUsername(employer.getUsername());
 //        employerDto.setEmployer_id(employer.getID());
 
@@ -77,7 +78,7 @@ public class AuthController {
 
 
     @PostMapping("/applicant")
-    public ResponseEntity<?> loginApplicant(@RequestBody LoginApplicationDto loginRequest) {
+    public ResponseEntity<?> loginApplicant(@Valid @RequestBody LoginApplicationDto loginRequest) {
         Applicant applicant = applicantService.findApplicantByUsername(loginRequest.getUsername());
         if (applicant == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();

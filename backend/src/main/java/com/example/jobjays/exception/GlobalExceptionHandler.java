@@ -24,5 +24,30 @@ public class GlobalExceptionHandler {
 
     return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
   }
+
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<String> handleRuntimeException(RuntimeException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(UserNotFoundException.class)
+  public ResponseEntity<String> handleApplicantNotFoundException(UserNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(DuplicateSavedJobCollectionException.class)
+  public ResponseEntity<String> handleDuplicateSavedJobListException(DuplicateSavedJobCollectionException ex) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(ResourceNotFoundException.class)
+  public ResponseEntity<String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(JwtTokenException.class)
+  public ResponseEntity<String> handleJwtTokenException(JwtTokenException ex) {
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+  }
 }
 

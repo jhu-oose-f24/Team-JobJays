@@ -74,7 +74,7 @@ public class JobPostController {
   }
 
   @PutMapping("/companies/profile/post/{id}")
-  public ResponseEntity<?> updateJobPost(@PathVariable Long id, @RequestBody UpdateJobPostDto updateJobPostDto) {
+  public ResponseEntity<?> updateJobPost(@PathVariable Long id, @Valid @RequestBody UpdateJobPostDto updateJobPostDto) {
     //find employer
     Long employerId = parsedUserId();
     ResponseEntity<?> build = checkOwnership(id, employerId);

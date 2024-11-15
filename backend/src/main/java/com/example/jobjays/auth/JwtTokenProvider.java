@@ -2,6 +2,7 @@ package com.example.jobjays.auth;
 
 import com.example.jobjays.dto.applicant.CreateApplicantDto;
 import com.example.jobjays.dto.employer.CreateEmployerDto;
+import com.example.jobjays.exception.JwtTokenException;
 import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.Employer;
 import io.jsonwebtoken.Claims;
@@ -183,11 +184,15 @@ public class JwtTokenProvider {
   }
 
   private Claims extractAllClaims(String token) {
-    return Jwts.parserBuilder()  // Use parserBuilder() for the new JJWT version
-        .setSigningKey(getSecretKey())  // Correct method to set the signing key
+    Claims claims = Jwts.parserBuilder()
+        .setSigningKey(getSecretKey())
         .build()
-        .parseClaimsJws(token)  // Use parseClaimsJws() for signed JWTs
+        .parseClaimsJws(token)
         .getBody();
+    if (claims == null) {
+      throw new JwtTokenException("Token parsing error, claims are null");
+    }
+    return claims;
   }
 
 

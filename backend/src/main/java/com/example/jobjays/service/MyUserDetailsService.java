@@ -22,7 +22,7 @@ public class MyUserDetailsService implements UserDetailsService {
   @Override
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     System.out.println("USER DETAILS Username: " + username);
-    Employer employer = employerRepository.findByUsername(username);
+    Employer employer = employerRepository.findByUsernameIs(username);
     if (employer == null) {
       Applicant applicant = applicantRepository.findByUsername(username);
       if (applicant == null) {

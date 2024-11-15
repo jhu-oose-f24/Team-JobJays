@@ -205,17 +205,19 @@ public class ApplicantService {
 
 
 
-  public Set<JobPost> findSavedJobsByApplicantId(Long applicantId) {
-    return applicantRepository.findSavedJobsByApplicantId(applicantId);
-  }
+//  public Set<JobPost> findSavedJobsByApplicantId(Long applicantId) {
+//    return applicantRepository.findSavedJobsByApplicantId(applicantId);
+//  }
 
-  public void addSavedJob(Applicant applicant, JobPost jobPost) {
-//    applicantRepository.findSavedJobsByApplicantId(applicantId).add(jobPost);
-    System.out.println("in add saved job in service!");
-    ApplicantProfile applicantProfile = applicant.getProfile();
-    applicantProfile.addSavedJobs(jobPost);
-    applicantRepository.save(applicant);
-  }
+//  public void addSavedJob(Applicant applicant, JobPost jobPost) {
+////    applicantRepository.findSavedJobsByApplicantId(applicantId).add(jobPost);
+//    System.out.println("in add saved job in service!");
+//    ApplicantProfile applicantProfile = applicant.getProfile();
+//    applicantProfile.addSavedJobs(jobPost);
+//    applicantRepository.save(applicant);
+//    System.out.println(jobPost.toString());
+//    System.out.println(applicantProfile.getSavedJobs().toString());
+//  }
 //
 //
 ////  public Optional<JobPost> findJobPostByApplicantIdandJobId(Long applicantId, Long jobPostId) {

@@ -135,7 +135,7 @@ public class EmployerService {
   }
 
   public Employer findEmployerByUsername(String username) {
-    return employerRepository.findByUsernameIsIgnoreCase(username);
+    return employerRepository.findByUsernameIs(username);
   }
 
 

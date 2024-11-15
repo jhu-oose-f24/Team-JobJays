@@ -8,6 +8,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
 public class CreateJobPostDto {
 
   @NotBlank
@@ -19,24 +20,19 @@ public class CreateJobPostDto {
   @NotNull
   private Location location;
 
-  @Getter
   @Setter
   @NotNull
   private String jobType;
-  @Getter
   @Setter
   private String industry;
-  @Getter
   @Setter
   @NotNull
   private String workTiming;
 
-  @Getter
   @Setter
   List<String> tags;
 
 
-  @Getter
   @Setter
   List<String> skillsRequired;
   @NotNull
@@ -53,29 +49,5 @@ public class CreateJobPostDto {
 
   //@NotBlank
 //  private String username; // username of user is passed and used to find employer on backend (service)
-
-  public String getTitle() {
-    return title;
-  }
-
-  public String getDescription() {
-    return description;
-  }
-
-  public Location getLocation() {
-    return location;
-  }
-
-  public Double getMinSalary() {
-    return minSalary;
-  }
-
-  public Double getMaxSalary() {
-    return maxSalary;
-  }
-
-  public LocalDateTime getClosedDate() {
-    return closedDate;
-  }
 
 }
