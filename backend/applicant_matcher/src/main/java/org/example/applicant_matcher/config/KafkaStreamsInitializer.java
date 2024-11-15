@@ -16,7 +16,6 @@ public class KafkaStreamsInitializer implements ApplicationListener<ContextRefre
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        // Start the Kafka Streams instance if not already started
         if (!streamsBuilderFactoryBean.isRunning()) {
             streamsBuilderFactoryBean.start();
         }
