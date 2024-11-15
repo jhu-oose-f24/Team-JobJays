@@ -44,7 +44,7 @@ public class JobCompanyMatcherService {
             System.err.println("Failed to process job post: " + message);
         }
     }
-    private List<MatchDTO> matchJobToApplicants(JobDTO jobPost, Map<String, ApplicantPreferenceDTO> preferences) {
+    public List<MatchDTO> matchJobToApplicants(JobDTO jobPost, Map<String, ApplicantPreferenceDTO> preferences) {
         List<MatchDTO> matchedApplicants = new ArrayList<>();
 
         for (Map.Entry<String, ApplicantPreferenceDTO> entry : preferences.entrySet()) {
@@ -64,6 +64,7 @@ public class JobCompanyMatcherService {
                         jobPost.getEmployerEmail()
                 );
                 matchedApplicants.add(match);
+                System.out.println("Matched applicant: " + match);
             }
         }
 

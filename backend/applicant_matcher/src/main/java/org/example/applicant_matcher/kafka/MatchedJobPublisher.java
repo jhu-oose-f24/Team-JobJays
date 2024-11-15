@@ -63,6 +63,9 @@ public class MatchedJobPublisher {
     }
 
     public void publishMatchedApplicantToCompany(JobDTO jobPost, List<MatchDTO> matchedApplicants) {
+        System.out.println("Testing publishMatchedApplicantToCompany...");
+        System.out.println("JobDTO: " + jobPost);
+        System.out.println("MatchedApplicants: " + matchedApplicants);
         try {
             if (jobPost.getEmployerEmail() == null || jobPost.getEmployerEmail().isEmpty()) {
                 throw new IllegalArgumentException("Employer email is missing for job post: " + jobPost.getJobId());

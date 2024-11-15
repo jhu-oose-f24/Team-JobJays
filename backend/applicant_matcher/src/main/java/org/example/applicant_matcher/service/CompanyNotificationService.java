@@ -27,7 +27,12 @@ public class CompanyNotificationService {
         try {
             CompanyNotificationDTO notification = objectMapper.readValue(message, CompanyNotificationDTO.class);
 
+            System.out.println("Received Kafka message: " + notification);
+
             String emailContent = generateEmailContent(notification);
+
+            System.out.println("Generated email content (for testing, not sent):\n" + emailContent);
+
             sendEmail(notification.getEmployerEmail(), "Matching Applicants for Your Job", emailContent);
 
         } catch (Exception e) {
@@ -35,7 +40,7 @@ public class CompanyNotificationService {
         }
     }
 
-    private void sendEmail(String recipient, String subject, String content) {
+    public void sendEmail(String recipient, String subject, String content) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(recipient);
         message.setSubject(subject);
@@ -43,7 +48,7 @@ public class CompanyNotificationService {
         mailSender.send(message);
     }
 
-    private String generateEmailContent(CompanyNotificationDTO notification) {
+    public String generateEmailContent(CompanyNotificationDTO notification) {
         StringBuilder content = new StringBuilder("The following applicants matched your job: " + notification.getJobTitle() + "\n\n");
         for (MatchDTO applicant : notification.getMatchedApplicants()) {
             content.append("Name: ").append(applicant.getApplicantName())
