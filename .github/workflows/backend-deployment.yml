@@ -71,13 +71,14 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_ed25519 $SERVER_USER@$SERVER_IP <<'EOF'
             set -e  # Exit immediately if a command exits with a non-zero status
+            cd jobjays/source/Team-JobJays/backend
 
             # Paths for each service
             declare -A services
-            services["job-jays-api"]="/backend/"
-            services["applicant-job-matcher"]="/backend/applicant_job_matcher"
-            services["preference-updater"]="/backend/preference_updater"
-            services["notification-sender"]="/backend/notification_sender"
+            services["job-jays-api"]=""
+            services["applicant-job-matcher"]="applicant_job_matcher"
+            services["preference-updater"]="preference_updater"
+            services["notification-sender"]="notification_sender"
 
             # Maven services
             maven_services=("job-jays-api")
@@ -100,7 +101,7 @@ jobs:
                 screen -dmS "$session_name" bash -c "cd $service_path && mvn spring-boot:run"
               else
                 # Gradle-based service
-                screen -dmS "$session_name" bash -c "cd $service_path && ./gradlew bootRun"
+                screen -dmS "$session_name" bash -c "cd $service_path && gradle build && java -jar /build/libs/*SNAPSHOT.jar"
               fi
             done
 
