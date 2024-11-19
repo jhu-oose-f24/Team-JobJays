@@ -1,7 +1,14 @@
 "use client";
 import React, {useState} from 'react';
 import {useParams} from "next/navigation";
-import {applyToJob, fetchJobPost, saveJob, updateJobPost} from "@/lib/api";
+import {
+    applyToJob,
+    createNewSaveCollection,
+    fetchJobPost,
+    saveJobToCollection,
+    updateJobPost,
+    useSavedJobCollections
+} from "@/lib/api";
 import JobForm from "@/components/employer/JobForm";
 import {
     Dialog,
@@ -11,27 +18,36 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 import {useToast} from "@/hooks/use-toast";
 import SkeletonJobDetails from "@/components/jobPost/SkeletonJobDetails";
 
 
 import { Button } from "@/components/ui/button"
+import {SavedJobCollection} from "@/lib/types";
 
 const JobDetails = () => {
-    //perhaps we can get User and check if they are logged in and if they are the employer of this post,
-    //then we can show the edit button
-    const { id } = useParams<{ id: string }>(); // Get the job ID from the route
+    const { id } = useParams<{ id: string }>();
     const { JobPost, isLoading, isError, mutate } = fetchJobPost(Number(id));
+    const { Collections, isError: collectionError } = useSavedJobCollections();
     const [open, setOpen] = useState(false);
+    const [openCreateDialog, setOpenCreateDialog] = useState(false);
+    const [newCollectionName, setNewCollectionName] = useState("");
     const { toast } = useToast();
 
-    const  handleJobFormSubmit = async (data: any) => {
-        //We need to send the filteredData with proper attributes to backend for now until we have type in backend
-        const {jobType, ...filteredData} = data;
-        JobPost.type = data.type;
-        const result = await updateJobPost(Number(id), filteredData, mutate, data);
+    // Handle job form submission
+    const handleJobFormSubmit = async (data: any) => {
+        const result = await updateJobPost(Number(id), data, mutate, data);
         if (result.success) {
-            setOpen(false);
+            setOpen(false); // Close the dialog
             toast({
                 title: "Success",
                 description: "Job details updated successfully!",
@@ -44,11 +60,10 @@ const JobDetails = () => {
                 variant: "destructive",
             });
         }
-    }
+    };
 
+    // Handle job application
     const handleApply = async () => {
-        console.log("Hello", id);
-        //const applicantId = 1; //TODO replace hardcoded 1 with actual applicant id
         const result = await applyToJob(Number(id));
         if (result.success) {
             toast({
@@ -63,36 +78,54 @@ const JobDetails = () => {
                 variant: "destructive",
             });
         }
-    }
+    };
 
-    const handleSave = async () => {
-        const result = await saveJob(Number(id));
+    // Handle collection creation
+    const handleCreateCollection = async () => {
+        const result = await createNewSaveCollection(newCollectionName);
+        if (result.success) {
+            // @ts-ignore
+            const collectionId: number = result.data.id;
+            const saveResult = await saveJobToCollection(collectionId, Number(id));
+            if (saveResult.success) {
+                toast({
+                    title: "Success",
+                    description: `Collection "${newCollectionName}" created successfully and job added!`,
+                    variant: "default",
+                });
+            }
+        } else {
+            toast({
+                title: "Error",
+                description: `Failed to create collection. Message: ${result.error.message}`,
+                variant: "destructive",
+            });
+        }
+        setNewCollectionName(""); // Reset input field
+        setOpenCreateDialog(false); // Close the create dialog
+    };
+
+    // Handle adding to collection
+    const handleAddToCollection = async (collectionId: number) => {
+        const result = await saveJobToCollection(collectionId, Number(id));
         if (result.success) {
             toast({
                 title: "Success",
-                description: "Job saved successfully!",
+                description: "Job successfully added to collection!",
                 variant: "default",
             });
         } else {
             toast({
                 title: "Error",
-                description: `Failed to save job. Message: ${result.error.message}, Code: ${result.error.status}`,
+                description: `Failed to add job to collection. Message: ${result.error.message}`,
                 variant: "destructive",
             });
         }
-    }
+    };
 
-    if (isLoading) return <SkeletonJobDetails/>;
+    if (isLoading) return <SkeletonJobDetails />;
     if (isError) return <div>Error loading job details.</div>;
     if (!JobPost) return <div>Job not found.</div>;
-
-    //const [savedJobs, setSavedJobs] = useState<JobPost[]>([]);
-
-    // const handleSubmit = () => {
-    //     setSavedJobs((prev) => [...prev, JobPost]);
-    // }
-
-
 
     return (
         <div className="container mx-auto px-4 py-6">
@@ -102,39 +135,82 @@ const JobDetails = () => {
                         <h1 className="text-2xl font-bold">{JobPost.title}</h1>
                         <p className="text-gray-600">at {JobPost.companyName}</p>
                         <div className="flex space-x-2 mt-2">
-                            <span className="bg-green-100 text-green-600 px-2 py-1 rounded">{JobPost.type}</span>
+                            <span className="bg-green-100 text-green-600 px-2 py-1 rounded">{JobPost.workTiming}</span>
                             <span className="bg-red-100 text-red-600 px-2 py-1 rounded">Featured</span>
                         </div>
                     </div>
-                    {/*/!* Conditionally render the "Edit" or "Apply" button based on user type *!/*/}
-                    {/*{user?.role === 'Employer' && user.id === jobPost.employerId ? (*/}
-                    {/*    <button>Edit Job Post</button>*/}
-                    {/*) : (*/}
-                    {/*    <button>Apply</button>*/}
-                    {/*    <button>Save</button>*/}
-                    {/*)}*/}
                     <div className="flex flex-col space-y-2">
-                        <button onClick={handleApply}
-                                className="px-4 py-2 bg-blue-400 text-white rounded-md">Apply Now</button>
-                        <Dialog modal={false} open={open} onOpenChange={setOpen}>
-                            <DialogTrigger asChild>
-                                <Button onClick={() => setOpen(true)}
-                                        className="px-4 py-2 bg-blue-400 text-white rounded-md">Edit Job
-                                    Details</Button>
-                            </DialogTrigger>
-                            <DialogContent className="overflow-y-auto max-h-[500px]">
-                                <DialogHeader>
-                                    <DialogTitle>Edit Job Details</DialogTitle>
-                                </DialogHeader>
-                                <DialogDescription>
-                                    Enter details below
-                                </DialogDescription>
-                                <JobForm onSubmit={handleJobFormSubmit}/>
-                            </DialogContent>
-                        </Dialog>
-                        <button
-                            onClick={handleSave}
-                            className="px-4 py-2 bg-blue-400 text-white rounded-md">Save Job</button>
+                        {collectionError ? (
+                            <Dialog open={open} onOpenChange={setOpen}>
+                                <DialogTrigger asChild>
+                                    <Button onClick={() => setOpen(true)} className="px-4 py-2 bg-blue-400 text-white rounded-md">
+                                        Edit Job Details
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent className="overflow-y-auto max-h-[500px]">
+                                    <DialogHeader>
+                                        <DialogTitle>Edit Job Details</DialogTitle>
+                                    </DialogHeader>
+                                    <DialogDescription>
+                                        Enter details below
+                                    </DialogDescription>
+                                    <JobForm onSubmit={handleJobFormSubmit} />
+                                </DialogContent>
+                            </Dialog>
+                        ) : (
+                            <div className="flex flex-col space-y-2">
+                                <button onClick={handleApply} className="px-4 py-2 bg-blue-400 text-white rounded-md">
+                                    Apply Now
+                                </button>
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button className="px-4 py-2 bg-blue-400 text-white rounded-md">Save Job</Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent>
+                                        <DropdownMenuLabel>Collections</DropdownMenuLabel>
+                                        {Collections && Collections.length > 0 ? (
+                                            Collections.map((collection) => (
+                                                <DropdownMenuItem
+                                                    key={collection.id}
+                                                    onSelect={() => {
+                                                        handleAddToCollection(collection.id);
+                                                        setOpenCreateDialog(false); // Ensure create dialog closes
+                                                    }}
+                                                >
+                                                    {collection.name}
+                                                </DropdownMenuItem>
+                                            ))
+                                        ) : (
+                                            <DropdownMenuItem disabled>No saved job collections found.</DropdownMenuItem>
+                                        )}
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuItem onSelect={() => setOpenCreateDialog(true)}>
+                                            Create a New Job Collection
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+
+                                <Dialog open={openCreateDialog} onOpenChange={setOpenCreateDialog}> {/* /TODO fix error with closing dialog not yielding control back to window*/}
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Create a New Job Collection</DialogTitle>
+                                        </DialogHeader>
+                                        <div className="space-y-4">
+                                            <input
+                                                type="text"
+                                                value={newCollectionName}
+                                                onChange={(e) => setNewCollectionName(e.target.value)}
+                                                placeholder="Collection title"
+                                                className="w-full border px-3 py-2 rounded-md"
+                                            />
+                                            <Button onClick={handleCreateCollection} className="px-4 py-2 bg-blue-400 text-white rounded-md">
+                                                Add Collection
+                                            </Button>
+                                        </div>
+                                    </DialogContent>
+                                </Dialog>
+                            </div>
+                        )}
                     </div>
                 </div>
 

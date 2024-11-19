@@ -1,9 +1,9 @@
 import useSWR from 'swr' ;
-import {Applicant, ApplicantProfile, Employer, EmployerProfile, JobPost} from './types'; // Ensure you have the correct types for your data
+import {Applicant, ApplicantProfile, Employer, EmployerProfile, JobPost, SavedJobCollection} from './types';
 
 // Fetcher function
 export const fetcher = (url: string) => {
-    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const token = localStorage.getItem("token");
     // const headersTest = new Headers();
     // headersTest.set("Authorization", `Bea`)
 
@@ -24,25 +24,21 @@ export function calculateDaysRemaining(endDate: string): number {
     const today = new Date();
     const end = new Date(endDate);
     const diffTime = end.getTime() - today.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)); // Convert milliseconds to days
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 }
 
 // Function to add additional attributes to job posts
 export function addJobAttributes(job: JobPost): JobPost {
-    //console.log(job)
     const daysRemaining = calculateDaysRemaining(new Date(job.closedDate).toISOString());
-    const jobType = job.type || 'Full Time'; // Default to Full Time if not specified
     const jobStatus = daysRemaining > 0 ? 'Active' : 'Expired';
 
     return {
         ...job,
         daysRemaining,
-        type: jobType,
         status: jobStatus
     };
 }
 
-// Hook to fetch the ApplicantProfile
 export function useApplicant() {
     console.log("In use applicant");
     const { data, error, isLoading } = useSWR("http://localhost:8080/api/applicants/profile", fetcher);
@@ -61,13 +57,13 @@ export function useEmployer() {
     const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile`, fetcher);
 
     // Process job posts if data is available
-    const processedEmployerProfile = data && data.jobPosts ? {
-        ...data,
-        jobPosts: data.jobPosts.map((job: JobPost) => addJobAttributes(job))
-    } : data;
+    // const processedEmployerProfile = data && data.jobPosts ? {
+    //     ...data,
+    //     jobPosts: data.jobPosts.map((job: JobPost) => addJobAttributes(job))
+    // } : data;
 
     return {
-        EmployerProfile: processedEmployerProfile as EmployerProfile,
+        EmployerProfile: data as EmployerProfile,
         isLoading,
         isError: error
     };
@@ -248,11 +244,39 @@ export const addImpressionEvent = async (id: number) => {
     }
 }
 
+export const createNewSaveCollection = async (collectionName: string) => {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": 'plain/text',
+    }
+    try {
+        const response = await fetch(`http://localhost:8080/api/applicants/create-job-collection`, {
+            method: 'POST',
+            headers: headers,
+            body: collectionName
+        });
+        if (response.ok) {
+            console.log("Collection created successfully");
+            const data: SavedJobCollection = await response.json();
+            return { success: true, data };
+
+        } else {
+            console.error(`Error creating collection: ${response.statusText}`);
+            const error = await response.json();
+            return { success: false, error };
+        }
+    } catch (error) {
+        console.error("Failed to create new collection:", error);
+        return { success: false, error };
+    }
+}
+
 //add a job to Saved
-export const saveJob = async (jobId:number) => {
+export const saveJobToCollection = async (listId: number, jobId:number) => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`http://localhost:8080/api/applicants/profile/saved-jobs/${jobId}`, {
-        method: 'PUT',
+    const response = await fetch(`http://localhost:8080/api/applicants/saved-job/${listId}/${jobId}/add`, {
+        method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
@@ -271,17 +295,12 @@ export const saveJob = async (jobId:number) => {
 
 
 //get saved a job
-export function getSavedJobs(applicantId:number) {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/profile/${applicantId}/saved-jobs`, fetcher);
-    //returns applicantProfile
-    const processedApplicantProfile = data && data.savedJobs ? {
-        ...data,
-        jobPosts: data.jobPosts.map((job: JobPost) => addJobAttributes(job))
-    } : data;
+export function useSavedJobCollections() {
+    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/saved-jobs/collections`, fetcher);
+    //returns list of savedJobCollection
 
     return {
-        ApplicantProfile: processedApplicantProfile as ApplicantProfile,
+        Collections: data as SavedJobCollection[],
         isLoading,
         isError: error
     };

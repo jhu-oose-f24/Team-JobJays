@@ -105,7 +105,7 @@ const ListJob = ({ query }: ListJobProps) => {
                         <h1>{jobListing.title}</h1>
                         <div className={styles.flexContainer}>
                             <div className={styles.typeBox}>
-                                <span className={styles.typeText}>{jobListing.type}</span>
+                                <span className={styles.typeText}>{jobListing.workTiming}</span>
                             </div>
                             <div className="justify-between">
                                 <p>Location: {jobListing.location.city},{jobListing.location.state},{jobListing.location.country} </p>

@@ -9,6 +9,7 @@ import RelatedJobs from "@/components/jobPost/RelatedJobs";
 import Link from "next/link";
 import {useParams} from "next/navigation";
 import {addImpressionEvent} from "@/lib/api";
+import {useRouter} from "next/navigation";
 
 const JobDetailPage: React.FC = () => {
     const router = useRouter();
