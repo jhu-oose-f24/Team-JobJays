@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { ChevronDown, HelpCircle, Search } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
 
 const Support = () => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);

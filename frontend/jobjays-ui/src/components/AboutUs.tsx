@@ -1,7 +1,7 @@
 "use client";
 
 import Image from 'next/image';
-import { Users, Lightbulb, Target, Mail } from 'lucide-react';
+import { Lightbulb, Target } from 'lucide-react';
 
 const teamMembers = [
     {

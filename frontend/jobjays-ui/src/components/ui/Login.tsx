@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import {useRouter} from "next/navigation";
 import {useToast} from "@/hooks/use-toast";
+import {loginApplicant, loginEmployer} from "@/lib/api";
 
 export default function Login() {
   const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
@@ -33,51 +34,27 @@ export default function Login() {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // save the form data to the database
-    console.log(formData);
 
-    try {
-      const response = await fetch("http://localhost:8080/api/auth/employer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password
-        })
+    const employerData = {
+        username: formData.username,
+        password: formData.password
+    }
+
+   const response = await loginEmployer(employerData) as Response;
+    if (response.ok) {
+      toast({
+        title: "Success",
+        description: "Log in successful!",
+        variant: "default",
       });
+      router.push(`employer/dashboard`);
+    } else {
 
-      if (response.status == 404) {
-        alert("Invalid username or password");
-        return;
-      }
-
-      if (response.ok) {
-        console.log(response);
-        const contentType = response.headers.get("content-type");
-        let employerData;
-        if (contentType && contentType.includes("application/json")) {
-          employerData = await response.json();
-        } else {
-          employerData = { token: await response.text() }; // wrap the token in an object
-        }
-
-        //alert("Sign in successful!");
         toast({
-          title: "Success",
-          description: "Sign in successful!",
-          variant: "default",
+            title: "Error! Try Again",
+            description: `${response.statusText}: ${await response.json()} Invalid username or password`,
+            variant: "destructive",
         });
-        localStorage.setItem("token", employerData.token);
-        console.log(employerData.token);
-        router.push(`employer/dashboard`); // redirect to new user's dashboard
-      } else {
-        const errorData = await response.json();
-        console.log(`Error: ${errorData.failReason}`);
-      }
-    } catch (error) {
-      alert(`An error occurred: ${error}`);
     }
   };
 
@@ -85,60 +62,27 @@ export default function Login() {
   const handleCandidateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(formData);
+    const candidateData = {
+      username: formData.username,
+      password: formData.password
+    }
 
-    try {
-      const response = await fetch("http://localhost:8080/api/auth/applicant", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password
-        })
+    const response = await loginApplicant(candidateData) as Response;
+    if (response.ok) {
+      toast({
+        title: "Success",
+        description: "Log in successful!",
+        variant: "default",
       });
-
-      if (response.ok) {
-        console.log(response);
-        console.log("hello!!!!!");
-        const contentType = response.headers.get("content-type");
-        let applicantData;
-        if (contentType && contentType.includes("application/json")) {
-          applicantData = await response.json();
-        } else {
-          applicantData = { token: await response.text() }; // wrap the token in an object
-        }
-
-        console.log("hello!!!!!");
-        const token = applicantData.token;
-
-        // Display a success message
-        toast({
-          title: "Success",
-          description: "Sign in successful!",
-          variant: "default",
-        });
-
-        // Store the token in localStorage
-        localStorage.setItem("token", token);
-
-        // Redirect to the dashboard
-        router.push(`candidate/profile`);
-      } else {
-        const errorData = await response.json();
-
-        if (response.status === 404) {
-          alert("Invalid username or password");
-        }
-        console.log(`Error: ${errorData.failReason}`);
-      }
-    } catch (error) {
-      alert(`An error occurred: ${error}`);
+      router.push(`candidate/profile`);
+    } else {
+      toast({
+        title: "Error! Try Again",
+        description: `${response.statusText}: ${await response.json()} Invalid username or password`,
+        variant: "destructive",
+      });
     }
   };
-
-
 
 
   return (

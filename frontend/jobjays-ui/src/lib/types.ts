@@ -9,7 +9,7 @@ export interface Post {
 }
 
 export interface UserTypeDto {
-    userType: string;
+    userType: "applicant" | "employer" | null;
 }
 
 export interface JobPost extends Post {
@@ -40,6 +40,10 @@ export interface Location {
     city: string;
 }
 
+export interface UserLoginResponse {
+    token: string;
+    role: string;
+}
 
 export interface User {
     //userID: number;
