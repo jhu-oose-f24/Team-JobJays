@@ -2,13 +2,29 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, {useEffect, useState} from "react";
-import {Employer, EmployerProfile, JobPost} from "@/lib/types";
+import {Employer, JobPost} from "@/lib/types";
+import {logout, useToken} from "@/lib/api";
+import {useToast} from "@/hooks/use-toast";
+
+
+const CLIENT_URL = `http://localhost:3000`;
+const API_URL = process.env.API_IP_ADDRESS;
 
 export default function Header() {
     const router = useRouter()
     const [query, setQuery] = useState("");
     const [results, setResults] = useState<(JobPost | Employer)[]> ([]);
     const [showDropdown, setShowDropdown] = useState(false);
+    //const token = useToken();
+    const [token, setToken] = useState<string | null>(null);
+    const {toast} = useToast();
+
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setToken(localStorage.getItem('token'));
+        }
+    },[])
 
 
     // Function to fetch search results (jobPost titles and employer names)
@@ -17,20 +33,43 @@ export default function Header() {
             setResults([]);
             return;
         }
-        const response = await fetch(`http://localhost:8080/api/companies/profile/search/name?name=${query}`);
+        const response = await fetch(`${API_URL}/api/companies/profile/search/name?name=${query}`);
         if (!response.ok) {
             console.error("Failed to fetch Employer search results");
+            toast({
+                title: "Error",
+                description: "Failed to fetch search results",
+                variant: "default"
+            })
             return;
         }
 
-        const jobPostResponse = await fetch(`http://localhost:8080/api/search/posts/jobs/title?title=${query}`);
+        const jobPostResponse = await fetch(`${API_URL}/api/search/posts/jobs/title?title=${query}`);
         if (!jobPostResponse.ok) {
             console.error("Failed to fetch Job Post search results");
+            toast({
+                title: "Error",
+                description: "Failed to fetch Job Post search results",
+                variant: "default"
+            })
             return;
         }
+
+        const candidateResponse = await fetch(`${API_URL}/api/candidates/profile/search/name?name=${query}`);
+        if (!candidateResponse.ok) {
+            console.error("Failed to fetch Candidate search results");
+            toast({
+                title: "Error",
+                description: "Failed to fetch Candidate search results",
+                variant: "default"
+            })
+            return;
+        }
+
         const jobPosts = await jobPostResponse.json();
         const Employers = await response.json();
-        const combinedResults = [...jobPosts, ...Employers];
+        const Candidates = await candidateResponse.json();
+        const combinedResults = [...jobPosts, ...Employers, ...Candidates];
         setResults(combinedResults);
 
 
@@ -45,6 +84,8 @@ export default function Header() {
         return () => clearTimeout(delayDebounceFn);
     }, [query]);
 
+
+
     // Handle input change
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.target.value);
@@ -55,9 +96,9 @@ export default function Header() {
     const handleSelect = (result: any) => {
         setShowDropdown(false);
         if ('title' in result) {
-            router.push(`http://localhost:3000/post/jobs/${result.id}`); // Redirect to job detail page
+            router.push(`${CLIENT_URL}/post/jobs/${result.id}`); // Redirect to job detail page
         } else if ('employer_id' in result) {
-            router.push(`http://localhost:3000/employer/${(result as Employer).employer_id}/my-jobs`); // Redirect to employer detail page
+            router.push(`/employer/${(result as Employer).employer_id}/my-jobs`); // Redirect to employer detail page
         }
     };
 
@@ -66,7 +107,7 @@ export default function Header() {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         setShowDropdown(false);
-        router.push(`http://localhost:3000/post/jobs/all?query=${query}`);
+        router.push(`${CLIENT_URL}/post/jobs/all?query=${query}`);
     };
 
 
@@ -79,8 +120,8 @@ export default function Header() {
               </Link>
               <nav className="flex gap-9">
                   <Link href="/">Home</Link>
-                  <Link href="http://localhost:3000/post/jobs/all?query=JOBS">Find Job</Link>
-                  <Link href="http://localhost:3000/post/jobs/all?query=EMPLOYERS">Employers</Link>
+                  <Link href={`${CLIENT_URL}/post/jobs/all?query=JOBS`}>Find Job</Link>
+                  <Link href={`${CLIENT_URL}/post/jobs/all?query=EMPLOYERS`}>Employers</Link>
                   <Link href="/candidate/dashboard">Candidates</Link>
               </nav>
           </div>
@@ -133,10 +174,34 @@ export default function Header() {
           </div>
 
           <div className="flex gap-4 font-[family-name:var(--font-geist-sans)]">
-              <button className="px-4 py-2 border rounded-md" onClick={() => router.push('/signup')}>Sign Up</button>
-              <button className="px-4 py-2 bg-blue-400 text-white rounded-md"
-                      onClick={() => router.push('/signin')}>Log In
-              </button>
+              {token ? (
+                  <>
+                      <button
+                          className="px-4 py-2 bg-red-400 text-white rounded-md"
+                          onClick={() => {
+                              logout();
+                              router.push('/signin');
+                          }}
+                      >
+                          Log Out
+                      </button>
+                  </>
+              ) : (
+                  <>
+                      <button
+                          className="px-4 py-2 border rounded-md"
+                          onClick={() => router.push('/signup')}
+                      >
+                          Sign Up
+                      </button>
+                      <button
+                          className="px-4 py-2 bg-blue-400 text-white rounded-md"
+                          onClick={() => router.push('/signin')}
+                      >
+                          Log In
+                      </button>
+                  </>
+              )}
           </div>
       </header>
   );

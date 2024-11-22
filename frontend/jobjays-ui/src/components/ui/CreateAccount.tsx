@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {useToast} from "@/hooks/use-toast";
+import {registerApplicant, registerEmployer} from "@/lib/api";
 
 export default function CreateAccount() {
   const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
@@ -28,7 +29,7 @@ export default function CreateAccount() {
     password: "",
     confirmPassword: "",
     email: "",
-    resume: "",
+    // resume: "",
     applicantName: "",
     applicantInfo: "",
   });
@@ -43,47 +44,37 @@ export default function CreateAccount() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
+      toast({
+        title: "Error! Try Again",
+        description: "Passwords do not match",
+        variant: "destructive",
+      })
       return;
     }
 
-    console.log(formData);
+    const employerData = {
+        username: formData.username,
+        password: formData.password,
+        email: formData.email,
+        employerName: formData.employerName,
+        employerInfo: formData.employerInfo,
+    }
 
-    try {
-      const response = await fetch("http://localhost:8080/api/companies/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          password: formData.password,
-          email: formData.email,
-          employerName: formData.employerName,
-          employerInfo: formData.employerInfo,
-        }),
+
+    const response = await registerEmployer(employerData);
+    if (response.success) {
+      toast({
+        title: "Success",
+        description: "Registration successful! Check your email for verification",
+        variant: "default",
       });
-
-
-      if (response.ok) {
-        console.log(response);
-        const employerData = await response.json();
-        console.log(employerData);
-        const employerId = employerData.employer_id;
-        //alert("Signup successful! Check your email for verification.");
-        toast({
-          title: "Success",
-          description: "Signup successful! Check your email for verification.",
-          variant: "default",
-        });
-        router.push(`signin`);
-        //router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
-      } else {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message}`);
-      }
-    } catch (error) {
-      alert(`An error occurred: ${error}`);
+      router.push(`/signin`);
+    } else {
+      toast({
+        title: "Error! Try Again",
+        description: `${response.error}`,
+        variant: "destructive",
+      });
     }
   };
 
@@ -97,45 +88,36 @@ export default function CreateAccount() {
     const handleCandSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
       if (formData.password !== formData.confirmPassword) {
-        alert("Passwords do not match");
+        toast({
+          title: "Error! Try Again",
+          description: "Passwords do not match",
+          variant: "destructive",
+        })
         return;
       }
-  
-      try {
-        const response = await fetch("http://localhost:8080/api/applicants/register", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
+
+      const candidateData = {
             username: candForm.username,
             password: candForm.password,
             email: candForm.email,
-            resume: candForm.resume,
             applicantName: candForm.applicantName,
             applicantInfo: candForm.applicantInfo,
-          }),
+      }
+
+      const response = await registerApplicant(candidateData);
+      if (response.success) {
+        toast({
+          title: "Success",
+          description: "Registration successful! Check your email for verification",
+          variant: "default",
         });
-  
-  
-        if (response.ok) {
-          const candidateData = await response.json();
-          console.log(candidateData);
-          const candidateId = candidateData.applicantId;
-          //alert("Signup successful! Check your email for verification.");
-          toast({
-            title: "Success",
-            description: "Signup successful! Check your email for verification.",
-            variant: "default",
-          });
-          router.push(`signin`);
-          //router.push(`candidate/${candidateId}/dashboard`);
-        } else {
-          const errorData = await response.json();
-          alert(`Error: ${errorData.message}`);
-        }
-      } catch (error) {
-        alert(`An error occurred: ${error}`);
+        router.push(`/signin`);
+      } else {
+        toast({
+          title: "Error! Try Again",
+          description: `${response.error}`,
+          variant: "destructive",
+        });
       }
     };
 
@@ -191,7 +173,7 @@ export default function CreateAccount() {
               name="employerName"
               value={formData.employerName}
               onChange={handleInputChange}
-              placeholder="Employer Name"
+              placeholder="Name"
               className="px-4 py-2 border rounded-md"
             />
             <input
@@ -199,7 +181,7 @@ export default function CreateAccount() {
               name="employerInfo"
               value={formData.employerInfo}
               onChange={handleInputChange}
-              placeholder="Employer Info"
+              placeholder="Bio"
               className="px-4 py-2 border rounded-md"
             />
             <input
@@ -234,12 +216,12 @@ export default function CreateAccount() {
               placeholder="Confirm Password"
               className="px-4 py-2 border rounded-md"
             />
-            <div className="flex items-center gap-2">
-              <input type="checkbox" id="terms" className="h-4 w-4" />
-              <label htmlFor="terms" className="text-gray-500">
-                I&apos;ve read and agree with your <a href="#" className="text-blue-600">Terms of Services</a>
-              </label>
-            </div>
+            {/*<div className="flex items-center gap-2">*/}
+            {/*  <input type="checkbox" id="terms" className="h-4 w-4" />*/}
+            {/*  <label htmlFor="terms" className="text-gray-500">*/}
+            {/*    I&apos;ve read and agree with your <a href="#" className="text-blue-600">Terms of Services</a>*/}
+            {/*  </label>*/}
+            {/*</div>*/}
             <button className="px-6 py-3 bg-blue-400 text-white rounded-md mt-4">
               <h2 className="font-bold">Create Account</h2>
             </button>
@@ -248,10 +230,34 @@ export default function CreateAccount() {
             <form className="flex flex-col gap-4" onSubmit={handleCandSubmit}>
               <input
                   type="text"
+                  name="applicantName"
+                  value={candForm.applicantName}
+                  onChange={handleCandInputChange}
+                  placeholder="Name"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="text"
+                  name="applicantInfo"
+                  value={candForm.applicantInfo}
+                  onChange={handleCandInputChange}
+                  placeholder="Bio"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="text"
                   name="username"
                   value={candForm.username}
                   onChange={handleCandInputChange}
                   placeholder="Username"
+                  className="px-4 py-2 border rounded-md"
+              />
+              <input
+                  type="email"
+                  name="email"
+                  value={candForm.email}
+                  onChange={handleCandInputChange}
+                  placeholder="Email address"
                   className="px-4 py-2 border rounded-md"
               />
               <input
@@ -270,44 +276,22 @@ export default function CreateAccount() {
                   placeholder="Password"
                   className="px-4 py-2 border rounded-md"
               />
-              <input
-                  type="email"
-                  name="email"
-                  value={candForm.email}
-                  onChange={handleCandInputChange}
-                  placeholder="Email Address"
-                  className="px-4 py-2 border rounded-md"
-              />
-              <input
-                  type="text"
-                  name="resume"
-                  value={candForm.resume}
-                  onChange={handleCandInputChange}
-                  placeholder="Resume (will be fleshed out)"
-                  className="px-4 py-2 border rounded-md"
-              />
-              <input
-                  type="text"
-                  name="applicantName"
-                  value={candForm.applicantName}
-                  onChange={handleCandInputChange}
-                  placeholder="Applicant Name"
-                  className="px-4 py-2 border rounded-md"
-              />
-              <input
-                  type="text"
-                  name="applicantInfo"
-                  value={candForm.applicantInfo}
-                  onChange={handleCandInputChange}
-                  placeholder="Applicant Info"
-                  className="px-4 py-2 border rounded-md"
-              />
-              <div className="flex items-center gap-2">
-                <input type="checkbox" id="terms" className="h-4 w-4"/>
-                <label htmlFor="terms" className="text-gray-500">
-                  I&apos;ve read and agree with your <a href="#" className="text-blue-600">Terms of Services</a>
-                </label>
-              </div>
+
+              {/*<input*/}
+              {/*    type="text"*/}
+              {/*    name="resume"*/}
+              {/*    value={candForm.resume}*/}
+              {/*    onChange={handleCandInputChange}*/}
+              {/*    placeholder="Resume (will be fleshed out)"*/}
+              {/*    className="px-4 py-2 border rounded-md"*/}
+              {/*/>*/}
+
+              {/*<div className="flex items-center gap-2">*/}
+              {/*  <input type="checkbox" id="terms" className="h-4 w-4"/>*/}
+              {/*  <label htmlFor="terms" className="text-gray-500">*/}
+              {/*    I&apos;ve read and agree with your <a href="#" className="text-blue-600">Terms of Services</a>*/}
+              {/*  </label>*/}
+              {/*</div>*/}
               <button className="px-6 py-3 bg-blue-400 text-white rounded-md mt-4">
                 <h2 className="font-bold">Create Account</h2>
               </button>
@@ -322,7 +306,7 @@ export default function CreateAccount() {
             alt=""
             layout="fill"
             objectFit="cover"
-          className="opacity-70"
+            className="opacity-70"
         />
         <div className="absolute text-white text-center px-8">
           <h3 className="text-3xl font-bold mb-4">
