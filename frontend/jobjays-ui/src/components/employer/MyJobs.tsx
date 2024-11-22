@@ -79,7 +79,7 @@ const MyJobs: React.FC = () => {
                         <div key={job.id} className={styles.jobRow}>
                             <div className={styles.jobDetails}>
                                 <h4>{job.title}</h4>
-                                <p>{job.type} &bull; {job.daysRemaining > 0 ? `${job.daysRemaining} days remaining` : 'Expired'}</p>
+                                <p>{job.workTiming} &bull; {job.daysRemaining > 0 ? `${job.daysRemaining} days remaining` : 'Expired'}</p>
                             </div>
                             <div className={styles.jobStatus}>
                                 {job.status === 'Active' ? (

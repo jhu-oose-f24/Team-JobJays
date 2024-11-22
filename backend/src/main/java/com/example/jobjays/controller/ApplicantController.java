@@ -7,21 +7,18 @@ import com.example.jobjays.dto.applicant.*;
 import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
 import com.example.jobjays.dto.profile.ResponseApplicantProfileDto;
 import com.example.jobjays.dto.profile.ResponseProfileDto;
-import com.example.jobjays.model.Applicant;
-import com.example.jobjays.model.ApplicantProfile;
-import com.example.jobjays.model.ApplicantResume;
-import com.example.jobjays.model.JobPost;
+import com.example.jobjays.exception.JwtTokenException;
+import com.example.jobjays.model.*;
 import com.example.jobjays.repository.ApplicantRepository;
-import com.example.jobjays.service.ApplicantService;
-import com.example.jobjays.service.JobPostService;
-import com.example.jobjays.service.ResponseMapperService;
-import com.example.jobjays.service.ResumeService;
+import com.example.jobjays.service.*;
 import com.example.jobjays.wrapper.EmailSendWrapper;
+import jakarta.validation.Valid;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,6 +36,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RestController
+@PreAuthorize("hasAuthority('APPLICANT')")
 @RequestMapping("/api/applicants")
 public class ApplicantController {
 
@@ -57,6 +55,9 @@ public class ApplicantController {
   private ResumeService resumeService;
   @Autowired
   private ApplicantRepository applicantRepository;
+
+  @Autowired
+  SavedJobCollectionService savedJobCollectionService;
 
   public ApplicantController(ApplicantService applicantService, JobPostService jobPostService, ResponseMapperService responseMapperService, AuthService authService) {
     this.applicantService = applicantService;
@@ -81,6 +82,7 @@ public class ApplicantController {
     UpdateApplicantDto user = new UpdateApplicantDto();
 
     if (applicant == null) {
+      //throw new JwtTokenException("Invalid token");
       return new RedirectView("http://localhost:3000/invalid-token");
 //      RedirectView redirectView = new RedirectView("http://localhost:3000/invalid-token");
 //      redirectView.setExposeModelAttributes(false);
@@ -97,7 +99,7 @@ public class ApplicantController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<ResponseApplicantDto> addApplicant(@RequestBody CreateApplicantDto createApplicantDto) {
+  public ResponseEntity<ResponseApplicantDto> addApplicant(@Valid @RequestBody CreateApplicantDto createApplicantDto) {
 //    // check the email formation
 //    if (!isValidEmail(createApplicantDto.getEmail())) {
 //      throw new ServiceException("Email format is wrong");
@@ -125,12 +127,12 @@ public class ApplicantController {
     createApplicantDto.setEnabled(false);
     Applicant applicant = applicantService.addApplicant(createApplicantDto);
     emailSendWrapper.sendVerificationEmail(applicant.getEmail(), token);
-    ResponseApplicantDto responseApplicantDto = mapToResponseApplicantDto(applicant);
+    ResponseApplicantDto responseApplicantDto = responseMapperService.mapToResponseApplicantDto(applicant);
     return new ResponseEntity<>(responseApplicantDto, HttpStatus.CREATED);
   }
 
   @PutMapping("/profile")
-  public ResponseEntity<ResponseApplicantDto> updateApplicant(@RequestBody UpdateApplicantDto updateApplicantDto) {
+  public ResponseEntity<ResponseApplicantDto> updateApplicant(@Valid @RequestBody UpdateApplicantDto updateApplicantDto) {
     // Retrieve authentication details
     System.out.println("In Update!!!");
     String currentUserId = getCurrentUserId();
@@ -144,7 +146,7 @@ public class ApplicantController {
     if (updatedApplicant == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(mapToResponseApplicantDto(updatedApplicant));
+    return ResponseEntity.ok(responseMapperService.mapToResponseApplicantDto(updatedApplicant));
   }
 
   private String getCurrentUserId() {
@@ -174,7 +176,7 @@ public class ApplicantController {
   public ResponseEntity<List<ResponseApplicantDto>> getAllApplicants() {
     List<Applicant> applicants = applicantService.findAllApplicants();
     List<ResponseApplicantDto> responseList = applicants.stream()
-        .map(this::mapToResponseApplicantDto)
+        .map(responseMapperService::mapToResponseApplicantDto)
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
@@ -187,7 +189,7 @@ public class ApplicantController {
     if (applicantProfile == null) {
       return ResponseEntity.notFound().build();
     }
-    return ResponseEntity.ok(mapToResponseProfileDto(applicantProfile));
+    return ResponseEntity.ok(responseMapperService.mapToResponseApplicantProfileDto(applicantProfile));
   }
 
   @GetMapping("/photos/{applicantId}")
@@ -351,7 +353,7 @@ public class ApplicantController {
       return ResponseEntity.notFound().build();
     }
 
-    ResponseApplicantProfileDto responseApplicantProfileDto = mapToResponseProfileDto(applicantProfile);
+    ResponseApplicantProfileDto responseApplicantProfileDto = responseMapperService.mapToResponseApplicantProfileDto(applicantProfile);
     return new ResponseEntity<>(responseApplicantProfileDto, HttpStatus.OK);
   }
 
@@ -360,36 +362,36 @@ public class ApplicantController {
   public ResponseEntity<List<ResponseProfileDto>> getApplicantsByName(@RequestParam("name") String name) {
     List<ApplicantProfile> profiles = applicantService.findApplicantProfilesByUsername(name);
     List<ResponseProfileDto> responseList = profiles.stream()
-        .map(this::mapToResponseProfileDto)
+        .map(responseMapperService::mapToResponseApplicantProfileDto)
 
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }
 
-  @GetMapping("/profile/saved-jobs")
-  public ResponseEntity<Set<ResponseJobPostDto>> getSavedJobsByApplicantId() {
-    String currentUserId = getCurrentUserId();
-    Set<JobPost> savedJobs = applicantService.findSavedJobsByApplicantId(Long.valueOf(currentUserId));
-    Set<ResponseJobPostDto> responseList = savedJobs.stream()
-        .map(this::mapToResponseJobPostDto)
-        .collect(Collectors.toSet());
-    return ResponseEntity.ok(responseList);
-  }
+//  @GetMapping("/profile/saved-jobs")
+//  public ResponseEntity<Set<ResponseJobPostDto>> getSavedJobsByApplicantId() {
+//    String currentUserId = getCurrentUserId();
+//    Set<JobPost> savedJobs = applicantService.findSavedJobsByApplicantId(Long.valueOf(currentUserId));
+//    Set<ResponseJobPostDto> responseList = savedJobs.stream()
+//        .map(this::mapToResponseJobPostDto)
+//        .collect(Collectors.toSet());
+//    return ResponseEntity.ok(responseList);
+//  }
 
-  @PutMapping("/profile/saved-jobs/{jobId}")
-  public ResponseEntity<ResponseApplicantProfileDto> saveJob(@PathVariable Long jobId) {
-    String currentUserId = getCurrentUserId();
-    Applicant applicant = applicantService.findApplicantById(Long.valueOf(currentUserId));
-    JobPost jobPost = jobPostService.getJobPostById(jobId);
-    if (applicant == null || jobPost == null) {
-      return ResponseEntity.badRequest().build();
-    }
-    ApplicantProfile applicantProfile = applicant.getProfile();
-    applicantService.addSavedJob(applicant, jobPost);
-    applicantRepository.save(applicant);
-    //return ResponseEntity.ok(mapToResponseProfileDto(applicantProfile));
-    return ResponseEntity.ok().build();
-  }
+//  @PutMapping("/profile/saved-jobs/{jobId}")
+//  public ResponseEntity<ResponseApplicantProfileDto> saveJob(@PathVariable Long jobId) {
+//    String currentUserId = getCurrentUserId();
+//    Applicant applicant = applicantService.findApplicantById(Long.valueOf(currentUserId));
+//    JobPost jobPost = jobPostService.getJobPostById(jobId);
+//    if (applicant == null || jobPost == null) {
+//      return ResponseEntity.badRequest().build();
+//    }
+//    ApplicantProfile applicantProfile = applicant.getProfile();
+//    applicantService.addSavedJob(applicant, jobPost);
+//    applicantRepository.save(applicant);
+//    //return ResponseEntity.ok(mapToResponseProfileDto(applicantProfile));
+//    return ResponseEntity.ok().build();
+//  }
 
   @PutMapping("/apply/{jobID}")
   public ResponseEntity<ResponseJobPostDto> applyForJob(@PathVariable Long jobID) {
@@ -404,51 +406,27 @@ public class ApplicantController {
     return ResponseEntity.ok().build();
   }
 
-  // TODO: refactor into class
-  public ResponseJobPostDto mapToResponseJobPostDto(JobPost jobPost) {
+  @PostMapping("/create-job-collection")
+  public ResponseEntity<SavedJobCollectionDto> createSavedJobCollection(@RequestBody String listName) {
+    String currentUserId = getCurrentUserId();
 
-    ResponseJobPostDto responseJobPostDto = new ResponseJobPostDto();
-    responseJobPostDto.id = jobPost.getID();
-    responseJobPostDto.setCompanyName(jobPost.getEmployer().getProfile().getName());
-    responseJobPostDto.title = jobPost.getTitle();
-    responseJobPostDto.description = jobPost.getDescription();
-    responseJobPostDto.location = jobPost.getLocation();
-    responseJobPostDto.minSalary = jobPost.getMinSalary();
-    responseJobPostDto.maxSalary = jobPost.getMaxSalary();
-    responseJobPostDto.postedDate = jobPost.getPostedDate();
-    responseJobPostDto.closedDate = jobPost.getClosedDate();
-    responseJobPostDto.numApplicants = jobPost.getApplicants().size();
-    return responseJobPostDto;
-
+    SavedJobCollection newList = savedJobCollectionService.createNewList(Long.parseLong(currentUserId), listName);
+    return ResponseEntity.ok(responseMapperService.mapToSavedJobCollectionDto(newList));
   }
 
-  ResponseApplicantProfileDto mapToResponseProfileDto(ApplicantProfile profile) {
-    ResponseApplicantProfileDto responseProfileDto = new ResponseApplicantProfileDto();
-    responseProfileDto.name = profile.getName();
-
-    responseProfileDto.bio = profile.getBio();
-    responseProfileDto.appliedJobs = profile.getAppliedJobs().stream().map(this::mapToResponseJobPostDto)
-        .collect(Collectors.toList());
-    responseProfileDto.savedJobs = profile.getSavedJobs().stream().map(this::mapToResponseJobPostDto).collect(Collectors.toSet());
-    responseProfileDto.dateOfBirth = profile.getDateOfBirth();
-    responseProfileDto.education  = profile.getEducation();
-    responseProfileDto.experience = profile.getExperience();
-    responseProfileDto.gender = profile.getGender();
-    responseProfileDto.maritalStatus = profile.getMaritalStatus();
-    responseProfileDto.nationality = profile.getNationality();
-    responseProfileDto.website = profile.getWebsite();
-    responseProfileDto.title = profile.getTitle();
-    return responseProfileDto;
+  @PostMapping("/saved-job/{listId}/{jobId}/add")
+  public ResponseEntity<SavedJobCollectionDto> addJobToList(
+      @PathVariable Long listId,
+      @PathVariable Long jobId) {
+    SavedJobCollection updatedList = savedJobCollectionService.addJobToList(listId, jobId);
+    return ResponseEntity.ok(responseMapperService.mapToSavedJobCollectionDto(updatedList));
   }
 
-  // Utility method to map Applicant entity to ResponseApplicantDto
-  private ResponseApplicantDto mapToResponseApplicantDto(Applicant applicant) {
-    ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
-    responseApplicantDto.applicantId = applicant.getID();
-    responseApplicantDto.username = applicant.getUsername();
-    responseApplicantDto.applicantProfile = mapToResponseProfileDto(applicant.getProfile());
-    return responseApplicantDto;
+  @GetMapping("/saved-jobs/collections")
+  public ResponseEntity<List<SavedJobCollectionDto>> getListsForApplicant() {
+    String currentUserId = getCurrentUserId();
+    List<SavedJobCollection> lists = savedJobCollectionService.getListsForApplicant(Long.parseLong(currentUserId));
+    return ResponseEntity.ok(lists.stream().map(responseMapperService::mapToSavedJobCollectionDto).collect(Collectors.toList()));
   }
-
 
 }

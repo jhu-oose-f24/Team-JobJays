@@ -10,14 +10,19 @@ import java.util.List;
 
 public class UserPrincipal implements UserDetails {
   private User user;
+  private String role;
 
-  public UserPrincipal(User user) {
+  public UserPrincipal(User user, String role) {
     this.user = user;
+    this.role = role;
   }
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Collections.singleton(new SimpleGrantedAuthority("USER"));
+    if (role.equals("applicant")) {
+      return Collections.singleton(new SimpleGrantedAuthority("APPLICANT"));
+    }
+    return Collections.singleton(new SimpleGrantedAuthority("EMPLOYER"));
   }
 
   @Override
@@ -29,6 +34,8 @@ public class UserPrincipal implements UserDetails {
   public String getUsername() {
     return user.getUsername();
   }
+
+  public String getRole() {return role;}
 
   @Override
   public boolean isAccountNonExpired() {

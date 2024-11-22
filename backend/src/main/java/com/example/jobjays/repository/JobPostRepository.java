@@ -35,6 +35,9 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
   @Query("SELECT j.impressions FROM JobPost j WHERE j.jobID = ?1")
   Impressions findImpressionsByJobPostId(Long jobID);
 
+  @Query("SELECT j.applicants FROM JobPost j WHERE j.jobID = ?1")
+  Set<Applicant> findApplicantsByJobID(Long jobID);
+
 
 
 

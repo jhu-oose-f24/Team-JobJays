@@ -50,7 +50,7 @@ export default function CreateAccount() {
     console.log(formData);
 
     try {
-      const response = await fetch("http://localhost:8080/api/companies", {
+      const response = await fetch("http://localhost:8080/api/companies/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -102,7 +102,7 @@ export default function CreateAccount() {
       }
   
       try {
-        const response = await fetch("http://localhost:8080/api/applicants", {
+        const response = await fetch("http://localhost:8080/api/applicants/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

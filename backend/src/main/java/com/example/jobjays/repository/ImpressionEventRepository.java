@@ -24,4 +24,9 @@ public interface ImpressionEventRepository extends JpaRepository<ImpressionEvent
       @Param("startDate") LocalDateTime startDate
   );
 
+  @Query("SELECT ie FROM ImpressionEvent ie " +
+      "WHERE ie.impressions.jobPost.jobID IN " +
+      "(SELECT jp.jobID FROM JobPost jp WHERE jp.employer.employer_id = :employerId)")
+  List<ImpressionEvent> findByEmployerId(@Param("employerId") Long employerId);
+
 }

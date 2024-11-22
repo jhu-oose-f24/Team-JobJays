@@ -2,6 +2,8 @@ package com.example.jobjays.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 
 import java.util.ArrayList;
@@ -34,8 +36,13 @@ public class ApplicantProfile implements Profile {
   private Applicant applicant;
   @ManyToMany(mappedBy = "applicants")
   private Set<JobPost> appliedJobs;
-  @ManyToMany(mappedBy = "applicants")
-  private Set<JobPost> savedJobs;
+//  @ManyToMany(mappedBy = "applicant")
+//  private Set<JobPost> savedJobs;
+
+  @Getter
+  @Setter
+  @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<SavedJobCollection> savedJobs = new HashSet<>();
 
   public ApplicantProfile() {}
 
@@ -164,13 +171,13 @@ public class ApplicantProfile implements Profile {
     //TODO: Implement this method
 
   }
-
-  public Set<JobPost> getSavedJobs() {
-    return savedJobs;
-  }
-
-  public void addSavedJobs(JobPost jobPost) {
-    System.out.println("About to addsavedjobs in profile");
-    savedJobs.add(jobPost);
-  }
+//
+//  public Set<JobPost> getSavedJobs() {
+//    return savedJobs;
+//  }
+//
+//  public void addSavedJobs(JobPost jobPost) {
+//    System.out.println("About to addsavedjobs in profile");
+//    savedJobs.add(jobPost);
+//  }
 }

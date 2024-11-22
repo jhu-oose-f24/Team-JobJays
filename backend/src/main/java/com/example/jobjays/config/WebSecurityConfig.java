@@ -25,20 +25,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
   public PasswordEncoder passwordEncoder () {
     return new BCryptPasswordEncoder(10);
   }
-//  @Bean
-//  public InMemoryUserDetailsManager userDetailsService() {
-//    UserDetails user = User.withUsername("user1").password(passwordEncoder().encode("userPass1"))
-//        .roles("USER")
-//        .build();
-//    return new InMemoryUserDetailsManager(user);
-//  }
 
-//  @Bean
-//  public UserDetailsService userDetailsService() {
-//    InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-//    manager.createUser(User.withDefaultPasswordEncoder().username("user").password("password").roles("USER").build());
-//    return manager;
-//  }
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/api/**")

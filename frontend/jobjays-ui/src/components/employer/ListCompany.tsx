@@ -1,12 +1,7 @@
 // src/components/PostJob.tsx
 "use client";
 import styles from '@/styles/listJob.module.css'; // Assuming you style it with CSS Modules
-import {
-    sampleJobListing, sampleJobListingB, sampleJobListingC
-} from "@/lib/data";
-import {Employer, JobPost} from "@/lib/types";
-import {fetchAllCompanies, fetchAllJobPosts} from "@/lib/api";
-import { useState } from 'react';
+import {fetchAllCompanies} from "@/lib/api";
 import Link from "next/link";
 
 interface ListCompanyProps {
