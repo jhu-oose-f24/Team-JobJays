@@ -63,6 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       //String role = jwtTokenProvider.extractRole(token); // Extracting role if you need it
 
       UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(username);
+
       if (jwtTokenProvider.validateToken(token, userDetails)) {
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

@@ -1,11 +1,13 @@
 package com.example.jobjays.controller;
 
 import com.example.jobjays.auth.AuthService;
+import com.example.jobjays.auth.CustomAuthenticationDetails;
 import com.example.jobjays.authentication.TokenGenerator;
 import com.example.jobjays.dto.applicant.LoginApplicationDto;
 import com.example.jobjays.dto.applicant.ResponseApplicantDto;
 //import com.example.jobjays.dto.auth.TokenResponseDto;
 import com.example.jobjays.dto.employer.ResponseEmployerDto;
+import com.example.jobjays.exception.UserNotFoundException;
 import com.example.jobjays.model.Applicant;
 import com.example.jobjays.model.Employer;
 import com.example.jobjays.service.ApplicantService;
@@ -18,11 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,6 +64,8 @@ public class AuthController {
         if (token == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+//        session.setAttribute("userType", "employer");
+//        session.setAttribute("userId", employer.getID());
 
         //ResponseEmployerDto employerDto = new ResponseEmployerDto();
 //        employerDto.setUsername(employer.getUsername());
@@ -106,9 +111,21 @@ public class AuthController {
 //            System.out.println(employerDto.toString());
 //            return ResponseEntity.status(HttpStatus.FORBIDDEN)
 //                    .body(employerDto);
+
 //        }
+
+//        session.setAttribute("userType", "applicant");
+//        session.setAttribute("userId", applicant.getID());
         return ResponseEntity.ok(token);
     }
+
+    private String getCurrentUserId() {
+        CustomAuthenticationDetails details = (CustomAuthenticationDetails)
+            SecurityContextHolder.getContext().getAuthentication().getDetails();
+        return details != null ? details.getUserId() : null;
+    }
+
+
 
     @PostMapping("/logout")
     public String logout() {

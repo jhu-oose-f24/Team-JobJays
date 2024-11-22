@@ -3,11 +3,14 @@ export interface Post {
     title: string;
     description: string;
     location: Location;
-    salary: number;
-    publish: () => void;
-    close: () => void;
+    // salary: number;
+    // publish: () => void;
+    // close: () => void;
 }
 
+export interface UserTypeDto {
+    userType: string;
+}
 
 export interface JobPost extends Post {
     id: number;
@@ -39,7 +42,7 @@ export interface Location {
 
 
 export interface User {
-    userID: number;
+    //userID: number;
     username: string;
     //email: string;
     //password: string;
@@ -115,9 +118,14 @@ export interface TimeSpentOnPage { //time spent on a specific page
 
 }
 export interface Impressions { //amount of times your job post has been viewed
-    impressions: number;
+    impressionsCount: number;
     //jobPost: JobPost;
 
+}
+
+export interface ImpressionsChartData {
+    date: Date;
+    impressions: number;
 }
 
 export interface ProfileViews { //amount of times your profile has been viewed

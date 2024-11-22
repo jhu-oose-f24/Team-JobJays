@@ -1,5 +1,15 @@
 import useSWR from 'swr' ;
-import {Applicant, ApplicantProfile, Employer, EmployerProfile, JobPost, SavedJobCollection} from './types';
+import {
+    Applicant,
+    ApplicantProfile,
+    Employer,
+    EmployerProfile, Impressions, ImpressionsChartData,
+    JobPost,
+    SavedJobCollection,
+    UserTypeDto
+} from './types';
+
+const BASE_URL = 'http://localhost:8080/api/';
 
 // Fetcher function
 export const fetcher = (url: string) => {
@@ -15,6 +25,10 @@ export const fetcher = (url: string) => {
         method: "GET",
         headers: headers,
     }).then((res) => res.json());
+};
+
+export const fetcherNoAuth = (url: string) => {
+    return fetch(url).then((res) => res.json());
 };
 
 
@@ -41,7 +55,7 @@ export function addJobAttributes(job: JobPost): JobPost {
 
 export function useApplicant() {
     console.log("In use applicant");
-    const { data, error, isLoading } = useSWR("http://localhost:8080/api/applicants/profile", fetcher);
+    const { data, error, isLoading } = useSWR(`${BASE_URL}applicants/profile`, fetcher);
 
 
     return {
@@ -54,7 +68,7 @@ export function useApplicant() {
 // Hook to fetch the EmployerProfile and process job posts
 export function useEmployer() {
     // employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0;
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/companies/profile`, fetcher);
+    const { data, error, isLoading } = useSWR(`${BASE_URL}companies/profile`, fetcher);
 
     // Process job posts if data is available
     // const processedEmployerProfile = data && data.jobPosts ? {
@@ -76,7 +90,7 @@ export function fetchUserProfile(id: number) {
 export function fetchJobApplicants(id:number) {
     console.log(id);
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, error, isLoading} = useSWR(`http://localhost:8080/api/${id}/applicants`, fetcher);
+    const { data, error, isLoading} = useSWR(`${BASE_URL}${id}/applicants`, fetcher);
     console.log(data);
     return {
         applicants: data as Applicant,
@@ -87,7 +101,7 @@ export function fetchJobApplicants(id:number) {
 
 export function useJobApplicants(jobId: number | null) {
     const { data, error } = useSWR(
-      jobId ? `http://localhost:8080/api/${jobId}/applicants` : null,
+      jobId ? `${BASE_URL}${jobId}/applicants` : null,
       fetcher
     );
   
@@ -102,7 +116,7 @@ export function useJobApplicants(jobId: number | null) {
 
 export function fetchJobPost(id:number) {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/posts/jobs/${id}`, fetcher);
+    const { data, error, isLoading, mutate } = useSWR(`${BASE_URL}posts/jobs/${id}`, fetcher);
 
     // Data should already be processed
     const processedJobPost = data ? addJobAttributes(data as JobPost) : null;
@@ -117,7 +131,7 @@ export function fetchJobPost(id:number) {
 
 export function fetchAllJobPosts() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/posts/jobs`, fetcher);
+    const { data, error, isLoading, mutate } = useSWR(`${BASE_URL}posts/public/jobs`, fetcher);
 
     const processedJobPosts = data ? (data as JobPost[]).map(addJobAttributes) : null;
     
@@ -131,7 +145,7 @@ export function fetchAllJobPosts() {
 
 export function fetchAllCompanies() {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, error, isLoading, mutate } = useSWR(`http://localhost:8080/api/companies`, fetcher);
+    const { data, error, isLoading, mutate } = useSWR(`${BASE_URL}companies/public`, fetcher);
     return {
         Employers: data as Employer[],
         isLoading,
@@ -150,7 +164,7 @@ export const createJobPost = async (
         "Authorization": `Bearer ${token}`,
         "Content-Type": 'application/json',
     };
-    const response = await fetch(`http://localhost:8080/api/companies/profile/post`, {
+    const response = await fetch(`${BASE_URL}companies/profile/post`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(jobData),
@@ -184,7 +198,7 @@ export const updateJobPost = async (
         "Content-Type": 'application/json',
     };
     try {
-        const response = await fetch(`http://localhost:8080/api/companies/profile/post/${id}`, {
+        const response = await fetch(`${BASE_URL}companies/profile/post/${id}`, {
             method: 'PUT',
             headers: headers,
             body: JSON.stringify(updatedData),
@@ -209,7 +223,7 @@ export const applyToJob = async (
     id: number
 ) => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`http://localhost:8080/api/applicants/apply/${id}`, {
+    const response = await fetch(`${BASE_URL}applicants/apply/${id}`, {
         method: 'PUT',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -232,7 +246,7 @@ export const addImpressionEvent = async (id: number) => {
         "Content-Type": 'application/json',
     };
     try {
-        const response = await fetch(`http://localhost:8080/api/metrics/impressions/${id}`, {
+        const response = await fetch(`${BASE_URL}metrics/impressions/${id}`, {
             method: 'POST',
             headers: headers
         });
@@ -244,6 +258,59 @@ export const addImpressionEvent = async (id: number) => {
     }
 }
 
+
+export function useEmployerJobImpressions() {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}metrics/impressions/employer/total`, fetcher);
+
+    return {
+        impressions: data as Impressions,
+        isLoading,
+        isError: error
+    };
+}
+
+
+export function usePostImpressions(id: number) {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}metrics/impressions/${id}`, fetcher);
+
+    return {
+        impressions: data as Impressions,
+        isLoading,
+        isError: error
+    };
+}
+
+export function useJobImpressionsByDateRange(start:Date, end:Date) {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}metrics/impressions/range?start=${start}&end=${end}`, fetcher);
+
+    return {
+        impressions: data as Impressions,
+        isLoading,
+        isError: error
+    };
+}
+
+export function useJobImpressionsBeforeDate(date:Date) {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}metrics/impressions/before?date=${date}`, fetcher);
+
+    return {
+        impressions: data as Impressions,
+        isLoading,
+        isError: error
+    };
+}
+
+
+export function useImpressionChartData() {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}metrics/impressions/chart`, fetcher);
+    console.log(data)
+    return {
+        impressionData: data as ImpressionsChartData[],
+        isLoading,
+        isError: error
+    };
+}
+
 export const createNewSaveCollection = async (collectionName: string) => {
     const token = localStorage.getItem("token"); // Retrieve token from localStorage
     const headers = {
@@ -251,7 +318,7 @@ export const createNewSaveCollection = async (collectionName: string) => {
         "Content-Type": 'plain/text',
     }
     try {
-        const response = await fetch(`http://localhost:8080/api/applicants/create-job-collection`, {
+        const response = await fetch(`${BASE_URL}applicants/create-job-collection`, {
             method: 'POST',
             headers: headers,
             body: collectionName
@@ -275,7 +342,7 @@ export const createNewSaveCollection = async (collectionName: string) => {
 //add a job to Saved
 export const saveJobToCollection = async (listId: number, jobId:number) => {
     const token = localStorage.getItem("token");
-    const response = await fetch(`http://localhost:8080/api/applicants/saved-job/${listId}/${jobId}/add`, {
+    const response = await fetch(`${BASE_URL}applicants/saved-job/${listId}/${jobId}/add`, {
         method: 'POST',
         headers: {
             'Authorization': `Bearer ${token}`,
@@ -296,7 +363,7 @@ export const saveJobToCollection = async (listId: number, jobId:number) => {
 
 //get saved a job
 export function useSavedJobCollections() {
-    const { data, error, isLoading } = useSWR(`http://localhost:8080/api/applicants/saved-jobs/collections`, fetcher);
+    const { data, error, isLoading } = useSWR(`${BASE_URL}applicants/saved-jobs/collections`, fetcher);
     //returns list of savedJobCollection
 
     return {
@@ -310,7 +377,7 @@ export function useSavedJobCollections() {
 
 export function useGetSavedJobs() {
     const { data, error, isLoading } = useSWR(
-        `http://localhost:8080/api/applicants/profile/saved-jobs`,
+        `${BASE_URL}applicants/profile/saved-jobs`,
         fetcher
     );
 
@@ -325,6 +392,19 @@ export function useGetSavedJobs() {
         isError: error,
     };
 }
+
+
+export function useUserType() {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}metrics/user-type`, fetcher);
+
+    return {
+        userType: data as UserTypeDto,
+        isLoading,
+        isError: error
+    };
+}
+
+
 
 export function logout() {
     localStorage.removeItem("token");

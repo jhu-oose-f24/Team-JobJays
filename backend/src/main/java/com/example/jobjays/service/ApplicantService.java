@@ -8,6 +8,8 @@ import com.example.jobjays.model.ApplicantProfile;
 import com.example.jobjays.model.JobPost;
 import com.example.jobjays.repository.ApplicantRepository;
 import jakarta.validation.constraints.Email;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,9 @@ import java.util.Set;
 public class ApplicantService {
   private final ApplicantRepository applicantRepository;
 
+  @Autowired
+  PasswordEncoder passwordEncoder;
+
 
   public ApplicantService(ApplicantRepository applicantRepository) {
     this.applicantRepository = applicantRepository;
@@ -32,7 +37,7 @@ public class ApplicantService {
     Applicant newApplicant = new Applicant(
       applicant.getUsername(),
       applicant.getApplicantName(),
-      applicant.getPassword(),
+      passwordEncoder.encode(applicant.getPassword()),
       applicant.getEmail(),
       applicant.getEnabled(),
       applicant.getResume(),

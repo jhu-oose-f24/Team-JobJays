@@ -49,6 +49,9 @@ public class SavedJobCollectionService {
   }
 
   public List<SavedJobCollection> getListsForApplicant(Long applicantId) {
+    if (!applicantRepository.existsById(applicantId)) {
+      throw new UserNotFoundException("Applicant not found");
+    }
     return savedJobCollectionRepository.findByApplicant_id(applicantId);
   }
 

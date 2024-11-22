@@ -38,7 +38,7 @@ export default function RootLayout({
         <main style={{ flex: 1 }}>
           {children}
         </main>
-        <Footer /> {/* Footer 在页面内容之后 */}
+        {/*<Footer /> /!* Footer 在页面内容之后 *!/*/}
         <Toaster />
       </body>
     </html>

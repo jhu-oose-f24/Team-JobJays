@@ -1,25 +1,11 @@
 "use client";
-import React, {useEffect} from 'react';
-// import { useParams } from "next/navigation";
-// import { fetchJobPost } from '@/lib/api'; // Use your custom hook or fetch logic
-// import styles from '@/styles/postJob.module.css';
+import React from 'react';
 import JobDetails from "@/components/jobPost/JobDetails";
-import RelatedJobs from "@/components/jobPost/RelatedJobs";
-// import ContactUs from "@/components/ContactUs";
 import Link from "next/link";
-import {useParams} from "next/navigation";
-import {addImpressionEvent} from "@/lib/api";
 import {useRouter} from "next/navigation";
 
 const JobDetailPage: React.FC = () => {
     const router = useRouter();
-    const { id } = useParams<{ id: string }>();
-
-    useEffect(() => {
-        // Call the API to increment the view count whenever this page loads
-        addImpressionEvent(Number(id));
-    }, [id]);
-
     return (
         <div className="bg-gray-100">
             {/* <Navbar />
@@ -38,7 +24,6 @@ const JobDetailPage: React.FC = () => {
                 </div>
             </header>
             <JobDetails />
-            <RelatedJobs />
         </div>
     );
 };

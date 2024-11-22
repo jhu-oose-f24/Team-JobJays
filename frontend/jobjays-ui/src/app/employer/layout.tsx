@@ -12,6 +12,7 @@ import {
     LogOut
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import {logout} from "@/lib/api";
 
 
 const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
@@ -39,12 +40,13 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
             href: `/employer/my-jobs`,
             label: 'My Jobs',
             icon: <BookmarkPlus className="w-5 h-5" />
-        },
-        {
-            href: `/employer/saved-candidates`,
-            label: 'Saved Candidates',
-            icon: <Users className="w-5 h-5" />
         }
+        //,
+        // {
+        //     href: `/employer/saved-candidates`,
+        //     label: 'Saved Candidates',
+        //     icon: <Users className="w-5 h-5" />
+        // }
     ];
 
     return (
@@ -103,7 +105,7 @@ const EmployerLayout = ({ children }: { children: React.ReactNode }) => {
                 <div className="p-4 border-t border-gray-200">
                     <button
                         onClick={() => {
-                            localStorage.removeItem("employerId");
+                            logout();
                             router.push("/signin"); // Use router.push for navigation
                         }}
                         className="flex items-center gap-3 px-4 py-3 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors w-full">

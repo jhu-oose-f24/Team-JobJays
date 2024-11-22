@@ -7,6 +7,7 @@ import com.example.jobjays.dto.jobPost.CreateJobPostDto;
 import com.example.jobjays.dto.jobPost.ResponseJobPostDto;
 import com.example.jobjays.dto.jobPost.UpdateJobPostDto;
 import com.example.jobjays.dto.profile.ResponseApplicantProfileDto;
+import com.example.jobjays.exception.AccessDeniedException;
 import com.example.jobjays.model.*;
 import com.example.jobjays.service.ApplicantService;
 import com.example.jobjays.service.EmployerService;
@@ -15,6 +16,7 @@ import com.example.jobjays.service.ResponseMapperService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +58,9 @@ public class JobPostController {
     return Long.parseLong(userId);
   }
 
+
+
+  @PreAuthorize("hasAuthority('EMPLOYER')")
   @PostMapping("/companies/profile/post")
   public ResponseEntity<ResponseJobPostDto> addJobPost(@Valid @RequestBody CreateJobPostDto newJobPost) {
     Long employerId = parsedUserId();
@@ -63,7 +68,6 @@ public class JobPostController {
     if (employer == null) {
       return ResponseEntity.notFound().build();
     }
-    // set industry from employer data
     System.out.println(newJobPost.getSkillsRequired());
     newJobPost.setIndustry(employer.getProfile().getIndustry());
     JobPost jobPost = jobPostService.addJobPost(newJobPost, employer);
@@ -73,51 +77,34 @@ public class JobPostController {
     return new ResponseEntity<>(responseJobPostDto, HttpStatus.CREATED);
   }
 
+  @PreAuthorize("hasAuthority('EMPLOYER')")
   @PutMapping("/companies/profile/post/{id}")
   public ResponseEntity<?> updateJobPost(@PathVariable Long id, @Valid @RequestBody UpdateJobPostDto updateJobPostDto) {
-    //find employer
+
     Long employerId = parsedUserId();
-    ResponseEntity<?> build = checkOwnership(id, employerId);
-    if (build != null) return build;
+    if (!isJobPostOwner(id, employerId)) {
+      throw new AccessDeniedException("You do not have permission to access this resource");
+    }
+
     JobPost updatedJobPost = jobPostService.updateJobPost(updateJobPostDto, id);
     return ResponseEntity.ok(responseMapperService.mapToResponseJobPostDto(updatedJobPost));
   }
 
-  /*
-    * Helper method to check if post belongs to employer
-   */
-  private ResponseEntity<?> checkOwnership(Long id, Long employerId) {
-    EmployerProfile employer = employerService.findEmployerById(employerId).getProfile();
-    ResponseEntity<ResponseJobPostDto> build = new ResponseEntity<>(HttpStatus.NOT_FOUND);
-    if (employer == null) {
-      return build;
-    }
-    //find post
-    JobPost jobPost = jobPostService.getJobPostById(id);
-    if (jobPost == null) {
-      return build;
-    }
-    //check if post belongs to employer
-    if (!jobPost.getEmployer().getProfile().equals(employer)) {
-      build = ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-      return build;
-    }
-    //return null if post belongs to employer
-    return null;
-  }
 
+  @PreAuthorize("hasAuthority('EMPLOYER')")
   @DeleteMapping("/companies/profile/post/{id}")
   public ResponseEntity<?> deleteJobPost(@PathVariable Long id) {
     Long employerId = parsedUserId();
     //find employer
-    ResponseEntity<?> build = checkOwnership(id, employerId);
-    if (build != null) return build;
+    if (!isJobPostOwner(id, employerId)) {
+      throw new AccessDeniedException("You do not have permission to access this resource");
+    }
     jobPostService.deleteJobPost(id);
     return ResponseEntity.noContent().build();
   }
 
 
-  @GetMapping("/posts/jobs")
+  @GetMapping("/posts/public/jobs")
   public ResponseEntity<List<ResponseJobPostDto>> getJobPosts() {
     List<JobPost> jobPosts = jobPostService.getJobPosts();
     List<ResponseJobPostDto> responseJobPosts = jobPosts.stream()
@@ -148,6 +135,7 @@ public class JobPostController {
     return new ResponseEntity<>(responseJobPosts, HttpStatus.OK);
   }
 
+  @PreAuthorize("hasAuthority('EMPLOYER')")
   @GetMapping("/companies/profile/jobs")
   public ResponseEntity<List<ResponseJobPostDto>> getJobPostsByEmployerId() {
     Long employerId = parsedUserId();
@@ -168,8 +156,13 @@ public class JobPostController {
     return ResponseEntity.ok(responseJobPosts);
   }
 
+  @PreAuthorize("hasAuthority('EMPLOYER')")
   @GetMapping("/{jobID}/applicants")
   public ResponseEntity<Set<ResponseApplicantDto>> getApplicants(@PathVariable Long jobID) {
+    Long employerId = parsedUserId();
+    if (!isJobPostOwner(jobID, employerId)) {
+      throw new AccessDeniedException("You do not have permission to access this resource");
+    }
     Set<Applicant> applicants = jobPostService.getApplicantsByJobPostId(jobID);
     Set<ResponseApplicantDto> responseApplicants = applicants.stream()
         .map(this::mapToResponseApplicantDto)
@@ -195,6 +188,19 @@ public class JobPostController {
     responseApplicantDto.username = applicant.getUsername();
     responseApplicantDto.applicantProfile = mapToResponseProfileDto(applicant.getProfile());
     return responseApplicantDto;
+  }
+
+  private boolean isJobPostOwner(Long jobPostId, Long userId) {
+    EmployerProfile employer = employerService.findEmployerById(userId).getProfile();
+    if (employer == null) {
+      return false;
+    }
+    //find post
+    JobPost jobPost = jobPostService.getJobPostById(jobPostId);
+    if (jobPost == null) {
+      return false;
+    }
+    return jobPostService.getJobPostById(jobPostId).getEmployer().getID().equals(userId);
   }
 
 }

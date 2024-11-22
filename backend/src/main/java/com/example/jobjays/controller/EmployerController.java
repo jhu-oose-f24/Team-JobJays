@@ -22,6 +22,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@PreAuthorize("hasAuthority('EMPLOYER')")
 @RequestMapping("/api/companies")
 public class EmployerController {
 
@@ -120,6 +122,7 @@ public class EmployerController {
   @GetMapping("/profile")
   public ResponseEntity<ResponseProfileDto> getEmployerProfileById() {
     Long userId = parsedUserId();
+
     EmployerProfile employerProfile = employerService.findEmployerProfileById(userId);
 
     if (employerProfile == null) {
@@ -144,7 +147,7 @@ public class EmployerController {
     return ResponseEntity.ok(responseList);
   }
 
-  @GetMapping
+  @GetMapping("/public")
   public ResponseEntity<List<ResponseEmployerDto>> getAllEmployers() {
     List<Employer> employers = employerService.findAllEmployers();
     List<ResponseEmployerDto> responseList = employers.stream()

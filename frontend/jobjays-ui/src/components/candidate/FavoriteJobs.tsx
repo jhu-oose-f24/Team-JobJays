@@ -9,6 +9,12 @@ import Link from "next/link";
 import {SavedJobCollection} from "@/lib/types";
 import {PlusCircledIcon} from "@radix-ui/react-icons";
 import styles from "@/styles/favoriteJobs.module.css";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+
 
 
 // const FavoriteJobs: React.FC = () => {
@@ -87,23 +93,21 @@ const FavoriteJobs: React.FC = () => {
     return (
         <div className="container mx-auto px-4 py-8">
             <h1 className="text-3xl font-semibold mb-6">My Saved Jobs</h1>
-            <PlusCircledIcon className="w-6 h-6 text-blue-600 cursor-pointer" />
+            <PlusCircledIcon className="w-6 h-6 text-blue-600 cursor-pointer " />
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {Collections.map((collection: SavedJobCollection) => (
-                    <div
-                        key={collection.id}
-                        className={`p-6 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200 cursor-pointer ${
-                            expandedCollectionId === collection.id ? styles.expandedCard : ''
-                        }`}
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            toggleCollectionExpansion(collection.id);
-                        }}
-                    >
-                        <h2 className="text-xl font-bold text-blue-600 mb-2">{collection.name}</h2>
-                        <p className="text-gray-600 mb-4">Total Jobs: {collection.jobPosts.length}</p>
+                    <Popover key={collection.id}>
+                        <PopoverTrigger asChild>
+                            <div
+                                className="p-6 bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+                            >
+                                <h2 className="text-xl font-bold text-blue-600 mb-2">{collection.name}</h2>
+                                <p className="text-gray-600 mb-4">Total Jobs: {collection.jobPosts.length}</p>
+                            </div>
+                        </PopoverTrigger>
 
-                        {expandedCollectionId === collection.id && (
+                        <PopoverContent className="p-4 bg-white rounded-lg shadow-lg">
                             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                                 {collection.jobPosts.map((jobListing) => (
                                     <Link
@@ -117,8 +121,8 @@ const FavoriteJobs: React.FC = () => {
                                     </Link>
                                 ))}
                             </div>
-                        )}
-                    </div>
+                        </PopoverContent>
+                    </Popover>
                 ))}
             </div>
         </div>
