@@ -59,7 +59,8 @@ We also got ahead on the next iteration and began to work on polishing the UI. T
 
 We also made changes to our UML diagram to mimic the state of our application at this point, which you can find in: ‘class_diagram.mermaid’ 
 
-### How Preference, JobMatching Services works(video explanation) -  https://drive.google.com/file/d/1K8zL4N61aZ6ESc-EVxIhXuNwvQRUu8E2/view?usp=sharing
+### How Preference, JobMatching Services works(video explanation) - 
+(https://drive.google.com/file/d/1K8zL4N61aZ6ESc-EVxIhXuNwvQRUu8E2/view?usp=sharing)
 
 
 ### Running services
