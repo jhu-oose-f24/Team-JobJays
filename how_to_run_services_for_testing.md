@@ -86,7 +86,11 @@ Provided that you have set up the database, we can go over running backend servi
 
 The main app is built with Maven, others mostly with Gradle. We provide a bash script that will run Kafka and Zookeeper as Docker containers, and helper services will be built and run.
 
-### Prerequisite - Docker Engine
+### Prerequisites
+-  Docker Engine
+-  JDK 22
+-  Java 17
+-  Maven 3.9.8
 
 Ensure you have Docker Engine installed on your machine.
 
