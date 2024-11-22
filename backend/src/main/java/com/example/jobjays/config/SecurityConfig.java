@@ -36,7 +36,8 @@ public class SecurityConfig {
 //        .requiresChannel(channel -> channel
 //            .anyRequest().requiresSecure()  // Redirects all requests to HTTPS
 //        )
-        .cors(Customizer.withDefaults())
+//        .cors(Customizer.withDefaults())
+        .cors(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests((authorize) -> authorize
             // Open endpoints for unauthenticated access
