@@ -36,7 +36,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @RestController
-@PreAuthorize("hasAuthority('APPLICANT')")
 @RequestMapping("/api/applicants")
 public class ApplicantController {
 
@@ -131,6 +130,7 @@ public class ApplicantController {
     return new ResponseEntity<>(responseApplicantDto, HttpStatus.CREATED);
   }
 
+  @PreAuthorize("hasAuthority('APPLICANT')")
   @PutMapping("/profile")
   public ResponseEntity<ResponseApplicantDto> updateApplicant(@Valid @RequestBody UpdateApplicantDto updateApplicantDto) {
     // Retrieve authentication details
@@ -155,6 +155,7 @@ public class ApplicantController {
     return details != null ? details.getUserId() : null;
   }
 
+  @PreAuthorize("hasAuthority('APPLICANT')")
   @DeleteMapping("/profile")
   public ResponseEntity<Void> deleteApplicant() {
     String currentUserId = getCurrentUserId();
@@ -191,6 +192,7 @@ public class ApplicantController {
     }
     return ResponseEntity.ok(responseMapperService.mapToResponseApplicantProfileDto(applicantProfile));
   }
+
 
   @GetMapping("/photos/{applicantId}")
   public ResponseEntity<byte[]> fetchPhotoByApplicantId(@PathVariable Long applicantId) {
@@ -393,6 +395,7 @@ public class ApplicantController {
 //    return ResponseEntity.ok().build();
 //  }
 
+  @PreAuthorize("hasAuthority('APPLICANT')")
   @PutMapping("/apply/{jobID}")
   public ResponseEntity<ResponseJobPostDto> applyForJob(@PathVariable Long jobID) {
     String currentUserId = getCurrentUserId();
@@ -406,6 +409,7 @@ public class ApplicantController {
     return ResponseEntity.ok().build();
   }
 
+  @PreAuthorize("hasAuthority('APPLICANT')")
   @PostMapping("/create-job-collection")
   public ResponseEntity<SavedJobCollectionDto> createSavedJobCollection(@RequestBody String listName) {
     String currentUserId = getCurrentUserId();
@@ -414,6 +418,7 @@ public class ApplicantController {
     return ResponseEntity.ok(responseMapperService.mapToSavedJobCollectionDto(newList));
   }
 
+  @PreAuthorize("hasAuthority('APPLICANT')")
   @PostMapping("/saved-job/{listId}/{jobId}/add")
   public ResponseEntity<SavedJobCollectionDto> addJobToList(
       @PathVariable Long listId,
@@ -422,6 +427,7 @@ public class ApplicantController {
     return ResponseEntity.ok(responseMapperService.mapToSavedJobCollectionDto(updatedList));
   }
 
+  @PreAuthorize("hasAuthority('APPLICANT')")
   @GetMapping("/saved-jobs/collections")
   public ResponseEntity<List<SavedJobCollectionDto>> getListsForApplicant() {
     String currentUserId = getCurrentUserId();

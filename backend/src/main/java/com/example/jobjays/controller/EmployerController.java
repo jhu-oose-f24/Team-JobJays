@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@PreAuthorize("hasAuthority('EMPLOYER')")
 @RequestMapping("/api/companies")
 public class EmployerController {
 
@@ -99,6 +98,7 @@ public class EmployerController {
 
   //REQUIRES USER TO BE SIGNED
   //REQUIRES USER TO BE OWNER OF THE PROFILE
+  @PreAuthorize("hasAuthority('EMPLOYER')")
   @PutMapping("/profile")
   public ResponseEntity<ResponseEmployerDto> updateEmployer(@Valid @RequestBody UpdateEmployerDto updateEmployerDto) {
     Long userId = parsedUserId();
@@ -111,6 +111,7 @@ public class EmployerController {
 
   //REQUIRES USER TO BE SIGNED
   //REQUIRES USER TO BE OWNER OF THE PROFILE
+  @PreAuthorize("hasAuthority('EMPLOYER')")
   @DeleteMapping("/profile")
   public ResponseEntity<Void> deleteEmployer() {
     Long userId = parsedUserId();
