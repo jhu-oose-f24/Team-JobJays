@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseEmployerProfileDto extends ResponseProfileDto {
+  public String industry;
   public Integer jobPostsSize;
   public List<ResponseJobPostDto> jobPosts;
 

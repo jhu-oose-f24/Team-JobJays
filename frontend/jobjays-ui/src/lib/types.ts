@@ -87,6 +87,7 @@ export interface SavedJobCollection {
 export interface EmployerProfile extends Profile {
     name: string;
     bio: string;
+    industry: string;
     jobPostsSize: number;
     jobPosts: JobPost[];
     //manageJobPosts: () => void;
@@ -96,8 +97,6 @@ export interface ApplicantProfile extends Profile {
     //userId:number;
     name:string;
     bio: string;
-    appliedJobs: JobPost[];
-    savedJobs: SavedJobCollection[]; //Set<SavedJobCollection>
     nationality: string;
     title: string;
     website: string;
@@ -106,6 +105,8 @@ export interface ApplicantProfile extends Profile {
     dateOfBirth: Date;
     maritalStatus: string;
     experience: string;
+    appliedJobs: JobPost[];
+    savedJobs: SavedJobCollection[]; //Set<SavedJobCollection>
 }
 
 export interface anonDataTrackingId {

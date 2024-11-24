@@ -15,6 +15,7 @@ import java.util.Set;
 public class ApplicantProfile implements Profile {
 
 
+  @Column(unique = true)
   private String name;
   private String bio;
 

@@ -160,14 +160,14 @@ public class EmployerController {
 
 
   @GetMapping("/profile/search/username")
-  public ResponseEntity<ResponseEmployerProfileDto> getEmployerProfileByUsername(@RequestParam("username") String username) {
+  public ResponseEntity<ResponseEmployerDto> getEmployerByUsername(@RequestParam("username") String username) {
     //Employer employer = employerService.findEmployerByUsername(username);
-    EmployerProfile employerProfile = employerService.findEmployerProfileByUsername(username);
-    if (employerProfile == null) {
+    Employer employer = employerService.findEmployerByUsername(username);
+    if (employer == null) {
       return ResponseEntity.notFound().build();
     }
-    ResponseEmployerProfileDto responseEmployerProfileDto = responseMapperService.mapToResponseEmployerProfileDto(employerProfile);
-    return new ResponseEntity<>(responseEmployerProfileDto, HttpStatus.OK);
+    ResponseEmployerDto responseEmployerDto = responseMapperService.mapToResponseEmployerDto(employer);
+    return new ResponseEntity<>(responseEmployerDto, HttpStatus.OK);
   }
 
 

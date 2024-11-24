@@ -2,6 +2,7 @@ package com.example.jobjays.service;
 
 import com.example.jobjays.dto.employer.CreateEmployerDto;
 import com.example.jobjays.dto.employer.UpdateEmployerDto;
+import com.example.jobjays.exception.ResourceNotFoundException;
 import com.example.jobjays.model.*;
 import com.example.jobjays.repository.ApplicantRepository;
 import com.example.jobjays.repository.EmployerRepository;
@@ -52,48 +53,43 @@ public class EmployerService {
   }
 
   public Employer updateEmployer(UpdateEmployerDto newEmployer, Long id) {
+
     Employer employerToUpdate = employerRepository.findById(id).orElse(null);
 
     if (employerToUpdate == null) {
-      return null;
+      throw new ResourceNotFoundException("Employer not found with id: " + id);
     }
-    EmployerProfile profile = employerToUpdate.getProfile();
+//    EmployerProfile profile = employerToUpdate.getProfile();
+//
+//    if (newEmployer.getEmployerInfo() != null && !newEmployer.getEmployerInfo().isEmpty()) {
+//      profile.setBio(newEmployer.getEmployerInfo());
+//    }
+//    if (newEmployer.getEmployerName() != null && !newEmployer.getEmployerName().isEmpty()) {
+//      profile.setName(newEmployer.getEmployerInfo());
+//    }
+//
+//    if (newEmployer.getEnabled() != null) {
+//      employerToUpdate.setEnabled(newEmployer.getEnabled());
+//    }
 
     if (newEmployer.getEmployerInfo() != null && !newEmployer.getEmployerInfo().isEmpty()) {
-      profile.setBio(newEmployer.getEmployerInfo());
+      employerToUpdate.getProfile().setBio(newEmployer.getEmployerInfo());
     }
+
     if (newEmployer.getEmployerName() != null && !newEmployer.getEmployerName().isEmpty()) {
-      profile.setName(newEmployer.getEmployerInfo());
+      employerToUpdate.getProfile().setName(newEmployer.getEmployerName());
     }
 
-    if (newEmployer.getEnabled() != null) {
-      employerToUpdate.setEnabled(newEmployer.getEnabled());
+    if (newEmployer.getIndustry() != null && !newEmployer.getIndustry().isEmpty()) {
+      employerToUpdate.getProfile().setIndustry(newEmployer.getIndustry());
     }
+
+
 
 
     return employerRepository.save(employerToUpdate);
   }
 
-  public Employer updateEmployerNoDto(Employer employer, Long id) {
-    Employer employerToUpdate = employerRepository.findById(id).orElse(null);
-
-    if (employerToUpdate == null) {
-      return null;
-    }
-    EmployerProfile profile = employerToUpdate.getProfile();
-
-    if (employer.getProfile().getBio() != null && !employer.getProfile().getBio().isEmpty()) {
-      profile.setBio(employer.getProfile().getBio());
-    }
-    if (employer.getProfile().getName() != null && !employer.getProfile().getName().isEmpty()) {
-      profile.setName(employer.getProfile().getName());
-    }
-
-    if (employer.getEnabled() != null) {
-      employerToUpdate.setEnabled(employer.getEnabled());
-    }
-    return employerRepository.save(employerToUpdate);
-  }
 
   public void deleteEmployer(Long id) {
     EmployerProfile profile = Objects.requireNonNull(employerRepository.findById(id).orElse(null)).getProfile();

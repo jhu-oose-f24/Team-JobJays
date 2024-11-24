@@ -47,6 +47,7 @@ public class ResponseMapperService {
     ResponseEmployerProfileDto responseProfileDto = new ResponseEmployerProfileDto();
     responseProfileDto.name = profile.getName();
     responseProfileDto.bio = profile.getBio();
+    responseProfileDto.industry = profile.getIndustry();
     responseProfileDto.jobPostsSize = profile.getJobPosts().size();
     responseProfileDto.jobPosts = profile.getJobPosts().stream().map(this::mapToResponseJobPostDto).collect(Collectors.toList());
     return responseProfileDto;

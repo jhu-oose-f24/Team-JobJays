@@ -1,64 +1,58 @@
-import { z } from "zod";
-import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-} from "@/components/ui/form";
-import React, { useState } from "react";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
-import { CalendarIcon } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import { format } from "date-fns";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {z} from "zod";
+import React, {useState} from "react";
+import {Controller, useFieldArray, useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {JobPost} from "@/lib/types";
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {format} from "date-fns";
+import {CalendarIcon} from "lucide-react";
+import {Calendar} from "@/components/ui/calendar";
 
 const jobFormSchema = z.object({
-    title: z.string().nonempty("Job title is required"),
-    description: z.string().nonempty("Job description is required"),
+    title: z.string(),
+    description: z.string(),
     location: z.object({
-        city: z.string().nonempty("City is required"),
-        state: z.string().nonempty("State is required"),
-        country: z.string().nonempty("Country is required"),
+        city: z.string(),
+        state: z.string(),
+        country: z.string(),
     }),
-    jobType: z.string().nonempty("Job type is required"), // On-site, Remote, Hybrid
-    workTiming: z.string().nonempty("Work timing is required"), // Full-time, Part-time, Flexible
-    minSalary: z.string().transform((val) => Number(val)),
-    maxSalary: z.string().transform((val) => Number(val)),
+    jobType: z.string(), // On-site, Remote, Hybrid
+    workTiming: z.string(), // Full-time, Part-time, Flexible
+    minSalary: z.number().transform((val) => Number(val)),
+    maxSalary: z.number().transform((val) => Number(val)),
     closedDate: z.string().transform((val) => new Date(val).toISOString()),
-    skillsRequired: z.array(z.string()).min(1, "At least one skill is required")
+    skillsRequired: z.array(z.string())
 });
-
 type JobFormSchemaType = z.infer<typeof jobFormSchema>;
 
-export const JobForm = ({ onSubmit }: { onSubmit: (data: JobFormSchemaType) => void }) => {
+
+
+export const EditJobForm = ({
+                                onSubmit,
+                                jobPost,
+                            }: { onSubmit: (data: JobFormSchemaType) => void; jobPost: JobPost }) => {
     const [datePopoverOpen, setDatePopoverOpen] = useState(false);
 
     const form = useForm<JobFormSchemaType>({
         resolver: zodResolver(jobFormSchema),
         defaultValues: {
-            title: "",
-            description: "",
+            title: `${jobPost.title}`,
+            description:`${jobPost.description}`,
             location: {
-                city: "",
-                state: "",
-                country: "",
+                city: `${jobPost.location.city}`,
+                state: `${jobPost.location.state}`,
+                country: `${jobPost.location.country}`,
             },
-            jobType: "",
-            workTiming: "Full-time",
-            minSalary: 10000,
-            maxSalary: 50000,
-            closedDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString(),
-            skillsRequired: [""], // Initialize with an empty skill
+            jobType: `${jobPost.jobType}`,
+            workTiming: `${jobPost.workTiming}`,
+            minSalary: jobPost.minSalary,
+            maxSalary: jobPost.maxSalary,
+            closedDate: new Date(jobPost.closedDate).toISOString(),
+            skillsRequired: jobPost.skillsRequired, // Initialize with an empty skill
         },
     });
 
@@ -170,7 +164,7 @@ export const JobForm = ({ onSubmit }: { onSubmit: (data: JobFormSchemaType) => v
                             <FormLabel>Job Type</FormLabel>
                             <Select
                                 onValueChange={(value) => { field.onChange(value);
-                                console.log(value)}} // Update form state with selected value
+                                    console.log(value)}} // Update form state with selected value
                                 value={field.value}
                             >
                                 <FormControl>
@@ -274,6 +268,8 @@ export const JobForm = ({ onSubmit }: { onSubmit: (data: JobFormSchemaType) => v
             </form>
         </Form>
     );
-};
 
-export default JobForm;
+
+}
+
+export default EditJobForm;
