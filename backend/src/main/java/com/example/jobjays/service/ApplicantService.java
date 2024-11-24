@@ -194,8 +194,17 @@ public class ApplicantService {
     return applicantRepository.findAllByUsernameContainingIgnoreCase(username);
   }
 
+  public List<Applicant> findApplicantsByName(String name) {
+    return applicantRepository.findAllByNameContainingIgnoreCase(name);
+  }
+
   public List<ApplicantProfile> findApplicantProfilesByUsername(String username) {
     List<Applicant> applicants = applicantRepository.findAllByUsernameContainingIgnoreCase(username);
+    return applicants.stream().map(Applicant::getProfile).toList();
+  }
+
+  public List<ApplicantProfile> findApplicantProfilesByName(String name) {
+    List<Applicant> applicants = applicantRepository.findAllByNameContainingIgnoreCase(name);
     return applicants.stream().map(Applicant::getProfile).toList();
   }
 

@@ -1,4 +1,3 @@
-"use client";
 import Header from "@/components/ui/Header";
 import Hero from "@/components/ui/Hero";
 import HowItWorks from "@/components/ui/Instructions";

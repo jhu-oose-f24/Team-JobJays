@@ -348,24 +348,23 @@ public class ApplicantController {
   }
 
   @GetMapping("/profile/search/username")
-  public ResponseEntity<ResponseApplicantProfileDto> getApplicantProfileByUsername(
+  public ResponseEntity<ResponseApplicantDto> getApplicantProfileByUsername(
       @RequestParam("username") String username) {
-    ApplicantProfile applicantProfile = applicantService.findApplicantProfileByUsername(username);
-    if (applicantProfile == null) {
+    Applicant applicant = applicantService.findApplicantByUsername(username);
+    if (applicant == null) {
       return ResponseEntity.notFound().build();
     }
 
-    ResponseApplicantProfileDto responseApplicantProfileDto = responseMapperService.mapToResponseApplicantProfileDto(applicantProfile);
-    return new ResponseEntity<>(responseApplicantProfileDto, HttpStatus.OK);
+    ResponseApplicantDto responseApplicantDto = responseMapperService.mapToResponseApplicantDto(applicant);
+    return new ResponseEntity<>(responseApplicantDto, HttpStatus.OK);
   }
 
 
-  @GetMapping("/profile/search/name")
-  public ResponseEntity<List<ResponseProfileDto>> getApplicantsByName(@RequestParam("name") String name) {
-    List<ApplicantProfile> profiles = applicantService.findApplicantProfilesByUsername(name);
-    List<ResponseProfileDto> responseList = profiles.stream()
-        .map(responseMapperService::mapToResponseApplicantProfileDto)
-
+  @GetMapping("/profile/search/name") // TODO need to change to return applicant dto
+  public ResponseEntity<List<ResponseApplicantDto>> getApplicantsByName(@RequestParam("name") String name) {
+    List<Applicant> applicants = applicantService.findApplicantsByName(name);
+    List<ResponseApplicantDto> responseList = applicants.stream()
+        .map(responseMapperService::mapToResponseApplicantDto)
         .collect(Collectors.toList());
     return ResponseEntity.ok(responseList);
   }

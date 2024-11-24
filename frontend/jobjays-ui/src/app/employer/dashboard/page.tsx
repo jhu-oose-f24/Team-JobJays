@@ -104,55 +104,113 @@ const DashboardPage: React.FC = () => {
                             })}
                         </div>
                     </CardHeader>
+                    {/*<CardContent className="px-2 sm:p-6">*/}
+                    {/*    <ChartContainer*/}
+                    {/*        config={chartConfig}*/}
+                    {/*        className="aspect-auto h-[250px] w-full"*/}
+                    {/*    >*/}
+                    {/*        <BarChart*/}
+                    {/*            accessibilityLayer*/}
+                    {/*            data={impressionData}*/}
+                    {/*            margin={{*/}
+                    {/*                left: 12,*/}
+                    {/*                right: 12,*/}
+                    {/*            }}*/}
+                    {/*        >*/}
+                    {/*            <CartesianGrid vertical={false} />*/}
+                    {/*            <XAxis*/}
+                    {/*                dataKey="date"*/}
+                    {/*                tickLine={false}*/}
+                    {/*                axisLine={false}*/}
+                    {/*                tickMargin={8}*/}
+                    {/*                minTickGap={32}*/}
+                    {/*                tickFormatter={(value) => {*/}
+                    {/*                    const date = new Date(value);*/}
+                    {/*                    return date.toLocaleDateString("en-US", {*/}
+                    {/*                        month: "short",*/}
+                    {/*                        day: "numeric",*/}
+                    {/*                    });*/}
+                    {/*                }}*/}
+                    {/*            />*/}
+                    {/*            <ChartTooltip*/}
+                    {/*                content={*/}
+                    {/*                    <ChartTooltipContent*/}
+                    {/*                        className="w-[150px]"*/}
+                    {/*                        nameKey="impressions"*/}
+                    {/*                        labelFormatter={(value) => {*/}
+                    {/*                            return new Date(value).toLocaleDateString("en-US", {*/}
+                    {/*                                month: "short",*/}
+                    {/*                                day: "numeric",*/}
+                    {/*                                year: "numeric",*/}
+                    {/*                            });*/}
+                    {/*                        }}*/}
+                    {/*                    />*/}
+                    {/*                }*/}
+                    {/*            />*/}
+                    {/*            <Bar*/}
+                    {/*                dataKey="impressions"*/}
+                    {/*                fill={chartConfig.impressions.color}*/}
+                    {/*            />*/}
+                    {/*        </BarChart>*/}
+                    {/*    </ChartContainer>*/}
+                    {/*</CardContent>*/}
                     <CardContent className="px-2 sm:p-6">
-                        <ChartContainer
-                            config={chartConfig}
-                            className="aspect-auto h-[250px] w-full"
-                        >
-                            <BarChart
-                                accessibilityLayer
-                                data={impressionData}
-                                margin={{
-                                    left: 12,
-                                    right: 12,
-                                }}
+                        {(!impressionData || impressionData.length === 0) ? (
+                            <div className="flex h-[250px] items-center justify-center text-muted-foreground">
+                                <p className="text-lg font-semibold">
+                                    You do not have any impressions yet.
+                                </p>
+                            </div>
+                        ) : (
+                            <ChartContainer
+                                config={chartConfig}
+                                className="aspect-auto h-[250px] w-full"
                             >
-                                <CartesianGrid vertical={false} />
-                                <XAxis
-                                    dataKey="date"
-                                    tickLine={false}
-                                    axisLine={false}
-                                    tickMargin={8}
-                                    minTickGap={32}
-                                    tickFormatter={(value) => {
-                                        const date = new Date(value);
-                                        return date.toLocaleDateString("en-US", {
-                                            month: "short",
-                                            day: "numeric",
-                                        });
+                                <BarChart
+                                    accessibilityLayer
+                                    data={impressionData}
+                                    margin={{
+                                        left: 12,
+                                        right: 12,
                                     }}
-                                />
-                                <ChartTooltip
-                                    content={
-                                        <ChartTooltipContent
-                                            className="w-[150px]"
-                                            nameKey="impressions"
-                                            labelFormatter={(value) => {
-                                                return new Date(value).toLocaleDateString("en-US", {
-                                                    month: "short",
-                                                    day: "numeric",
-                                                    year: "numeric",
-                                                });
-                                            }}
-                                        />
-                                    }
-                                />
-                                <Bar
-                                    dataKey="impressions"
-                                    fill={chartConfig.impressions.color}
-                                />
-                            </BarChart>
-                        </ChartContainer>
+                                >
+                                    <CartesianGrid vertical={false} />
+                                    <XAxis
+                                        dataKey="date"
+                                        tickLine={false}
+                                        axisLine={false}
+                                        tickMargin={8}
+                                        minTickGap={32}
+                                        tickFormatter={(value) => {
+                                            const date = new Date(value);
+                                            return date.toLocaleDateString("en-US", {
+                                                month: "short",
+                                                day: "numeric",
+                                            });
+                                        }}
+                                    />
+                                    <ChartTooltip
+                                        content={
+                                            <ChartTooltipContent
+                                                className="w-[150px]"
+                                                nameKey="impressions"
+                                                labelFormatter={(value) => {
+                                                    return new Date(value).toLocaleDateString("en-US", {
+                                                        month: "short",
+                                                        day: "numeric",
+                                                        year: "numeric",
+                                                    });
+                                                }}
+                                            />
+                                        }
+                                    />
+                                    <Bar
+                                        dataKey="impressions"
+                                        fill={chartConfig.impressions.color}
+                                    />
+                                </BarChart>
+                            </ChartContainer>
+                        )}
                     </CardContent>
                 </Card>
             </div>

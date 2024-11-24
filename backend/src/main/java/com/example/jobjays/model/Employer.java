@@ -12,8 +12,10 @@ import lombok.ToString;
 public class Employer implements User {
   @Column(insertable=false, updatable=false)
   private String name;
+  @Column(unique = true, updatable = false)
   private String username;
   private String password;
+  @Column(unique = true, updatable = false)
   private String email;
   @Setter
   @Getter
@@ -22,6 +24,7 @@ public class Employer implements User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long employer_id;
+  @Column(unique = true)
   private String employerName; //companyName
   private String employerInfo; //companyInfo
 

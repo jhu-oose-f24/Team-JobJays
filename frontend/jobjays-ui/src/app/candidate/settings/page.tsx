@@ -1,73 +1,39 @@
 "use client";
 import React from 'react';
-import styles from '@/styles/profile.module.css';
-// import Image from "next/image";
-// import SocialMediaInfo from "@/components/employer/SocialMediaInfo";
-// import AccountSettings from "@/components/candidate/AccountSettings";
-// import ProfileData from "@/components/candidate/Profile";
-// import PersonalSettings from "@/components/candidate/PersonalSettings";
-// import {useApplicant} from "@/lib/api";
-
-//
-// interface DashboardPageProps {
-//     params: {
-//         candidate_id: string;
-//     };
-// }
+import {updateApplicantProfile, useApplicant} from "@/lib/api";
+import EditCandidateProfile from "@/components/candidate/EditCandidateProfile";
+import {useToast} from "@/hooks/use-toast";
 
 const ProfilePage = () => {
-    // const [tab, setTab] = useState<'personal' | 'profile' | 'social-media' | 'account-setting'>('personal');
-    //
-    // const handleTabClick = (selectedTab: 'personal' | 'profile' | 'social-media' | 'account-setting') => {
-    //     setTab(selectedTab);
-    // };
+    const {toast} = useToast();
+    const { applicantProfile, isLoading, isError, mutate } = useApplicant();
+
+    if (isLoading) return <div>Loading profile...</div>;
+    if (isError) return <div>Error loading profile.</div>;
+
+
+    //TODO handle api call to update profile
+    const handleEditProfileSubmit = async (data: any) => {
+        console.log(data);
+        const result = await updateApplicantProfile(data, mutate, data);
+        if (result.success) {
+            // setOpen(false); // Close the dialog
+            toast({
+                title: "Success",
+                description: "Profile details updated successfully!",
+                variant: "default",
+            });
+        } else {
+            toast({
+                title: "Error",
+                description: `Failed to update profile. Message: ${result.error.message}, Code: ${result.error.status}`,
+                variant: "destructive",
+            });
+        }
+    };
 
     return (
-        <div className={styles.profileContainer}>
-            <p>Profile Page</p>
-            {/*<main className={styles.mainContent}>*/}
-            {/*    <h3 className={styles.header}>Settings</h3>*/}
-            {/*    /!* Tabs Navigation *!/*/}
-            {/*    <div className={styles.tabs}>*/}
-            {/*        <button className={`${styles.tabButton} ${tab === 'personal' ? styles.activeTab : ''}`} onClick={() => handleTabClick('personal')}>*/}
-            {/*            Personal*/}
-            {/*        </button>*/}
-            {/*        <button className={`${styles.tabButton} ${tab === 'profile' ? styles.activeTab : ''}`} onClick={() => handleTabClick('profile')}>*/}
-            {/*            Profile*/}
-            {/*        </button>*/}
-            {/*        <button className={`${styles.tabButton} ${tab === 'social-media' ? styles.activeTab : ''}`} onClick={() => handleTabClick('social-media')}>*/}
-            {/*            Social Links*/}
-            {/*        </button>*/}
-            {/*        <button className={`${styles.tabButton} ${tab === 'account-setting' ? styles.activeTab : ''}`} onClick={() => handleTabClick('account-setting')}>*/}
-            {/*            Account Setting*/}
-            {/*        </button>*/}
-            {/*    </div>*/}
-
-            {/*    {tab === 'personal' && (*/}
-            {/*        <div className={styles.tabContent}>*/}
-            {/*            <PersonalSettings  params={params}/> /!* No submit button here *!/*/}
-            {/*        </div>*/}
-            {/*    )}*/}
-
-            {/*    {tab === 'profile' && (*/}
-            {/*        <div className={styles.tabContent}>*/}
-            {/*            <ProfileData /> /!* No submit button here *!/*/}
-            {/*        </div>*/}
-            {/*    )}*/}
-
-            {/*    {tab === 'social-media' && (*/}
-            {/*        <div className={styles.tabContent}>*/}
-            {/*            <SocialMediaInfo />*/}
-            {/*        </div>*/}
-            {/*    )}*/}
-
-            {/*    {tab === 'account-setting' && (*/}
-            {/*        <div className={styles.tabContent}>*/}
-            {/*            <AccountSettings></AccountSettings>*/}
-            {/*        </div>*/}
-            {/*    )}*/}
-            {/*</main>*/}
-        </div>
-);
+        <EditCandidateProfile onSubmit={handleEditProfileSubmit} applicantProfile={applicantProfile}/>
+    );
 };
 export default  ProfilePage;

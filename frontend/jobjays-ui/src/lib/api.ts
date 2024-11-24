@@ -8,8 +8,8 @@ import {
     SavedJobCollection,
     UserTypeDto
 } from './types';
-// const BASE_URL = process.env.API_IP_ADDRESS +'/api';
-const BASE_URL = 'http://74.179.58.106:8080/api';
+const BASE_URL = 'http://localhost:8080/api';
+//const BASE_URL = 'http://74.179.58.106:8080/api';
 
 // Fetcher function
 export const fetcher = (url: string) => {
@@ -20,7 +20,7 @@ export const fetcher = (url: string) => {
     const headers = {
         "Authorization": `Bearer ${token}`
     };
-    console.log("Headers being sent:", headers);
+    //console.log("Headers being sent:", headers);
     return fetch(url, {
         method: "GET",
         headers: headers,
@@ -129,7 +129,7 @@ export async function loginApplicant(applicantData: any) {
             }
 
             localStorage.setItem("token", applicantData.token);
-            localStorage.setItem("role", "applicant");
+            localStorage.setItem("role", "candidate");
             return response;
         } else {
             // const errorData = await response.json();
@@ -182,11 +182,63 @@ export async function loginEmployer(employerData: any) {
 
 export function useApplicant() {
     console.log("In use applicant");
-    const { data, error, isLoading } = useSWR(`${BASE_URL}/applicants/profile`, fetcher);
+    const { data, error, isLoading, mutate} = useSWR(`${BASE_URL}/applicants/profile`, fetcher);
 
 
     return {
         applicantProfile: data as ApplicantProfile,
+        isLoading,
+        isError: error,
+        mutate
+    };
+}
+
+export async function updateApplicantProfile(updatedData: any, mutate: any, applicantProfile: ApplicantProfile) {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": 'application/json',
+    };
+    try {
+        const response = await fetch(`${BASE_URL}/applicants/profile`, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify(updatedData),
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Data:", data);
+            mutate({...applicantProfile}); // Optimistically update the UI
+            return {success: true, data: data}
+        } else {
+            const error = await response.json();
+            console.log(`Unexpected response: ${response.status} - ${response.statusText}`);
+            return {success: false, error};
+        }
+    } catch (error: any) {
+        console.error("Error updating job post:", error);
+        return {success: false, error};
+    }
+}
+
+
+
+export function useEmployerFromUsername(username:string) {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}/companies/profile/search/username?username=${username}`, fetcher);
+
+    return {
+        Employer: data as Employer,
+        isLoading,
+        isError: error
+    };
+}
+
+
+export function useApplicantFromUsername(username:string) {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}/applicants/profile/search/username?username=${username}`, fetcher);
+
+    return {
+        Applicant: data as Applicant,
         isLoading,
         isError: error
     };
@@ -195,7 +247,7 @@ export function useApplicant() {
 // Hook to fetch the EmployerProfile and process job posts
 export function useEmployer() {
     // employerId = localStorage.getItem('employerId') ? parseInt(localStorage.getItem('employerId') as string) : 0;
-    const { data, error, isLoading } = useSWR(`${BASE_URL}/companies/profile`, fetcher);
+    const { data, error, isLoading, mutate } = useSWR(`${BASE_URL}/companies/profile`, fetcher);
 
     // Process job posts if data is available
     // const processedEmployerProfile = data && data.jobPosts ? {
@@ -206,8 +258,37 @@ export function useEmployer() {
     return {
         EmployerProfile: data as EmployerProfile,
         isLoading,
-        isError: error
+        isError: error,
+        mutate
     };
+}
+
+export async function updateEmployerProfile(updatedData: any, mutate: any, employerProfile: EmployerProfile) {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": 'application/json',
+    };
+    try {
+        const response = await fetch(`${BASE_URL}/companies/profile`, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify(updatedData),
+        });
+        if (response.ok) {
+            const data = await response.json();
+            console.log("Data:", data);
+            mutate({...employerProfile}); // Optimistically update the UI
+            return {success: true, data: data}
+        } else {
+            const error = await response.json();
+            console.log(`Unexpected response: ${response.status} - ${response.statusText}`);
+            return {success: false, error};
+        }
+    } catch (error: any) {
+        console.error("Error updating job post:", error);
+        return {success: false, error};
+    }
 }
 
 export function fetchUserProfile(id: number) {
@@ -430,7 +511,6 @@ export function useJobImpressionsBeforeDate(date:Date) {
 
 export function useImpressionChartData() {
     const { data, error, isLoading } = useSWR(`${BASE_URL}/metrics/impressions/chart`, fetcher);
-    console.log(data)
     return {
         impressionData: data as ImpressionsChartData[],
         isLoading,

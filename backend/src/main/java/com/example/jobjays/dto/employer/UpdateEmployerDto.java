@@ -5,9 +5,11 @@ import lombok.Data;
 @Data
 public class UpdateEmployerDto {
 
-  String employerName;
+  String employerName; //name
 
-  String employerInfo;
+  String employerInfo; //bio
+
+  String industry;
 
   Boolean enabled;
 

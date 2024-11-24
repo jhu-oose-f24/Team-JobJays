@@ -36,14 +36,14 @@ public class SecurityConfig {
 //        .requiresChannel(channel -> channel
 //            .anyRequest().requiresSecure()  // Redirects all requests to HTTPS
 //        )
-//        .cors(Customizer.withDefaults())
-        .cors(AbstractHttpConfigurer::disable)
+        .cors(Customizer.withDefaults()) //THIS WORKS
+//        .cors(AbstractHttpConfigurer::disable)
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests((authorize) -> authorize
             // Open endpoints for unauthenticated access
             .requestMatchers( new AntPathRequestMatcher("/api/auth/**")).permitAll()
             .requestMatchers( "/api/companies/register", "/api/companies/verify", "api/applicants/register", "api/applicants/verify").permitAll()
-            .requestMatchers( new AntPathRequestMatcher("/api/companies/profile")).hasAuthority("EMPLOYER")
+
 
                 // Secure all other endpoints
             .anyRequest().authenticated()

@@ -8,11 +8,12 @@ import lombok.ToString;
 @ToString
 public class Applicant implements User  {
 
+  @Column(unique = true, updatable = false)
   private String username;
   @Column(insertable=false, updatable=false)
   private String name;
   private String password;
-  @Column(unique = true)
+  @Column(unique = true, updatable = false)
   private String email;
   private Boolean enabled;
   private String token;
