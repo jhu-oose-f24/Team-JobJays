@@ -60,56 +60,54 @@
 
 // src/components/PostJob.tsx
 import styles from '@/styles/listJob.module.css'; // Assuming you style it with CSS Modules
-import { fetchAllJobPosts } from "@/lib/api";
+import {fetchAllJobPosts, useAllApplicants} from "@/lib/api";
 import Link from "next/link";
-import { Suspense } from "react"; // Import Suspense
+import { Suspense } from "react";
+import {Applicant} from "@/lib/types"; // Import Suspense
 
-interface ListJobProps {
+interface ListCandidateProps {
     query: string;  // Accept the query as a prop
 }
 
-const ListJob = ({ query }: ListJobProps) => {
-    const { JobPosts, isLoading, isError } = fetchAllJobPosts();
+const ListCandidate = ({ query }: ListCandidateProps) => {
+    const { applicants, isLoading, isError } = useAllApplicants();
 
-    if (query === "EMPLOYERS" || query === "CANDIDATES") {
+    if (query === "EMPLOYERS" || query === "JOBS") {
         return <div></div>;
     }
-    if (query === "JOBS") { query = "";}
+    if (query === "CANDIDATES") { query = "";}
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <div>Error loading all job details.</div>;
-    if (!JobPosts) return <div>Jobs not found.</div>;
+    if (!applicants) return <div>Jobs not found.</div>;
 
-    const activeJobListings = JobPosts.filter(job => job.status === 'Active');
-    //const activeJobListings = JobPosts;
+    // const activeJobListings = JobPosts.filter(job => job.status === 'Active');
 
-    const filteredJobListings = query
-        ? activeJobListings.filter(job =>
-            job.title.toLowerCase().includes(query.toLowerCase()) ||
-            job.description.toLowerCase().includes(query.toLowerCase()) ||
-            job.location.city.toLowerCase().includes(query.toLowerCase()) ||
-            job.location.state.toLowerCase().includes(query.toLowerCase()) ||
-            job.location.country.toLowerCase().includes(query.toLowerCase()) ||
-            job.companyName.toLowerCase().includes(query.toLowerCase())
+
+    const filteredApplicants: Applicant[] = query
+        ? applicants.filter(applicant =>
+            applicant.username.toLowerCase().includes(query.toLowerCase()) ||
+            applicant.applicantProfile.name.toLowerCase().includes(query.toLowerCase()) ||
+            applicant.applicantProfile.bio.toLowerCase().includes(query.toLowerCase())
         )
-        : activeJobListings;
+        : applicants;
 
     return (
         <div className={styles.jobListGrid}>
-            {filteredJobListings.map((jobListing) => (
+            {filteredApplicants.map((applicant) => (
                 <Link
-                    key={jobListing.id}
-                    href={`http://localhost:3000/post/jobs/${jobListing.id}`}
+                    key={applicant.applicantId}
+                    href={`/profile/applicants/${applicant.username}`} //username
                     className={styles.jobBox} // This applies styling to the entire box
                 >
                     <div>
-                        <h1>{jobListing.title}</h1>
+                        <h1>{applicant.applicantProfile.name}</h1>
                         <div className={styles.flexContainer}>
-                            <div className={styles.typeBox}>
-                                <span className={styles.typeText}>{jobListing.workTiming}</span>
-                            </div>
+                            {/*<div className={styles.typeBox}>*/}
+                            {/*    <span className={styles.typeText}>{company.employerProfile.bio}</span>*/}
+                            {/*</div>*/}
                             <div className="justify-between">
-                                <p>Location: {jobListing.location.city},{jobListing.location.state},{jobListing.location.country} </p>
-                                <p>Salary: ${jobListing.minSalary.toLocaleString()} - ${jobListing.maxSalary.toLocaleString()}</p>
+                                <p>{applicant.applicantProfile.bio}</p>
+                                <p>Experience: {applicant.applicantProfile.experience}</p>
                             </div>
                         </div>
                     </div>
@@ -119,12 +117,12 @@ const ListJob = ({ query }: ListJobProps) => {
     );
 };
 
-const SuspenseListJob = ({ query }: ListJobProps) => {
+const SuspenseCandidate = ({query}: ListCandidateProps) => {
     return (
-        <Suspense fallback={<div>Loading job posts...</div>}>
-            <ListJob query={query} />
+        <Suspense fallback={<div>Loading candidates...</div>}>
+            <ListCandidate query={query}/>
         </Suspense>
     );
 };
 
-export default SuspenseListJob;
+export default SuspenseCandidate;

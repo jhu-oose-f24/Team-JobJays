@@ -193,6 +193,16 @@ export function useApplicant() {
     };
 }
 
+export function useAllApplicants() {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}/applicants`, fetcher);
+
+    return {
+        applicants: data as Applicant[],
+        isLoading,
+        isError: error
+    };
+}
+
 export async function updateApplicantProfile(updatedData: any, mutate: any, applicantProfile: ApplicantProfile) {
     const token = localStorage.getItem("token"); // Retrieve token from localStorage
     const headers = {
@@ -309,7 +319,7 @@ export function fetchJobApplicants(id:number) {
 
 export function useJobApplicants(jobId: number | null) {
     const { data, error } = useSWR(
-      jobId ? `${BASE_URL}${jobId}/applicants` : null,
+      jobId ? `${BASE_URL}/${jobId}/applicants` : null,
       fetcher
     );
   
