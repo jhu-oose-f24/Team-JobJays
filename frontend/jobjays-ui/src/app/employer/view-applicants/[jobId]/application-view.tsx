@@ -1,17 +1,20 @@
 "use client";
 import React from 'react';
-import { useJobApplicants } from '../../../lib/api';
-import { Applicant } from '../../../lib/types';
+import { useJobApplicants } from '../../../../lib/api';
+import { Applicant } from '../../../../lib/types';
 import { useParams } from 'next/navigation';
+import ErrorPage from "@/components/ui/ErrorPage";
 
-const CandidatePage: React.FC = () => {
-  const params = useParams();
-  const jobId = params?.id ? Number(params.id) : null;
+
+
+const CandidatePage = ({jobId}: {jobId: number}) => {
+  // const params = useParams();
+  // const jobId = params?.id ? Number(params.id) : null;
 
   const { applicants, isLoading, isError } = useJobApplicants(jobId);
 
   if (isLoading) return <div>Loading applicants...</div>;
-  if (isError) return <div>Error loading applicants.</div>;
+  if (isError) return <ErrorPage/>;
   if (!applicants || applicants.length === 0)
     return <div>No applicants found.</div>;
 
@@ -41,12 +44,12 @@ const CandidatePage: React.FC = () => {
                 <td className="py-3 px-4 border-b">
                   {applicant.applicantProfile.bio}
                 </td>
-                <td className="py-3 px-4 border-b">
-                  10/28/2024
-                </td>
-                <td className="py-3 px-4 border-b">
-                  Reviewing...
-                </td>
+                {/*<td className="py-3 px-4 border-b">*/}
+                {/*  10/28/2024*/}
+                {/*</td>*/}
+                {/*<td className="py-3 px-4 border-b">*/}
+                {/*  Reviewing...*/}
+                {/*</td>*/}
               </tr>
             ))}
           </tbody>

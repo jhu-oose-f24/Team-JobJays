@@ -2,6 +2,7 @@
 import {useParams} from "next/navigation";
 import {useEmployerFromUsername} from "@/lib/api";
 import React from "react";
+import ErrorPage from "@/components/ui/ErrorPage";
 // import {useEmployer} from "@/lib/api";
 // import Link from "next/link";
 // import React from "react";
@@ -13,7 +14,7 @@ const EmployerProfilePage = () => {
     const {Employer, isLoading, isError} = useEmployerFromUsername(username);
 
     if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>Error loading data.</div>;
+    if (isError) return <ErrorPage/>;
 
     const { name, bio } = Employer.employerProfile;
     return (

@@ -280,8 +280,8 @@ const EditEmployerProfile = ({onSubmit, employerProfile}:{onSubmit: (data: JobFo
                             </Form>
                         )}
 
-                        {currentSection === 'founding-info' && <FoundingInfo />}
-                        {currentSection === 'social-media' && <SocialMediaInfo />}
+                        {/*{currentSection === 'founding-info' && <FoundingInfo />}*/}
+                        {/*{currentSection === 'social-media' && <SocialMediaInfo />}*/}
                         {currentSection === 'account-setting' && <AccountSettings />}
                     </div>
                 </div>

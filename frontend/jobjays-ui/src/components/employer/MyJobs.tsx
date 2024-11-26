@@ -9,6 +9,7 @@ import { useParams } from 'next/navigation';
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import SkeletonMyJobs from "@/components/employer/SkeletonMyJobs";
+import ErrorPage from "@/components/ui/ErrorPage";
 
 
 const MyJobs: React.FC = () => {
@@ -47,9 +48,13 @@ const MyJobs: React.FC = () => {
         router.push(`/post/jobs/${jobId}`);
     }
 
+    const handleViewApplications = (jobId: number) => {
+        router.push(`/employer/view-applicants/${jobId}`);
+    }
+
 
     if (isLoading) return <SkeletonMyJobs />;
-    if (isError) return <div>Error loading data.</div>;
+    if (isError) return <ErrorPage/>;
 
     return (
         <div className={styles.container}>
@@ -90,7 +95,9 @@ const MyJobs: React.FC = () => {
                                 <p>{job.numApplicants} Applications</p>
                             </div>
                             <div className={styles.jobActions}>
-                                <button className={styles.viewApplicationsButton}>
+                                <button
+                                    onClick={() => handleViewApplications(job.id)}
+                                    className={styles.viewApplicationsButton}>
                                     View Applications
                                 </button>
                                 <div className={styles.moreActions}>

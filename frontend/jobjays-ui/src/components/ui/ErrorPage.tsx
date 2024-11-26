@@ -17,6 +17,7 @@ export default function ErrorPage() {
             <p className="text-lg text-gray-600">
                 Oops! You do not have access to this resource.
             </p>
+
             <Button onClick={handleClickHome}>Go Home</Button>
             <Button onClick={handleClickSignIn}>SignIn</Button>
         </div>

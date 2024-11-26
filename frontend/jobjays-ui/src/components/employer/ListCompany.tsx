@@ -31,7 +31,7 @@ const ListCompany = ({query}: ListCompanyProps) => {
             {filteredEmployers.map((company) => (
                 <Link
                     key={company.employer_id}
-                    href={`/profile/employers/${company.employer_id}`}
+                    href={`/profile/employers/${company.username}`}
                     className={styles.jobBox} // This applies styling to the entire box
                 >
                     <div>

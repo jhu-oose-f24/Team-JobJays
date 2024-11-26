@@ -2,9 +2,9 @@
 import {useSearchParams} from "next/navigation";
 import ListCompany from "@/components/employer/ListCompany";
 import ListJob from "@/components/jobPost/ListJob";
-import RelatedJobs from "@/components/jobPost/RelatedJobs";
 import SearchBar from "@/components/SearchBar";
 import React from "react";
+import ListCandidate from "@/components/candidate/ListCandidate";
 
 export default function Search() {
     const searchParams = useSearchParams();
@@ -13,14 +13,11 @@ export default function Search() {
         <>
             <header className="flex justify-center items-center p-6 bg-white shadow-md">
                 <SearchBar/>
-
             </header>
-
-
             <div className={"py-4"}>
                 <ListCompany query={query}/>
                 <ListJob query={query}/>
-                <RelatedJobs/>
+                <ListCandidate query={query}/>
             </div>
         </>
     );
