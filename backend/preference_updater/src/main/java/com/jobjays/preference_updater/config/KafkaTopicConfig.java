@@ -1,4 +1,5 @@
 package com.jobjays.preference_updater.config;
+import org.springframework.beans.factory.annotation.Value;
 
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.NewTopic;
@@ -12,10 +13,12 @@ import java.util.Map;
 @Configuration
 public class KafkaTopicConfig {
 
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String BOOTSTRAP_SERVERS;
     @Bean
     public KafkaAdmin kafkaAdmin() {
         Map<String, Object> configs = new HashMap<>();
-        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         // add serilizer and deserializer
          //string serde
 

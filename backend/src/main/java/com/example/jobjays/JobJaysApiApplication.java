@@ -9,5 +9,8 @@ public class JobJaysApiApplication {
     public static void main(String[] args) {
 
       SpringApplication.run(JobJaysApiApplication.class, args);
+      // read current kafka bootstrap servername
+        String kafkaBootstrapServer = System.getenv("KAFKA_BOOTSTRAP_SERVER");
+        System.out.println("Kafka bootstrap server: " + kafkaBootstrapServer);
     }
 }

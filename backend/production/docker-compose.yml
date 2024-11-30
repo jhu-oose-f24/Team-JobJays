@@ -1,50 +1,7 @@
-# services:
-#   job-jays-api:
-#     build:
-#       context: ../
-#       dockerfile: Dockerfile
-#     container_name: job-jays-api
-#     ports:
-#       - "8080:8080"
-#     # environment:
-#       # KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
-
-#   applicant-job-matcher:
-#     build:
-#       context: ../applicant_job_matcher
-#       dockerfile: Dockerfile
-#     container_name: applicant-job-matcher
-#     depends_on:
-#       - job-jays-api
-#     # environment:
-#       # KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
-
-#   preference-updater:
-#     build:
-#       context: ../preference_updater
-#       dockerfile: Dockerfile
-#     container_name: preference-updater
-#     depends_on:
-#       - job-jays-api
-#     # environment:
-#       # KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
-
-#   notification-sender:
-#     build:
-#       context: ../notification_sender
-#       dockerfile: Dockerfile
-#     container_name: notification-sender
-#     depends_on:
-#       - job-jays-api
-#     # environment:
-#       # KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
-
-
-#version: '3.7'
-
 services:
   # Confluent Kafka setup
   broker:
+    restart: on-failure
     image: confluentinc/cp-kafka:7.7.1
     hostname: broker
     container_name: broker
@@ -72,6 +29,7 @@ services:
       - kafka-network
 
   schema-registry:
+    restart: on-failure
     image: confluentinc/cp-schema-registry:7.7.1
     hostname: schema-registry
     container_name: schema-registry
@@ -88,33 +46,57 @@ services:
 
   # Application containers
   job-jays-api:
+    restart: on-failure
     build:
-        context: ../
-        dockerfile: Dockerfile
+      context: ../
+      dockerfile: Dockerfile
     container_name: job-jays-api
     ports:
       - "8080:8080"
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+    networks:
+      - kafka-network
+
+
   applicant-job-matcher:
+    restart: on-failure
     build:
       context: ../applicant_job_matcher
       dockerfile: Dockerfile
     container_name: applicant-job-matcher
     depends_on:
       - job-jays-api
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+    networks:
+      - kafka-network
+
   preference-updater:
+    restart: on-failure
     build:
       context: ../preference_updater
       dockerfile: Dockerfile
     container_name: preference-updater
     depends_on:
       - job-jays-api
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+    networks:
+      - kafka-network
+
   notification-sender:
+    restart: on-failure
     build:
       context: ../notification_sender
       dockerfile: Dockerfile
     container_name: notification-sender
     depends_on:
       - job-jays-api
+    environment:
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
+    networks:
+      - kafka-network
 
 networks:
   kafka-network:
@@ -123,12 +105,4 @@ networks:
 volumes:
   kafka-data:
   kafka-streams-state:
-#  notification-logger:
-#    build:
-#      context: ../notification_logger
-#      dockerfile: Dockerfile
-#    container_name: notification-logger
-#    depends_on:
-#      - job-jays-api
-  ## Kafka and database runs on server
-  ## Have access to database but not kafka
+

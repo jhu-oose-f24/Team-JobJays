@@ -4,6 +4,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
@@ -17,10 +18,13 @@ import java.util.Map;
 @Configuration
 @EnableKafka
 public class KafkaConfig {
-    private static final String BOOTSTRAP_SERVERS = "74.179.58.106:29092";
-    private static final String USERNAME = "youruser";
-    private static final String PASSWORD = "yourpassword";
-    private static final String GROUP_ID = "job-matcher-group";
+
+    @Value("${spring.kafka.bootstrap-servers}")
+    private String BOOTSTRAP_SERVERS;
+//    private static final String BOOTSTRAP_SERVERS;
+//    private static final String USERNAME = "youruser";
+//    private static final String PASSWORD = "yourpassword";
+//    private static final String GROUP_ID = "job-matcher-group";
 
     // Common Producer Configuration
     public Map<String, Object> producerConfigs() {
@@ -28,11 +32,11 @@ public class KafkaConfig {
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
 
         // SASL/PLAIN Authentication
-        props.put("security.protocol", "SASL_PLAINTEXT");
-        props.put("sasl.mechanism", "PLAIN");
-        props.put("sasl.jaas.config",
-                "org.apache.kafka.common.security.plain.PlainLoginModule required username=\""
-                        + USERNAME + "\" password=\"" + PASSWORD + "\";");
+//        props.put("security.protocol", "SASL_PLAINTEXT");
+//        props.put("sasl.mechanism", "PLAIN");
+//        props.put("sasl.jaas.config",
+//                "org.apache.kafka.common.security.plain.PlainLoginModule required username=\""
+//                        + USERNAME + "\" password=\"" + PASSWORD + "\";");
         return props;
     }
 
@@ -70,7 +74,6 @@ public class KafkaConfig {
     public Map<String, Object> consumerConfigs() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, GROUP_ID);
 
         // SASL/PLAIN Authentication
         props.put("security.protocol", "SASL_PLAINTEXT");
