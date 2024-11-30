@@ -1,42 +1,14 @@
 services:
-  # zookeeper:
-  #   image: confluentinc/cp-zookeeper:latest
-  #   container_name: zookeeper
-  #   environment:
-  #     ZOOKEEPER_CLIENT_PORT: 2181
-  #     ZOOKEEPER_TICK_TIME: 2000
-  #   ports:
-  #     - "2181:2181"
-  #   networks:
-  #     - kafka-network
-
-  # kafka:
-  #   image: confluentinc/cp-kafka:latest
-  #   container_name: kafka
-  #   environment:
-  #     KAFKA_BROKER_ID: 1
-  #     KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-  #     KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
-  #     KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
-  #     KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-  #     KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-  #   ports:
-  #     - "9092:9092"
-  #   depends_on:
-  #     - zookeeper
-  #   networks:
-  #     - kafka-network
-  #   volumes:
-  #     - kafka-data:/var/lib/kafka/data  # New volume for Kafka data
-  #     - kafka-streams-state:/var/lib/kafka/streams  # New volume for Kafka Streams state
-
   job-jays-api:
     build:
-        context: ../
-        dockerfile: Dockerfile
+      context: ../
+      dockerfile: Dockerfile
     container_name: job-jays-api
     ports:
       - "8080:8080"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
+
   applicant-job-matcher:
     build:
       context: ../applicant_job_matcher
@@ -44,6 +16,9 @@ services:
     container_name: applicant-job-matcher
     depends_on:
       - job-jays-api
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
+
   preference-updater:
     build:
       context: ../preference_updater
@@ -51,6 +26,9 @@ services:
     container_name: preference-updater
     depends_on:
       - job-jays-api
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
+
   notification-sender:
     build:
       context: ../notification_sender
@@ -58,20 +36,5 @@ services:
     container_name: notification-sender
     depends_on:
       - job-jays-api
-
-networks:
-  kafka-network:
-    driver: bridge
-
-volumes:
-  kafka-data:
-  kafka-streams-state:
-#  notification-logger:
-#    build:
-#      context: ../notification_logger
-#      dockerfile: Dockerfile
-#    container_name: notification-logger
-#    depends_on:
-#      - job-jays-api
-  ## Kafka and database runs on server
-  ## Have access to database but not kafka
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
