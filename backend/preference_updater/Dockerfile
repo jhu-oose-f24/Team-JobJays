@@ -1,4 +1,4 @@
-# Use an official Gradle image with Java 23 for the build stage
+# Use an official Gradle image with Java 22 for the build stage
 FROM gradle:8.10.2-jdk23 AS build
 WORKDIR /app
 COPY --chown=gradle:gradle . .
