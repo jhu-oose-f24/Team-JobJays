@@ -6,7 +6,7 @@ services:
     container_name: job-jays-api
     ports:
       - "8080:8080"
-    environment:
+    # environment:
       # KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
 
   applicant-job-matcher:
@@ -16,7 +16,7 @@ services:
     container_name: applicant-job-matcher
     depends_on:
       - job-jays-api
-    environment:
+    # environment:
       # KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
 
   preference-updater:
@@ -26,7 +26,7 @@ services:
     container_name: preference-updater
     depends_on:
       - job-jays-api
-    environment:
+    # environment:
       # KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
 
   notification-sender:
@@ -36,5 +36,5 @@ services:
     container_name: notification-sender
     depends_on:
       - job-jays-api
-    environment:
+    # environment:
       # KAFKA_BOOTSTRAP_SERVERS: host.docker.internal:9092  # Add this line
