@@ -245,7 +245,7 @@
 services:
   # PostgreSQL Database
   db:
-    image: postgres:latest
+    image: postgres:17
     container_name: postgres-db
     environment:
       POSTGRES_USER: postgres
@@ -255,7 +255,7 @@ services:
       - "5432:5432"  # Expose PostgreSQL on port 5432
     volumes:
       - db_data:/var/lib/postgresql/data  # Persistent storage for database data
-    network_mode: host  # Uses the host network directly (optional)
+    # network_mode: host  # Uses the host network directly (optional)
     restart: on-failure
 
   # Confluent Kafka setup
