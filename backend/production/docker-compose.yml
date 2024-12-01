@@ -257,6 +257,9 @@ services:
       - db_data:/var/lib/postgresql/data  # Persistent storage for database data
     # network_mode: host  # Uses the host network directly (optional)
     restart: on-failure
+    networks:
+      - kafka-network
+
 
   # Confluent Kafka setup
   broker:
