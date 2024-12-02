@@ -3,6 +3,7 @@ package com.example.jobjays.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
+@ToString
 public class ImpressionEvent {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

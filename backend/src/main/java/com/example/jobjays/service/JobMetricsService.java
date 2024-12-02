@@ -10,9 +10,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.example.jobjays.model.ImpressionType.JOB_POST;
+import static com.example.jobjays.model.ImpressionType.PROFILE;
 
 @Service
 public class JobMetricsService {
@@ -33,14 +38,14 @@ public class JobMetricsService {
   public void addJobImpressionEvent(@NotNull JobPost jobPost) {
     ImpressionEvent newEvent = jobPost.addImpression(); //logs impression, creates and logs if there isnt an impression already
     impressionsRepository.save(jobPost.getImpressions());
-    impressionEventRepository.save(newEvent); // Log event
+    //impressionEventRepository.save(newEvent); // Log event
   }
 
   public void addProfileImpressionEvent(@NotNull Employer employer) {
 //    ImpressionEvent newEvent = employer.getProfile().addImpression(); //logs impression, creates and logs if there isnt an impression already
     ImpressionEvent newEvent = employer.addImpression();
     impressionsRepository.save(employer.getProfile().getImpressions());
-    impressionEventRepository.save(newEvent); // Log event
+    //impressionEventRepository.save(newEvent); // Log event
   }
 
   // For querying between dates
@@ -150,7 +155,11 @@ public class JobMetricsService {
   }
 
   public List<ImpressionEvent> getAllImpressionsByEmployerId(Long employerId) {
-    return impressionEventRepository.findAllImpressionEventsByEmployerId(employerId);
+    List<ImpressionEvent> employerImpressionEvents = new ArrayList<>();
+    employerImpressionEvents.addAll(impressionEventRepository.findJobImpressionEventsByEmployerId(employerId));
+    employerImpressionEvents.addAll(impressionEventRepository.findProfileImpressionEventsByEmployerId(employerId));
+
+    return employerImpressionEvents;
   }
 
   public List<ImpressionEventChartDto> getChartData(Long employerId) {
@@ -159,63 +168,31 @@ public class JobMetricsService {
   }
 
 
-
-
-
-//  public List<ImpressionEventChartDto> aggregateBothImpressionsForChart(List<ImpressionEvent> impressionEvents) {
-//    // Group by date (LocalDate) and count occurrences
-//    Map<LocalDate, Long> aggregatedData = impressionEvents.stream()
-//        .collect(Collectors.groupingBy(
-//            event -> event.getEventDate().toLocalDate(), // Extract date with Month, Day, Year
-//            Collectors.counting() // Count the number of events for each date
-//        ));
-//
-//    // Convert the map to a list of DTOs
-////    return aggregatedData.entrySet().stream()
-////        .map(entry -> ImpressionEventDto.from(entry.getKey(), entry.getValue()))
-////        .collect(Collectors.toList());
-//
-//    System.out.println("Aggregated Data: " + aggregatedData);
-//
-//    return aggregatedData.entrySet().stream()
-//        .map(entry -> ImpressionEventDto.from(entry.getKey(), entry.getValue()))
-//        .collect(Collectors.toList());
-//  }
-
   public List<ImpressionEventChartDto> aggregateImpressionsForChart(List<ImpressionEvent> impressionEvents) {
     // Group by date (LocalDate) and count occurrences
-    Map<LocalDate, Map<String, Long>> aggregatedData = impressionEvents.stream()
+    Map<LocalDate, Map<ImpressionType, Long>> aggregatedData = impressionEvents.stream()
         .collect(Collectors.groupingBy(
             event -> event.getEventDate().toLocalDate(), // Group by date
             Collectors.groupingBy(
-                event -> String.valueOf((event.getImpressionType())), // Group by platform (e.g., "desktop" or "mobile")
-                Collectors.counting() // Count occurrences for each platform
+                ImpressionEvent::getImpressionType, // Group by type (Job Post or Profile)
+                Collectors.counting() // Count occurrences for each
             )
         ));
 
+
+
     // Convert the map to a list of DTOs
-//    return aggregatedData.entrySet().stream()
-//        .map(entry -> ImpressionEventDto.from(entry.getKey(), entry.getValue()))
-//        .collect(Collectors.toList());
-
-    System.out.println("Aggregated Data: " + aggregatedData);
-    System.out.println("String value of Job Post:" + String.valueOf(ImpressionType.JOB_POST));
-    System.out.println("String value of Profile:" + String.valueOf(ImpressionType.PROFILE));
-
-
     return aggregatedData.entrySet().stream()
         .map(entry -> {
           LocalDate date = entry.getKey();
-          Map<String, Long> platformCounts = entry.getValue();
-          long jobCount = platformCounts.getOrDefault(String.valueOf(ImpressionType.JOB_POST), 0L);
-          long profileCount = platformCounts.getOrDefault(String.valueOf(ImpressionType.PROFILE), 0L);
+          Map<ImpressionType, Long> platformCounts = entry.getValue();
+          long jobCount = platformCounts.getOrDefault(JOB_POST, 0L);
+          long profileCount = platformCounts.getOrDefault(PROFILE, 0L);
           return new ImpressionEventChartDto(date, jobCount, profileCount);
         })
         .collect(Collectors.toList());
 
   }
-
-  //create regular objects out of the profile and job then combine them into one obejct
 
 
 

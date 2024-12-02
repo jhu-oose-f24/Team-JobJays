@@ -29,6 +29,7 @@ public interface ImpressionEventRepository extends JpaRepository<ImpressionEvent
   List<ImpressionEvent> findJobImpressionEventsByEmployerId(@Param("employerId") Long employerId);
 
 
+  //TODO FIX THIS
   @Query("SELECT e FROM ImpressionEvent e WHERE e.impressions.jobPost.jobID = :jobPostId AND e.eventDate BETWEEN :startDate AND :endDate AND e.impressionType = 'PROFILE'")
   List<ImpressionEvent> findProfileImpressionsBetween(
       @Param("jobPostId") Long jobPostId,
@@ -36,24 +37,18 @@ public interface ImpressionEventRepository extends JpaRepository<ImpressionEvent
       @Param("endDate") LocalDateTime endDate
   );
 
+  //TODO FIX THIS
   @Query("SELECT COUNT(e) FROM ImpressionEvent e WHERE e.impressions.jobPost.jobID = :jobPostId AND e.eventDate < :startDate AND e.impressionType = 'PROFILE'")
   Integer findProfileImpressionEventsBeforeDate(
       @Param("jobPostId") Long jobPostId,
       @Param("startDate") LocalDateTime startDate
   );
 
+  //TODO EXAMPLE OF PROPER WAY TO QUERY PROFILE IMPRESSION EVENTS
   @Query("SELECT ie FROM ImpressionEvent ie " +
-      "WHERE ie.impressionType = 'PROFILE' AND ie.impressions.jobPost.jobID IN " +
-      "(SELECT jp.jobID FROM JobPost jp WHERE jp.employer.employer_id = :employerId)")
+      "WHERE ie.impressionType = 'PROFILE' AND ie.impressions.employer.employer_id = :employerId")
   List<ImpressionEvent> findProfileImpressionEventsByEmployerId(@Param("employerId") Long employerId);
 
 
-  @Query("""
-        SELECT e
-        FROM ImpressionEvent e
-        WHERE e.impressions.jobPost.employer.employer_id = :employerId
-           OR e.impressions.employer.employer_id= :employerId
-    """)
-  List<ImpressionEvent> findAllImpressionEventsByEmployerId(@Param("employerId") Long employerId);
 
 }
