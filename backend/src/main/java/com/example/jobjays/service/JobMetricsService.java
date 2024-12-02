@@ -1,16 +1,13 @@
 package com.example.jobjays.service;
 
-import com.example.jobjays.dto.ImpressionEventDto;
-import com.example.jobjays.model.ImpressionEvent;
-import com.example.jobjays.model.Impressions;
-import com.example.jobjays.model.JobPost;
+import com.example.jobjays.dto.ImpressionEventChartDto;
+import com.example.jobjays.model.*;
 import com.example.jobjays.repository.ImpressionEventRepository;
 import com.example.jobjays.repository.ImpressionsRepository;
 import jakarta.validation.constraints.NotNull;
-import org.hibernate.query.Page;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,6 +20,9 @@ public class JobMetricsService {
   private final ImpressionEventRepository impressionEventRepository;
   private final JobPostService jobPostService;
 
+  @Autowired
+  private EmployerService employerService;
+
   public JobMetricsService(ImpressionsRepository impressionsRepository, ImpressionEventRepository impressionEventRepository, JobPostService jobPostService) {
     this.impressionsRepository = impressionsRepository;
     this.impressionEventRepository = impressionEventRepository;
@@ -30,57 +30,106 @@ public class JobMetricsService {
   }
 
   // For updating cumulative count
-  public void addImpressionEvent(@NotNull JobPost jobPost) {
+  public void addJobImpressionEvent(@NotNull JobPost jobPost) {
     ImpressionEvent newEvent = jobPost.addImpression(); //logs impression, creates and logs if there isnt an impression already
     impressionsRepository.save(jobPost.getImpressions());
     impressionEventRepository.save(newEvent); // Log event
   }
 
-  // For querying between dates
-  public List<ImpressionEvent> getImpressionsByDateRange(Long jobPostId, LocalDateTime start, LocalDateTime end) {
-    return impressionEventRepository.findImpressionsBetween(jobPostId, start, end);
+  public void addProfileImpressionEvent(@NotNull Employer employer) {
+//    ImpressionEvent newEvent = employer.getProfile().addImpression(); //logs impression, creates and logs if there isnt an impression already
+    ImpressionEvent newEvent = employer.addImpression();
+    impressionsRepository.save(employer.getProfile().getImpressions());
+    impressionEventRepository.save(newEvent); // Log event
   }
 
-  public Integer getImpressionsBeforeDate(Long jobPostId, LocalDateTime start) {
-    return impressionEventRepository.findImpressionEventsBeforeDate(jobPostId, start);
+  // For querying between dates
+  public List<ImpressionEvent> getJobImpressionsByDateRange(Long jobPostId, LocalDateTime start, LocalDateTime end) {
+    return impressionEventRepository.findJobImpressionsBetween(jobPostId, start, end);
+  }
+
+  public List<ImpressionEvent> getProfileImpressionsByDateRange(Long jobPostId, LocalDateTime start, LocalDateTime end) {
+    return impressionEventRepository.findProfileImpressionsBetween(jobPostId, start, end);
+  }
+
+  public Integer getJobImpressionsBeforeDate(Long jobPostId, LocalDateTime start) {
+    return impressionEventRepository.findJobImpressionEventsBeforeDate(jobPostId, start);
+  }
+
+  public Integer getProfileImpressionsBeforeDate(Long jobPostId, LocalDateTime start) {
+    return impressionEventRepository.findProfileImpressionEventsBeforeDate(jobPostId, start);
   }
 
   // Total impressions by date range for a list of job posts
-  public List<ImpressionEvent> getImpressionsByDateRange(List<JobPost> jobPosts, LocalDateTime start, LocalDateTime end) {
+  public List<ImpressionEvent> getJobImpressionsByDateRange(List<JobPost> jobPosts, LocalDateTime start, LocalDateTime end) {
     return jobPosts.stream()
-        .flatMap(jobPost -> impressionEventRepository.findImpressionsBetween(jobPost.getID(), start, end).stream())
+        .flatMap(jobPost -> impressionEventRepository.findJobImpressionsBetween(jobPost.getID(), start, end).stream())
         .collect(Collectors.toList());
   }
 
-  // Total impressions before a specific date for a list of job posts
-  public Integer getImpressionsBeforeDate(List<JobPost> jobPosts, LocalDateTime date) {
+  public List<ImpressionEvent> getProfileImpressionsByDateRange(List<JobPost> jobPosts, LocalDateTime start, LocalDateTime end) {
     return jobPosts.stream()
-        .mapToInt(jobPost -> impressionEventRepository.findImpressionEventsBeforeDate(jobPost.getID(), date))
+        .flatMap(jobPost -> impressionEventRepository.findProfileImpressionsBetween(jobPost.getID(), start, end).stream())
+        .collect(Collectors.toList());
+  }
+
+
+  // Total impressions before a specific date for a list of job posts
+  public Integer getJobImpressionsBeforeDate(List<JobPost> jobPosts, LocalDateTime date) {
+    return jobPosts.stream()
+        .mapToInt(jobPost -> impressionEventRepository.findJobImpressionEventsBeforeDate(jobPost.getID(), date))
+        .sum();
+  }
+
+  public Integer getProfileImpressionsBeforeDate(List<JobPost> jobPosts, LocalDateTime date) {
+    return jobPosts.stream()
+        .mapToInt(jobPost -> impressionEventRepository.findProfileImpressionEventsBeforeDate(jobPost.getID(), date))
         .sum();
   }
 
   // Overloaded method for date range, given employer ID
-  public List<ImpressionEvent> getEmployerImpressionsByDateRange(Long employerId, LocalDateTime start, LocalDateTime end) {
+  public List<ImpressionEvent> getEmployerJobImpressionsByDateRange(Long employerId, LocalDateTime start, LocalDateTime end) {
     List<JobPost> jobPosts = jobPostService.getJobPostsByEmployerId(employerId);
-    return getImpressionsByDateRange(jobPosts, start, end);
+    return getJobImpressionsByDateRange(jobPosts, start, end);
+  }
+
+  public List<ImpressionEvent> getEmployerProfileImpressionsByDateRange(Long employerId, LocalDateTime start, LocalDateTime end) {
+    List<JobPost> jobPosts = jobPostService.getJobPostsByEmployerId(employerId);
+    return getProfileImpressionsByDateRange(jobPosts, start, end);
   }
 
   // Overloaded method for impressions before date, given employer ID
-  public Integer getEmployerImpressionsBeforeDate(Long employerId, LocalDateTime date) {
+  public Integer getEmployerJobImpressionsBeforeDate(Long employerId, LocalDateTime date) {
     List<JobPost> jobPosts = jobPostService.getJobPostsByEmployerId(employerId);
-    return getImpressionsBeforeDate(jobPosts, date);
+    return getJobImpressionsBeforeDate(jobPosts, date);
+  }
+
+  public Integer getEmployerProfileImpressionsBeforeDate(Long employerId, LocalDateTime date) {
+    List<JobPost> jobPosts = jobPostService.getJobPostsByEmployerId(employerId);
+    return getProfileImpressionsBeforeDate(jobPosts, date);
   }
 
   // For getting total impressions
-  public Integer getTotalImpressions(Long jobPostId) {
-    Impressions impressions = impressionsRepository.findImpressionsByJobPost_ID(jobPostId);
+  public Integer getTotalJobImpressions(Long jobPostId) {
+    Impressions impressions = impressionsRepository.findJobImpressionsByJobPost_ID(jobPostId);
     return impressions != null ? impressions.getTotalImpressions() : 0;
   }
 
-  public Integer getTotalEmployerImpressions(Long employerId) {
+  public Integer getTotalProfileImpressions(Long jobPostId) {
+    Impressions impressions = impressionsRepository.findProfileImpressionsByJobPost_ID(jobPostId);
+    return impressions != null ? impressions.getTotalImpressions() : 0;
+  }
+
+  public Integer getTotalEmployerJobImpressions(Long employerId) {
     List<JobPost> jobPosts = jobPostService.getJobPostsByEmployerId(employerId);
     return getTotalImpressionsForJobPosts(jobPosts);
   }
+
+  public Integer getTotalEmployerProfileImpressions(Long employerId) {
+    EmployerProfile employerProfile = employerService.findEmployerProfileById(employerId);
+    return employerProfile.getImpressions().getTotalImpressions();
+  }
+
 
   public Integer getTotalImpressionsForJobPosts(List<JobPost> jobPosts) {
     return jobPosts.stream()
@@ -90,25 +139,83 @@ public class JobMetricsService {
         .sum();                                  // Sum the total impressions
   }
 
-  public List<ImpressionEventDto> getImpressionDataForChart(Long employerId) {
-    List<ImpressionEvent> impressionEvents = impressionEventRepository.findByEmployerId(employerId);
+  public List<ImpressionEventChartDto> getJobImpressionDataForChart(Long employerId) {
+    List<ImpressionEvent> impressionEvents = impressionEventRepository.findJobImpressionEventsByEmployerId(employerId);
     return aggregateImpressionsForChart(impressionEvents);
   }
 
-  public List<ImpressionEventDto> aggregateImpressionsForChart(List<ImpressionEvent> impressionEvents) {
+  public List<ImpressionEventChartDto> getProfileImpressionDataForChart(Long employerId) {
+    List<ImpressionEvent> impressionEvents = impressionEventRepository.findProfileImpressionEventsByEmployerId(employerId);
+    return aggregateImpressionsForChart(impressionEvents);
+  }
+
+  public List<ImpressionEvent> getAllImpressionsByEmployerId(Long employerId) {
+    return impressionEventRepository.findAllImpressionEventsByEmployerId(employerId);
+  }
+
+  public List<ImpressionEventChartDto> getChartData(Long employerId) {
+    List<ImpressionEvent> impressionEvents = getAllImpressionsByEmployerId(employerId);
+    return aggregateImpressionsForChart(impressionEvents);
+  }
+
+
+
+
+
+//  public List<ImpressionEventChartDto> aggregateBothImpressionsForChart(List<ImpressionEvent> impressionEvents) {
+//    // Group by date (LocalDate) and count occurrences
+//    Map<LocalDate, Long> aggregatedData = impressionEvents.stream()
+//        .collect(Collectors.groupingBy(
+//            event -> event.getEventDate().toLocalDate(), // Extract date with Month, Day, Year
+//            Collectors.counting() // Count the number of events for each date
+//        ));
+//
+//    // Convert the map to a list of DTOs
+////    return aggregatedData.entrySet().stream()
+////        .map(entry -> ImpressionEventDto.from(entry.getKey(), entry.getValue()))
+////        .collect(Collectors.toList());
+//
+//    System.out.println("Aggregated Data: " + aggregatedData);
+//
+//    return aggregatedData.entrySet().stream()
+//        .map(entry -> ImpressionEventDto.from(entry.getKey(), entry.getValue()))
+//        .collect(Collectors.toList());
+//  }
+
+  public List<ImpressionEventChartDto> aggregateImpressionsForChart(List<ImpressionEvent> impressionEvents) {
     // Group by date (LocalDate) and count occurrences
-    Map<LocalDate, Long> aggregatedData = impressionEvents.stream()
+    Map<LocalDate, Map<String, Long>> aggregatedData = impressionEvents.stream()
         .collect(Collectors.groupingBy(
-            event -> event.getEventDate().toLocalDate(), // Extract date with Month, Day, Year
-            Collectors.counting() // Count the number of events for each date
+            event -> event.getEventDate().toLocalDate(), // Group by date
+            Collectors.groupingBy(
+                event -> String.valueOf((event.getImpressionType())), // Group by platform (e.g., "desktop" or "mobile")
+                Collectors.counting() // Count occurrences for each platform
+            )
         ));
 
-
     // Convert the map to a list of DTOs
+//    return aggregatedData.entrySet().stream()
+//        .map(entry -> ImpressionEventDto.from(entry.getKey(), entry.getValue()))
+//        .collect(Collectors.toList());
+
+    System.out.println("Aggregated Data: " + aggregatedData);
+    System.out.println("String value of Job Post:" + String.valueOf(ImpressionType.JOB_POST));
+    System.out.println("String value of Profile:" + String.valueOf(ImpressionType.PROFILE));
+
+
     return aggregatedData.entrySet().stream()
-        .map(entry -> ImpressionEventDto.from(entry.getKey(), entry.getValue()))
+        .map(entry -> {
+          LocalDate date = entry.getKey();
+          Map<String, Long> platformCounts = entry.getValue();
+          long jobCount = platformCounts.getOrDefault(String.valueOf(ImpressionType.JOB_POST), 0L);
+          long profileCount = platformCounts.getOrDefault(String.valueOf(ImpressionType.PROFILE), 0L);
+          return new ImpressionEventChartDto(date, jobCount, profileCount);
+        })
         .collect(Collectors.toList());
+
   }
+
+  //create regular objects out of the profile and job then combine them into one obejct
 
 
 

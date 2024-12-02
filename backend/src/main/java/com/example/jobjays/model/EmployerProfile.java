@@ -23,6 +23,10 @@ public class EmployerProfile implements Profile {
   @OneToMany(mappedBy = "employer", cascade = CascadeType.REMOVE, orphanRemoval = true)
   private List<JobPost> jobPosts;
 
+  @Getter
+  @Setter
+  @OneToOne(mappedBy = "employer", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Impressions impressions;
 
   public EmployerProfile() {}
   public EmployerProfile(Employer employer, String name, String bio) {
@@ -32,6 +36,19 @@ public class EmployerProfile implements Profile {
     this.bio = bio;
 
   }
+
+  public ImpressionEvent addImpression() {
+    if (impressions == null) {
+      impressions = new Impressions(this.getUser());
+      //impressions.setEmployer(this.employer);
+      System.out.println("Employer: " + this.employer);
+      //impressions.setJobPost(this);
+    }
+    return impressions.logImpression();
+
+  }
+
+
 
   @Transient
   public Employer getUser() {

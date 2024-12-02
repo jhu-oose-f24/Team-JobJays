@@ -18,9 +18,14 @@ public abstract class PostMetrics {
   private Long id;
 
   @OneToOne
-  @JoinColumn(name = "job_post_id", nullable = false, unique = true)
+  @JoinColumn(name = "job_post_id", unique = true, nullable = true)
   @Setter
   private JobPost jobPost;
+
+  @OneToOne
+  @JoinColumn(name = "profile_id", unique = true)
+  @Setter
+  private Employer employer;
 
   @Column(name = "timestamp", nullable = false)
   private LocalDateTime timestamp;

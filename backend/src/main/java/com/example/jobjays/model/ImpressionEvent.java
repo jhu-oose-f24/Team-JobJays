@@ -19,10 +19,14 @@ public class ImpressionEvent {
   @JoinColumn(name = "impressions_id", nullable = false)
   private Impressions impressions;
 
+  @Enumerated(EnumType.STRING)
+  private ImpressionType impressionType;
+
   private LocalDateTime eventDate;
 
   public ImpressionEvent(Impressions impressions) {
     this.impressions = impressions;
+    this.impressionType = impressions.getImpressionType();
     this.eventDate = LocalDateTime.now();
   }
 }

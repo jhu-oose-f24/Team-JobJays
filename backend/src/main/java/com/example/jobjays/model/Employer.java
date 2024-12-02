@@ -111,6 +111,28 @@ public class Employer implements User {
     return this.profile;
   }
 
+//  public ImpressionEvent addImpression() {
+//    return this.profile.addImpression();
+//  }
+//
+//  public ImpressionEvent addImpression() {
+//    if (impressions == null) {
+//      impressions = new Impressions(this.getUser());
+//      //impressions.setEmployer(this.employer);
+//      System.out.println("Employer: " + this.employer);
+//      //impressions.setJobPost(this);
+//    }
+//    return impressions.logImpression();
+//
+//  }
+
+  public ImpressionEvent addImpression() {
+    if (profile.getImpressions() == null) {
+      profile.setImpressions(new Impressions(this));
+    }
+    return profile.getImpressions().logImpression();
+  }
+
   public void postJob(JobPost job) {
     this.profile.getJobPosts().add(job);
   }
