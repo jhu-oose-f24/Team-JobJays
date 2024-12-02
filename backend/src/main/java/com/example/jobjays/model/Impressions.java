@@ -18,16 +18,34 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 //@DiscriminatorValue("IMPRESSION")
 public class Impressions extends PostMetrics {
-    private Integer totalImpressions;
+  private Integer totalImpressions;
 
-    @OneToMany(mappedBy = "impressions", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ImpressionEvent> events = new ArrayList<>();
+  @Enumerated(EnumType.STRING)
+  private ImpressionType impressionType;
 
-    public Impressions(JobPost jobPost) {
-      super();
-      this.setJobPost(jobPost);
-      this.totalImpressions = 0;
-    }
+  @OneToMany(mappedBy = "impressions", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ImpressionEvent> events = new ArrayList<>();
+
+  public Impressions(JobPost jobPost) {
+    super();
+    this.setJobPost(jobPost);
+    this.impressionType = ImpressionType.JOB_POST;
+    this.totalImpressions = 0;
+  }
+
+//  public Impressions(Profile employerProfile) {
+//    super();
+//    this.setProfile(employerProfile);
+//    this.impressionType = ImpressionType.EMPLOYER_PROFILE;
+//    this.totalImpressions = 0;
+//  }
+
+  public Impressions(Employer employer) {
+    super();
+    this.setEmployer(employer);
+    this.impressionType = ImpressionType.PROFILE;
+    this.totalImpressions = 0;
+  }
 
   public ImpressionEvent logImpression() {
     this.totalImpressions++;

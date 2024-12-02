@@ -2,12 +2,13 @@ package com.example.jobjays.controller;
 
 import com.example.jobjays.auth.AuthService;
 import com.example.jobjays.auth.CustomAuthenticationDetails;
-import com.example.jobjays.dto.ImpressionEventDto;
+import com.example.jobjays.dto.ImpressionEventChartDto;
 import com.example.jobjays.dto.ResponseImpressionsDto;
 import com.example.jobjays.exception.UserNotFoundException;
-import com.example.jobjays.model.ImpressionEvent;
-import com.example.jobjays.model.Impressions;
+import com.example.jobjays.model.Employer;
+import com.example.jobjays.model.EmployerProfile;
 import com.example.jobjays.model.JobPost;
+import com.example.jobjays.service.EmployerService;
 import com.example.jobjays.service.JobMetricsService;
 import com.example.jobjays.service.JobPostService;
 import org.springframework.http.HttpStatus;
@@ -28,12 +29,12 @@ public class JobMetricsController {
     // Add methods to handle various metrics related to job posts, impressions, etc.
     private final JobMetricsService jobMetricsService;
     private final JobPostService jobPostService;
-    private final AuthService authService;
+    private final EmployerService employerService;
 
-    public JobMetricsController(JobMetricsService jobMetricsService, JobPostService jobPostService, AuthService authService) {
+    public JobMetricsController(JobMetricsService jobMetricsService, JobPostService jobPostService, EmployerService employerService) {
       this.jobMetricsService = jobMetricsService;
       this.jobPostService = jobPostService;
-      this.authService = authService;
+      this.employerService = employerService;
     }
 
   private String getCurrentUserId() {
@@ -50,29 +51,26 @@ public class JobMetricsController {
     return Long.parseLong(userId);
   }
 
-  @GetMapping("/user-type")
-  public ResponseEntity<Map<String, String>> getUserType() {
-
-    String userType = authService.getUserType();
-    Map<String, String> response = new HashMap<>();
-    response.put("userType", userType);
-    return ResponseEntity.ok(response);
-  }
-
-
-//  @GetMapping("/user-type")
-//  public String getUserType() {
-//    return authService.getUserType();
-//  }
-
   @PreAuthorize("hasAuthority('APPLICANT')")
-  @PostMapping("/impressions/{jobPostId}")
-  public ResponseEntity<Void> addImpressionEvent(@PathVariable Long jobPostId) {
+  @PostMapping("/impressions/{jobPostId}/post")
+  public ResponseEntity<Void> addJobImpressionEvent(@PathVariable Long jobPostId) {
     JobPost jobPost = jobPostService.getJobPostById(jobPostId);
     if (jobPost == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    jobMetricsService.addImpressionEvent(jobPost);
+    jobMetricsService.addJobImpressionEvent(jobPost);
+    return new ResponseEntity<>(HttpStatus.CREATED);
+
+  }
+
+  @PreAuthorize("hasAuthority('APPLICANT')")
+  @PostMapping("/impressions/{employerUsername}/profile")
+  public ResponseEntity<Void> addProfileImpressionEvent(@PathVariable String employerUsername) {
+    Employer employerProfile = employerService.findEmployerByUsername(employerUsername);
+    if (employerProfile == null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+    jobMetricsService.addProfileImpressionEvent(employerProfile);
     return new ResponseEntity<>(HttpStatus.CREATED);
 
   }
@@ -80,7 +78,7 @@ public class JobMetricsController {
   @PreAuthorize("hasAuthority('EMPLOYER')")
   @GetMapping("/impressions/{jobPostId}")
   public ResponseEntity<ResponseImpressionsDto> getJobImpressionsCount(@PathVariable Long jobPostId) {
-    Integer totalImpressions = jobMetricsService.getTotalImpressions(jobPostId);
+    Integer totalImpressions = jobMetricsService.getTotalJobImpressions(jobPostId);
     ResponseImpressionsDto responseDto = ResponseImpressionsDto.builder()
         .impressionsCount(totalImpressions)
         .build();
@@ -91,7 +89,7 @@ public class JobMetricsController {
   @GetMapping("/impressions/employer/total")
   public ResponseEntity<ResponseImpressionsDto> getTotalImpressionsForEmployer() {
     Long employerId = parsedUserId();
-    Integer totalImpressions = jobMetricsService.getTotalEmployerImpressions(employerId);
+    Integer totalImpressions = jobMetricsService.getTotalEmployerJobImpressions(employerId);
     ResponseImpressionsDto responseDto = ResponseImpressionsDto.builder()
         .impressionsCount(totalImpressions)
         .build();
@@ -106,7 +104,7 @@ public class JobMetricsController {
     Long employerId = parsedUserId();
     LocalDateTime startDate = LocalDateTime.parse(start);
     LocalDateTime endDate = LocalDateTime.parse(end);
-    Integer totalImpressions = jobMetricsService.getEmployerImpressionsByDateRange(employerId, startDate, endDate).size();
+    Integer totalImpressions = jobMetricsService.getEmployerJobImpressionsByDateRange(employerId, startDate, endDate).size();
     ResponseImpressionsDto responseDto = ResponseImpressionsDto.builder()
         .impressionsCount(totalImpressions)
         .build();
@@ -118,7 +116,7 @@ public class JobMetricsController {
   public ResponseEntity<ResponseImpressionsDto> getImpressionsBeforeDate(@RequestParam("date") String date) {
     Long employerId = parsedUserId();
     LocalDateTime beforeDate = LocalDateTime.parse(date);
-    Integer impressionCount = jobMetricsService.getEmployerImpressionsBeforeDate(employerId, beforeDate);
+    Integer impressionCount = jobMetricsService.getEmployerJobImpressionsBeforeDate(employerId, beforeDate);
     ResponseImpressionsDto responseDto = ResponseImpressionsDto.builder()
         .impressionsCount(impressionCount)
         .build();
@@ -127,9 +125,9 @@ public class JobMetricsController {
 
   @PreAuthorize("hasAuthority('EMPLOYER')")
   @GetMapping("/impressions/chart")
-  public ResponseEntity<List<ImpressionEventDto>> getImpressionDataForChart() {
+  public ResponseEntity<List<ImpressionEventChartDto>> getImpressionDataForChart() {
     Long employerId = parsedUserId();
-    List<ImpressionEventDto> chartData = jobMetricsService.getImpressionDataForChart(employerId);
+    List<ImpressionEventChartDto> chartData = jobMetricsService.getChartData(employerId);
     return ResponseEntity.ok(chartData);
   }
 

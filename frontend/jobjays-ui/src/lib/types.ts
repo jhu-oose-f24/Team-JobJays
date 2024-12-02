@@ -130,7 +130,8 @@ export interface Impressions { //amount of times your job post has been viewed
 
 export interface ImpressionsChartData {
     date: Date;
-    impressions: number;
+    jobImpressions: number;
+    profileImpressions: number;
 }
 
 export interface ProfileViews { //amount of times your profile has been viewed

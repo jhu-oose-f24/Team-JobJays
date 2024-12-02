@@ -1,5 +1,6 @@
 package com.example.jobjays.service;
 
+import com.example.jobjays.exception.UserNotFoundException;
 import com.example.jobjays.model.*;
 import com.example.jobjays.repository.ApplicantRepository;
 import com.example.jobjays.repository.EmployerRepository;
@@ -27,7 +28,7 @@ public class MyUserDetailsService implements UserDetailsService {
       Applicant applicant = applicantRepository.findByUsername(username);
       if (applicant == null) {
         System.out.println("User Not Found");
-        throw new UsernameNotFoundException("user not found");
+        throw new UserNotFoundException("user not found");
       }
       return new UserPrincipal(applicant, "applicant");
     }

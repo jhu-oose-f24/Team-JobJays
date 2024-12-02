@@ -2,6 +2,9 @@
 import CandidateSidebar from "@/components/candidate/CandidateSidebar";
 import React, {useEffect, useState} from "react";
 import EmployerSidebar from "@/components/employer/EmployerSidebar";
+import {ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent} from "@/components/ui/chart";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "@/components/ui/card";
+import {Bar, BarChart, CartesianGrid, XAxis} from "recharts";
 
 const PageLayout = ({ children }: { children: React.ReactNode }) => {
     const [role, setRole] = useState<string | null>(null);
@@ -31,3 +34,5 @@ const PageLayout = ({ children }: { children: React.ReactNode }) => {
 }
 
 export default PageLayout;
+
+

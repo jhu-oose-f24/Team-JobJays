@@ -21,7 +21,7 @@ jobs:
       # Step 3: Build Docker Compose
       - name: Build Docker Compose Services
         run: |
-          docker compose -f docker-compose.yml build
+          docker compose -f backend/docker-compose.yml build
 
       # # Step 4: Start Services for Testing
       # - name: Start Docker Compose Services
@@ -40,4 +40,4 @@ jobs:
       - name: Tear Down Docker Compose Services
         if: always()
         run: |
-          docker compose -f docker-compose.yml down --volumes
+          docker compose -f backend/docker-compose.yml down --volumes
