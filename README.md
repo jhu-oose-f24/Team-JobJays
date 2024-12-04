@@ -59,10 +59,32 @@ We also got ahead on the next iteration and began to work on polishing the UI. T
 
 We also made changes to our UML diagram to mimic the state of our application at this point, which you can find in: ‘class_diagram.mermaid’ 
 
-### How Preference, JobMatching Services works(video explanation) - 
-(https://drive.google.com/file/d/1K8zL4N61aZ6ESc-EVxIhXuNwvQRUu8E2/view?usp=sharing)
 
+# Iteration 4
+
+For this iteration, we focused on key milestones that brought the project closer to becoming a fully functional and secure platform. One of the primary achievements was the successful deployment of the frontend on Vercel, ensuring that users could interact with the platform in a live, production-ready environment. To enhance the security of the platform, we implemented JWT-based (JSON Web Token) authentication for both employers and applicants. This allowed us to securely manage user sessions and protect sensitive information while enabling secure access to various features. With JWT in place, all API endpoints are now secured, ensuring that only authorized users can perform specific actions or retrieve data.
+
+Another critical area of focus was improving the user interface (UI) for both applicants and employers. We worked on making the UI not only visually appealing but also highly intuitive, ensuring that users could navigate the platform effortlessly and have a positive experience. Additionally, we finalized and thoroughly tested the login functionality, ensuring that users could log in seamlessly without encountering any glitches or errors.
+
+On the backend side, we successfully deployed the core backend systems, ensuring that the necessary infrastructure was in place to support the frontend and upcoming features. While functional, we identified some areas for improvement in the backend, which we aim to address in the next iteration. Overall, Iteration 4 was a significant step forward, focusing on both functionality and security to deliver a robust and user-friendly experience.
+
+# Iteration 5
+
+Building on the solid foundation laid in Iteration 4, this phase was dedicated to adding new features, improving existing functionalities, and further optimizing the platform. One of the most exciting additions during this iteration was the Resume Upload feature. This feature allows applicants to easily upload their resumes directly to the platform, simplifying the application process for jobs. With this enhancement, applicants now have a more streamlined and convenient way to showcase their qualifications to potential employers.
+
+We also introduced the Impressions feature, designed to boost user engagement by allowing applicants and employers to interact with the platform in more dynamic ways. This feature adds depth to the user experience, making the platform more engaging and interactive.
+
+On the technical side, we addressed and resolved critical issues related to the notification URL in the production environment, ensuring that users now receive notifications reliably and on time. This fix was essential to maintaining effective communication between the platform and its users.
+
+Additionally, we made significant progress in automating and streamlining development workflows. Continuous Integration (CI) pipelines were implemented to automatically build the application on every push request, ensuring that code changes are tested and validated without manual intervention. For Continuous Deployment (CD), we configured the system to use Action Runner, enabling automatic updates to Docker containers after every merge. This has greatly improved the efficiency and reliability of the deployment process.
+
+Work in Progress:
+We began work on the Application feature, which is designed to allow applicants to monitor the status of their job applications. This feature is being developed to provide real-time insights into the progress of submitted applications, empowering users to track their job-seeking efforts more effectively. While still a work in progress, this feature is a top priority and will continue to be developed and refined in the next iteration.
 
 ### Running services
 
 Please refer this file (https://github.com/jhu-oose-f24/Team-JobJays/blob/main/how_to_run_services_for_testing.md).
+
+# Miscellaneous
+## How Preference, JobMatching Services works(video explanation) - 
+(https://drive.google.com/file/d/1K8zL4N61aZ6ESc-EVxIhXuNwvQRUu8E2/view?usp=sharing)
