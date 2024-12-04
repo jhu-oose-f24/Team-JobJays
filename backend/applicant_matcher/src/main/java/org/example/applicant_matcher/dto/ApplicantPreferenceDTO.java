@@ -17,13 +17,14 @@ public class ApplicantPreferenceDTO {
 //    private NotificationPreferenceDTO notificationPreference;
     private String email;
     private String name;
+    private String resume;
 
     // Constructors
 
 
     public ApplicantPreferenceDTO(Long applicantId, String email, String name, List<String> industries, List<String> jobTitles, List<String> skills,
                                   Double minMonthlySalary, List<String> jobTypes,
-                                  List<String> workTimings) {
+                                  List<String> workTimings, String resume) {
         this.applicantId = applicantId;
         this.email = email;
         this.name = name;
@@ -33,5 +34,6 @@ public class ApplicantPreferenceDTO {
         this.minMonthlySalary = minMonthlySalary;
         this.jobTypes = jobTypes;
         this.workTimings = workTimings;
+        this.resume = resume;
     }
 }

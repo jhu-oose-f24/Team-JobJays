@@ -49,10 +49,16 @@ public class CompanyNotificationService {
     }
 
     public String generateEmailContent(CompanyNotificationDTO notification) {
-        StringBuilder content = new StringBuilder("The following applicants matched your job: " + notification.getJobTitle() + "\n\n");
+        StringBuilder content = new StringBuilder();
+        content.append("The following applicants matched your job: ").append(notification.getJobTitle()).append("\n\n");
+
         for (MatchDTO applicant : notification.getMatchedApplicants()) {
             content.append("Name: ").append(applicant.getApplicantName())
-                    .append(", Email: ").append(applicant.getApplicantEmail()).append("\n");
+                    .append(", Email: ").append(applicant.getApplicantEmail())
+                    .append(", Skill Match Score: ").append(String.format("%.2f", applicant.getMatchScore() * 0.6))
+                    .append(", Resume Match Score: ").append(String.format("%.2f", applicant.getMatchScore() * 0.4))
+                    .append(", Total Score: ").append(String.format("%.2f", applicant.getMatchScore()))
+                    .append("\n");
         }
         return content.toString();
     }

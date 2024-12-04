@@ -131,3 +131,76 @@
 //        System.out.println("Similarity Score: " + similarityScore);
 //    }
 //}
+
+package org.example.applicant_matcher.matchalgo;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+public class DesToKeys {
+
+    private static final Logger logger = LoggerFactory.getLogger(DesToKeys.class);
+
+    private static final Set<String> JOB_RELATED_KEYWORDS = new HashSet<>() {{
+        add("java"); add("python"); add("c++"); add("docker"); add("aws"); add("spring"); add("kubernetes");
+        // 添加更多关键词
+    }};
+
+    public static Map<String, Integer> extractKeywordsWithFrequency(String text) {
+        Map<String, Integer> keywordFrequency = new HashMap<>();
+        String[] words = text.toLowerCase().split("\\W+");
+        for (String word : words) {
+            if (JOB_RELATED_KEYWORDS.contains(word)) {
+                keywordFrequency.put(word, keywordFrequency.getOrDefault(word, 0) + 1);
+            }
+        }
+        logger.info("Extracted keywords: {}", keywordFrequency);
+        return keywordFrequency;
+    }
+
+    public static String extractTextFromPdf(String pdfFilePath) {
+        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
+            return new PDFTextStripper().getText(document);
+        } catch (IOException e) {
+            logger.error("Failed to extract text from PDF: {}", pdfFilePath, e);
+            return "";
+        }
+    }
+
+    public static Map<String, Integer> matchKeywordsInPdf(String pdfFilePath, Map<String, Integer> jobKeywords) {
+        String pdfText = extractTextFromPdf(pdfFilePath).toLowerCase();
+        Map<String, Integer> resumeKeywords = new HashMap<>();
+        for (String keyword : jobKeywords.keySet()) {
+            resumeKeywords.put(keyword, 0);
+        }
+        for (String word : pdfText.split("\\W+")) {
+            if (resumeKeywords.containsKey(word)) {
+                resumeKeywords.put(word, resumeKeywords.get(word) + 1);
+            }
+        }
+        logger.info("Matched keywords in resume: {}", resumeKeywords);
+        return resumeKeywords;
+    }
+
+    public static double compareKeywordFrequencies(Map<String, Integer> jobKeywords, Map<String, Integer> resumeKeywords,
+                                                   int overlapWeight, double frequencyWeight) {
+        int overlapCount = 0;
+        double frequencyScore = 0.0;
+        for (String keyword : jobKeywords.keySet()) {
+            if (resumeKeywords.containsKey(keyword)) {
+                overlapCount++;
+                frequencyScore += Math.min(jobKeywords.get(keyword), resumeKeywords.get(keyword)) * frequencyWeight;
+            }
+        }
+        return overlapCount * overlapWeight + frequencyScore;
+    }
+}
