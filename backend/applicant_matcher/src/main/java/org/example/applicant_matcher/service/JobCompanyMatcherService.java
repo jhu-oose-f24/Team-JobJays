@@ -137,6 +137,19 @@ public class JobCompanyMatcherService {
             // 获取申请人偏好
             Map<String, ApplicantPreferenceDTO> preferences = preferencesStreamService.getAllPreferences();
 
+
+            // RETRIEVE RESUMES FROM DATABASE WITH APPLICANT ID
+
+            // 1. CREATE REPOSITORY OR COPY IT FROM MAIN APPLICATION
+
+            // 2. CALL FIND_BYAPPLICANTID FUNCTION FROM REPOSITORY AND PASS APPLICANT ID FROM PREFERENCES LIST
+
+            // 3. CALL RESUME PARSER AND MATCHER
+
+            // 4. COLLECT THE SCORE
+
+            // 5. SUM IT UP
+
             // 匹配申请人
             List<MatchDTO> matchedApplicants = matchJobToApplicants(jobPost, preferences);
 
@@ -146,7 +159,7 @@ public class JobCompanyMatcherService {
                 System.out.println("Published matched applicants to company: " + jobPost.getEmployerEmail());
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            e.aprintStackTrace();
             System.err.println("Failed to process job post: " + message);
         }
     }

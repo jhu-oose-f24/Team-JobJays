@@ -167,17 +167,18 @@ public class DesToKeys {
         return keywordFrequency;
     }
 
-    public static String extractTextFromPdf(String pdfFilePath) {
-        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
-            return new PDFTextStripper().getText(document);
+    public static String extractTextFromPdf(byte[] pdfData) {
+        try (PDDocument document = PDDocument.load(pdfData)) {
+            PDFTextStripper pdfStripper = new PDFTextStripper();
+            return pdfStripper.getText(document);
         } catch (IOException e) {
-            logger.error("Failed to extract text from PDF: {}", pdfFilePath, e);
+            logger.error("Failed to extract text from PDF", e);
             return "";
         }
     }
 
-    public static Map<String, Integer> matchKeywordsInPdf(String pdfFilePath, Map<String, Integer> jobKeywords) {
-        String pdfText = extractTextFromPdf(pdfFilePath).toLowerCase();
+    public static Map<String, Integer> matchKeywordsInPdf(byte[] pdfData, Map<String, Integer> jobKeywords) {
+        String pdfText = extractTextFromPdf(pdfData).toLowerCase();
         Map<String, Integer> resumeKeywords = new HashMap<>();
         for (String keyword : jobKeywords.keySet()) {
             resumeKeywords.put(keyword, 0);
@@ -190,6 +191,7 @@ public class DesToKeys {
         logger.info("Matched keywords in resume: {}", resumeKeywords);
         return resumeKeywords;
     }
+
 
     public static double compareKeywordFrequencies(Map<String, Integer> jobKeywords, Map<String, Integer> resumeKeywords,
                                                    int overlapWeight, double frequencyWeight) {
