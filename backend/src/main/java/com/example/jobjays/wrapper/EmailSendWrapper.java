@@ -14,7 +14,7 @@ public class EmailSendWrapper {
 
 
     public void sendVerificationEmailForEmployer(String recipientEmail, String token){
-        String verificationLink = "http://localhost:8080/api/companies/verify?token=" + token;
+        String verificationLink = "https://muradazimzada.me/api/companies/verify?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(recipientEmail);
@@ -25,7 +25,7 @@ public class EmailSendWrapper {
     }
 
     public void sendVerificationEmail(String recipientEmail, String token) {
-        String verificationLink = "http://localhost:8080/api/applicants/verify?token=" + token;
+        String verificationLink = "https://muradazimzada.me/api/applicants/verify?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(recipientEmail);
@@ -36,7 +36,7 @@ public class EmailSendWrapper {
     }
 
     public void sendUserVerificationEmail(String recipientEmail, String token){
-        String verificationLink = "http://localhost:8080/api/users/verify?token=" + token;
+        String verificationLink = "https://muradazimzada.me/api/users/verify?token=" + token;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(recipientEmail);
