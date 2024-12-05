@@ -8,7 +8,7 @@ import {
     SavedJobCollection,
     UserTypeDto
 } from './types';
-const BASE_URL = 'http://localhost:8080/api';
+const BASE_URL = 'https://muradazimzada.me/api';
 //const BASE_URL = 'http://74.179.58.106:8080/api';
 
 // Fetcher function
@@ -65,9 +65,11 @@ export async function registerApplicant(applicantData: any) {
 
 
         if (response.ok) {
+            console.log("Backend in response ok");
             const employerData = await response.json();
             return { success: true, data: employerData };
         } else {
+            console.log("Not ok");
             const errorData = await response.json();
             // alert(`Error: ${errorData.message}`);
             return { success: false, error: errorData };
@@ -633,6 +635,40 @@ export function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
 }
+
+export async function addApplicantSkills(skills: string[]) {
+    const token = localStorage.getItem('token');
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+    };
+    for (const skill of skills) {
+        const response = await fetch(`${BASE_URL}/applicants/profile/skills/add`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(skill),
+        });
+        if (!response.ok) {
+            throw new Error(`Error saving skill: ${skill}`);
+        }
+        // Optionally handle the response
+    }
+    // Return success message or nothing
+    return;
+}
+
+export function useApplicantSkills() {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}/applicants/profile/skills`, fetcher);
+
+    return {
+        skills: data as string[],
+        isLoading,
+        isError: error,
+    };
+}
+
+
+
 
 
 

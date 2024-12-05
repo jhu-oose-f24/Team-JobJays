@@ -1,8 +1,9 @@
-// app/advice/page.tsx
-
 'use client';
 
+import ReactMarkdown from 'react-markdown';
 import React, { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react'; // Import an icon for the back button
 
 export default function Home() {
   const [messages, setMessages] = useState([
@@ -17,7 +18,7 @@ export default function Home() {
 
   // Define the predefined prompts
   const prompts = [
-    'What are some tips for improving my resume?',
+    'Out of all the jobs posted, which one is best suited for me?',
     'How can I prepare for a technical interview?',
     'Which of my saved jobs would be best suited for me?',
     'Can you help me practice common interview questions?',
@@ -25,6 +26,9 @@ export default function Home() {
 
   // Reference to the end of the messages list
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
+
+  // Initialize the router
+  const router = useRouter();
 
   // Scroll to the bottom when messages change
   useEffect(() => {
@@ -62,10 +66,14 @@ export default function Home() {
         },
       ];
 
+      const token = localStorage.getItem('token');
       // Send the conversation to the API route
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify({ messages: conversation }),
       });
 
@@ -124,9 +132,13 @@ export default function Home() {
         },
       ];
 
+      const token = localStorage.getItem('token');
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
         body: JSON.stringify({ messages: conversation }),
       });
 
@@ -160,6 +172,13 @@ export default function Home() {
       <div className="flex flex-col h-screen bg-gray-100">
         {/* Header */}
         <header className="bg-white border-b border-gray-300 p-4 flex items-center">
+          {/* Back Button */}
+          <button
+              className="mr-2 p-2 text-gray-600 hover:text-gray-800"
+              onClick={() => router.back()}
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
           <img src="/jay.jpg" alt="Assistant Icon" className="w-8 h-8 rounded-full mr-2" />
           <h1 className="text-lg font-semibold text-gray-800">JobJays Guide</h1>
         </header>
@@ -205,7 +224,7 @@ export default function Home() {
                         />
                       </div>
                       <div className="bg-white text-gray-800 p-4 rounded-lg shadow-md max-w-xl">
-                        {message.text}
+                        <ReactMarkdown>{message.text}</ReactMarkdown>
                       </div>
                     </div>
                 )}
@@ -259,7 +278,6 @@ export default function Home() {
                 onClick={handleSend}
                 disabled={input.trim() === ''}
             >
-              {/* You can replace this with a send icon */}
               Send
             </button>
           </div>
