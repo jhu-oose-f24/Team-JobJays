@@ -1,17 +1,22 @@
 package org.example.applicant_matcher.matchalgo;
+
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-
 
 public class DesToKeys {
-    private static final Set<String> JOB_RELATED_KEYWORDS = new HashSet<String>() {{
+
+    private static final Logger logger = LoggerFactory.getLogger(DesToKeys.class);
+
+    private static final Set<String> JOB_RELATED_KEYWORDS = new HashSet<>() {{
         add("java"); add("python"); add("c++"); add("javascript"); add("html"); add("css"); add("sql");
         add("nosql"); add("database"); add("mysql"); add("mongodb"); add("oracle"); add("postgresql");
         add("git"); add("docker"); add("kubernetes"); add("aws"); add("azure"); add("gcp"); add("cloud");
@@ -52,82 +57,55 @@ public class DesToKeys {
         add("mechanical engineering"); add("chemical engineering"); add("software engineering");
         add("product management"); add("product design"); add("product lifecycle"); add("requirements gathering");
     }};
+
     public static Map<String, Integer> extractKeywordsWithFrequency(String text) {
         Map<String, Integer> keywordFrequency = new HashMap<>();
-
-        // 将输入文本分词并转换为小写
-        String[] words = text.toLowerCase().split("\\W+"); // 非单词字符分割
-
-        // 遍历分词结果并记录出现的关键词
+        String[] words = text.toLowerCase().split("\\W+");
         for (String word : words) {
             if (JOB_RELATED_KEYWORDS.contains(word)) {
                 keywordFrequency.put(word, keywordFrequency.getOrDefault(word, 0) + 1);
             }
         }
-
+        logger.info("Extracted keywords: {}", keywordFrequency);
         return keywordFrequency;
     }
 
-    public static String extractTextFromPdf(String pdfFilePath) {
-        try (PDDocument document = PDDocument.load(new File(pdfFilePath))) {
+    public static String extractTextFromPdf(byte[] pdfData) {
+        try (PDDocument document = PDDocument.load(pdfData)) {
             PDFTextStripper pdfStripper = new PDFTextStripper();
             return pdfStripper.getText(document);
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to extract text from PDF", e);
             return "";
         }
     }
 
-    public static Map<String, Integer> matchKeywordsInPdf(String pdfFilePath, Map<String, Integer> keywordFrequency) {
-
-        String pdfText = extractTextFromPdf(pdfFilePath).toLowerCase();
-
-        Map<String, Integer> matchedKeywordFrequency = new HashMap<>();
-
-        String[] words = pdfText.split("\\W+");
-
-        for (String keyword : keywordFrequency.keySet()) {
-            matchedKeywordFrequency.put(keyword, 0);
+    public static Map<String, Integer> matchKeywordsInPdf(byte[] pdfData, Map<String, Integer> jobKeywords) {
+        String pdfText = extractTextFromPdf(pdfData).toLowerCase();
+        Map<String, Integer> resumeKeywords = new HashMap<>();
+        for (String keyword : jobKeywords.keySet()) {
+            resumeKeywords.put(keyword, 0);
         }
-
-        for (String word : words) {
-            if (matchedKeywordFrequency.containsKey(word)) {
-                matchedKeywordFrequency.put(word, matchedKeywordFrequency.get(word) + 1);
+        for (String word : pdfText.split("\\W+")) {
+            if (resumeKeywords.containsKey(word)) {
+                resumeKeywords.put(word, resumeKeywords.get(word) + 1);
             }
         }
-        return matchedKeywordFrequency;
+        logger.info("Matched keywords in resume: {}", resumeKeywords);
+        return resumeKeywords;
     }
-    public static double compareKeywordFrequencies(Map<String, Integer> des, Map<String, Integer> pdf) {
-        final int overlapWeight = 10;
-        final double frequencyWeight = 0.1;
+
+
+    public static double compareKeywordFrequencies(Map<String, Integer> jobKeywords, Map<String, Integer> resumeKeywords,
+                                                   int overlapWeight, double frequencyWeight) {
         int overlapCount = 0;
         double frequencyScore = 0.0;
-
-        for (String keyword : des.keySet()) {
-            if (pdf.containsKey(keyword)) {
-                // 如果关键词出现在两个字典中，增加重叠计数
+        for (String keyword : jobKeywords.keySet()) {
+            if (resumeKeywords.containsKey(keyword)) {
                 overlapCount++;
-
-                // 获取两个字典中该关键词的 frequency
-                int frequency1 = des.get(keyword);
-                int frequency2 = pdf.get(keyword);
-
-                // frequency 分数为两者的最小值，越高频率则得分越高
-                frequencyScore += Math.min(frequency1, frequency2) * frequencyWeight;
+                frequencyScore += Math.min(jobKeywords.get(keyword), resumeKeywords.get(keyword)) * frequencyWeight;
             }
         }
         return overlapCount * overlapWeight + frequencyScore;
-    }
-
-
-    public static void main(String[] args) {
-        String pdfFilePath = "/Users/lixinyang/Downloads/resume.pdf";
-        String inputText = "I have experience in Java, Python, and SQL. I have used Docker and Kubernetes for deployment, and I am familiar with cloud platforms like AWS and Azure.";
-        Map<String, Integer> keywordFrequency = extractKeywordsWithFrequency(inputText);
-        Map<String, Integer> result = matchKeywordsInPdf(pdfFilePath, keywordFrequency);
-        double similarityScore = compareKeywordFrequencies(keywordFrequency, result);
-        System.out.println("Keywords and their frequencies: " + keywordFrequency);
-        System.out.println("Matched Keywords and their frequencies: " + result);
-        System.out.println("Similarity Score: " + similarityScore);
     }
 }
