@@ -242,6 +242,38 @@ public class ApplicantService {
 //    applicantRepository.findSavedJobsByApplicantId(applicantId).remove(jobPost);
 //  }
 
+  // Method to update skills
+  @Transactional
+  public Applicant updateApplicantSkills(Long applicantId, Set<String> skills) {
+    Applicant applicant = applicantRepository.findById(applicantId).orElseThrow(() -> new RuntimeException("Applicant not found"));
+    ApplicantProfile profile = applicant.getProfile();
+    profile.setSkills(skills);
+    return applicantRepository.save(applicant);
+  }
+
+  // Method to add a single skill
+  @Transactional
+  public Applicant addSkillToApplicant(Long applicantId, String skill) {
+    Applicant applicant = applicantRepository.findById(applicantId).orElseThrow(() -> new RuntimeException("Applicant not found"));
+    ApplicantProfile profile = applicant.getProfile();
+    profile.addSkill(skill);
+    return applicantRepository.save(applicant);
+  }
+
+  // Method to remove a skill
+  @Transactional
+  public Applicant removeSkillFromApplicant(Long applicantId, String skill) {
+    Applicant applicant = applicantRepository.findById(applicantId).orElseThrow(() -> new RuntimeException("Applicant not found"));
+    ApplicantProfile profile = applicant.getProfile();
+    profile.removeSkill(skill);
+    return applicantRepository.save(applicant);
+  }
+
+  // Method to get applicant's skills
+  public Set<String> getApplicantSkills(Long applicantId) {
+    Applicant applicant = applicantRepository.findById(applicantId).orElseThrow(() -> new RuntimeException("Applicant not found"));
+    return applicant.getProfile().getSkills();
+  }
 
 
 

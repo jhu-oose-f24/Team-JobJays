@@ -302,7 +302,7 @@ export default function CreateAccount() {
       {/* Right side */}
       <div className="hidden md:flex md:w-1/2 bg-blue-400 items-center justify-center relative">
         <Image
-            src="/create-account-banner.jpg"
+            src="/"
             alt=""
             layout="fill"
             objectFit="cover"

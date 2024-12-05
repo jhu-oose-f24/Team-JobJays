@@ -5,7 +5,7 @@ import { Applicant, Employer, JobPost } from "@/lib/types";
 import { useToast } from "@/hooks/use-toast";
 
 //const API_URL = process.env.API_IP_ADDRESS;
-const API_URL = "http://localhost:8080";
+const API_URL = "https://muradazimzada.me";
 
 
 export default function SearchBar() {

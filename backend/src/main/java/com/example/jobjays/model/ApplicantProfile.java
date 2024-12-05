@@ -45,6 +45,11 @@ public class ApplicantProfile implements Profile {
   @OneToMany(mappedBy = "applicant", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<SavedJobCollection> savedJobs = new HashSet<>();
 
+  @ElementCollection(fetch = FetchType.EAGER)
+  @CollectionTable(name = "profile_skills", joinColumns = @JoinColumn(name = "applicant_id"))
+  @Column(name = "skill")
+  private Set<String> skills = new HashSet<>();
+
   public ApplicantProfile() {}
 
   public ApplicantProfile(Applicant applicant, String name, String bio) {
@@ -166,6 +171,25 @@ public class ApplicantProfile implements Profile {
     this.setName(profile.getName());
     this.setBio(profile.getBio());
     return this;
+  }
+
+  // Getter and Setter for skills
+  public Set<String> getSkills() {
+    return skills;
+  }
+
+  public void setSkills(Set<String> skills) {
+    this.skills = skills;
+  }
+
+  // Method to add a single skill
+  public void addSkill(String skill) {
+    this.skills.add(skill);
+  }
+
+  // Method to remove a skill
+  public void removeSkill(String skill) {
+    this.skills.remove(skill);
   }
 
   void trackApplications() {

@@ -434,4 +434,40 @@ public class ApplicantController {
     return ResponseEntity.ok(lists.stream().map(responseMapperService::mapToSavedJobCollectionDto).collect(Collectors.toList()));
   }
 
+  // Endpoint to update skills (replace existing skills)
+  @PreAuthorize("hasAuthority('APPLICANT')")
+  @PutMapping("/profile/skills")
+  public ResponseEntity<?> updateSkills(@RequestBody Set<String> skills) {
+    String currentUserId = getCurrentUserId();
+    Applicant updatedApplicant = applicantService.updateApplicantSkills(Long.parseLong(currentUserId), skills);
+    return ResponseEntity.ok().build();
+  }
+
+  // Endpoint to add a single skill
+  @PreAuthorize("hasAuthority('APPLICANT')")
+  @PostMapping("/profile/skills/add")
+  public ResponseEntity<?> addSkill(@RequestBody String skill) {
+    String currentUserId = getCurrentUserId();
+    Applicant updatedApplicant = applicantService.addSkillToApplicant(Long.parseLong(currentUserId), skill);
+    return ResponseEntity.ok().body("{\"message\":\"Skill added successfully\"}");
+  }
+
+  // Endpoint to remove a single skill
+  @PreAuthorize("hasAuthority('APPLICANT')")
+  @DeleteMapping("/profile/skills/remove")
+  public ResponseEntity<?> removeSkill(@RequestBody String skill) {
+    String currentUserId = getCurrentUserId();
+    Applicant updatedApplicant = applicantService.removeSkillFromApplicant(Long.parseLong(currentUserId), skill);
+    return ResponseEntity.ok().build();
+  }
+
+  // Endpoint to get applicant's skills
+  @PreAuthorize("hasAuthority('APPLICANT')")
+  @GetMapping("/profile/skills")
+  public ResponseEntity<Set<String>> getSkills() {
+    String currentUserId = getCurrentUserId();
+    Set<String> skills = applicantService.getApplicantSkills(Long.parseLong(currentUserId));
+    return ResponseEntity.ok(skills);
+  }
+
 }
