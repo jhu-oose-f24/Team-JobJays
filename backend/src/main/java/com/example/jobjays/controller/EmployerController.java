@@ -70,14 +70,14 @@ public class EmployerController {
     UpdateEmployerDto user = new UpdateEmployerDto();
 
     if (employer == null) {
-      return  new RedirectView("http://localhost:3000/invalid-token");
+      return  new RedirectView("https://jobjays.vercel.app/invalid-token");
     }
 
     user.setEnabled(true); // Enable the user
     user.setToken(null); // Clear the token
     employerService.updateEmployer(user,employer.getID());
 
-    RedirectView redirectView = new RedirectView("http://localhost:3000/signin");
+    RedirectView redirectView = new RedirectView("https://jobjays.vercel.app/signin");
     redirectView.setExposeModelAttributes(false);
 
     return redirectView;
