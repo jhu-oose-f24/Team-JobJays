@@ -203,4 +203,17 @@ public class JobPostController {
     return jobPostService.getJobPostById(jobPostId).getEmployer().getID().equals(userId);
   }
 
+  @GetMapping("/find/posts/jobs/salary")
+  public ResponseEntity<List<ResponseJobPostDto>> getMostSimilarJobPostsByMaxSalary() {
+    List<JobPost> jobPosts = jobPostService.getMostSimilarJobPostsByMaxSalary();
+    System.out.println("Fetched JobPosts: " + jobPosts);
+
+    List<ResponseJobPostDto> responseJobPosts = jobPosts.stream()
+            .map(responseMapperService::mapToResponseJobPostDto)
+            .collect(Collectors.toList());
+    System.out.println("Mapped ResponseJobPostDtos: " + responseJobPosts);
+    return ResponseEntity.ok(responseJobPosts);
+  }
+
+
 }

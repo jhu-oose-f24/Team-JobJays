@@ -670,6 +670,19 @@ export function useApplicantSkills() {
 
 
 
+export function useSimilarJobs() {
+    const { data, error, isLoading } = useSWR(`${BASE_URL}/find/posts/jobs/salary`, fetcher);
+
+    if (error) {
+        console.error("Error fetching data:", error);
+    }
+
+    return {
+        jobList: data || []
+    };
+}
+
+
 
 
 
