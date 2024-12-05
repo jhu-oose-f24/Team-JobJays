@@ -138,4 +138,10 @@ public class JobPostService {
 
   }
 
+  public List<JobPost> getMostSimilarJobPostsByMaxSalary() {
+    return jobPostRepository.findMostSimilarJobPostsByMaxSalary();
+  }
+
+
+
 }

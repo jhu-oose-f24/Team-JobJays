@@ -39,6 +39,10 @@ public interface JobPostRepository extends JpaRepository<JobPost, Long> {
   Set<Applicant> findApplicantsByJobID(Long jobID);
 
 
+  @Query("SELECT j FROM JobPost j ORDER BY j.maxSalary DESC")
+  List<JobPost> findMostSimilarJobPostsByMaxSalary();
+
+
 
 
 
