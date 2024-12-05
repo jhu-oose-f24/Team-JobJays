@@ -82,7 +82,7 @@ public class ApplicantController {
 
     if (applicant == null) {
       //throw new JwtTokenException("Invalid token");
-      return new RedirectView("https://jobjays.vercel.com/invalid-token");
+      return new RedirectView("https://jobjays.vercel.app/invalid-token");
 //      RedirectView redirectView = new RedirectView("http://localhost:3000/invalid-token");
 //      redirectView.setExposeModelAttributes(false);
 //      return redirectView;
@@ -92,7 +92,7 @@ public class ApplicantController {
     user.setToken(null); // Clear the token
     applicantService.updateApplicant(user, applicant.getID());
 
-    RedirectView redirectView = new RedirectView("https://jobjays.vercel.com/signin");
+    RedirectView redirectView = new RedirectView("https://jobjays.vercel.app/signin");
     redirectView.setExposeModelAttributes(false);
     return redirectView;
   }
