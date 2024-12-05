@@ -1,6 +1,8 @@
+// app/advice/page.tsx
+
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 export default function Home() {
   const [messages, setMessages] = useState([
@@ -11,18 +13,34 @@ export default function Home() {
     },
   ]);
   const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false); // To show a loading indicator
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSend = async () => {
-    if (input.trim() === '') return;
+  // Define the predefined prompts
+  const prompts = [
+    'What are some tips for improving my resume?',
+    'How can I prepare for a technical interview?',
+    'Which of my saved jobs would be best suited for me?',
+    'Can you help me practice common interview questions?',
+  ];
+
+  // Reference to the end of the messages list
+  const messagesEndRef = useRef<null | HTMLDivElement>(null);
+
+  // Scroll to the bottom when messages change
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  // Function to handle prompt clicks
+  const handlePromptClick = async (promptText: string) => {
+    if (promptText.trim() === '') return;
 
     const userMessage = {
       id: messages.length + 1,
       sender: 'user',
-      text: input.trim(),
+      text: promptText.trim(),
     };
 
-    // Update the messages state with the user's message
     setMessages((prevMessages) => [...prevMessages, userMessage]);
     setInput('');
     setIsLoading(true);
@@ -40,7 +58,7 @@ export default function Home() {
         })),
         {
           role: 'user',
-          content: input.trim(),
+          content: promptText.trim(),
         },
       ];
 
@@ -55,7 +73,66 @@ export default function Home() {
         throw new Error('Network response was not ok');
       }
 
-      
+      const data = await response.json();
+
+      const assistantReply = {
+        id: messages.length + 2,
+        sender: 'assistant',
+        text: data.assistantMessage.content.trim(),
+      };
+
+      setMessages((prevMessages) => [...prevMessages, assistantReply]);
+    } catch (error) {
+      console.error('Error fetching assistant reply:', error);
+      const errorReply = {
+        id: messages.length + 2,
+        sender: 'assistant',
+        text: "I'm sorry, but I couldn't process your request at this time.",
+      };
+      setMessages((prevMessages) => [...prevMessages, errorReply]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSend = async () => {
+    if (input.trim() === '') return;
+
+    const userMessage = {
+      id: messages.length + 1,
+      sender: 'user',
+      text: input.trim(),
+    };
+
+    setMessages((prevMessages) => [...prevMessages, userMessage]);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const conversation = [
+        {
+          role: 'system',
+          content: 'You are a helpful assistant.',
+        },
+        ...messages.map((message) => ({
+          role: message.sender === 'user' ? 'user' : 'assistant',
+          content: message.text,
+        })),
+        {
+          role: 'user',
+          content: input.trim(),
+        },
+      ];
+
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversation }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
 
       const data = await response.json();
 
@@ -68,7 +145,6 @@ export default function Home() {
       setMessages((prevMessages) => [...prevMessages, assistantReply]);
     } catch (error) {
       console.error('Error fetching assistant reply:', error);
-      // Handle error (e.g., display a message to the user)
       const errorReply = {
         id: messages.length + 2,
         sender: 'assistant',
@@ -81,85 +157,113 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-blue-50">
-      {/* Header */}
-      <header className="bg-blue-500 text-white p-4">
-        <h1 className="text-xl font-semibold">JobJays Guide</h1>
-      </header>
+      <div className="flex flex-col h-screen bg-gray-100">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-300 p-4 flex items-center">
+          <img src="/jay.jpg" alt="Assistant Icon" className="w-8 h-8 rounded-full mr-2" />
+          <h1 className="text-lg font-semibold text-gray-800">JobJays Guide</h1>
+        </header>
 
-      {/* Chat messages */}
-      <main className="flex-1 overflow-y-auto p-4">
-        {messages.map((message) => (
-          <div
-            key={message.id}
-            className={`flex items-start ${
-              message.sender === 'user' ? 'justify-end' : 'justify-start'
-            } mb-4`}
-          >
-            {/* Assistant icon */}
-            {message.sender === 'assistant' && (
-              <img
-                src="/jay.jpg"
-                alt="Assistant Icon"
-                className="w-14 h-14 rounded-full mr-2"
-              />
-            )}
+        {/* Main Content */}
+        <main className="flex-1 overflow-y-auto p-4">
+          {/* Display prompts if only the initial assistant message is present */}
+          {messages.length === 1 && (
+              <div className="mb-6">
+                <h2 className="text-lg font-semibold mb-4 text-center text-gray-700">
+                  Quick Suggestions
+                </h2>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {prompts.map((prompt, index) => (
+                      <button
+                          key={index}
+                          onClick={() => handlePromptClick(prompt)}
+                          className="px-4 py-2 bg-white border border-gray-300 rounded-full shadow-sm hover:bg-gray-100 text-gray-700"
+                      >
+                        {prompt}
+                      </button>
+                  ))}
+                </div>
+              </div>
+          )}
 
-            {/* Message bubble */}
-            <div
-              className={`max-w-md p-5 rounded-lg ${
-                message.sender === 'user'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-200 text-gray-800'
-              }`}
+          {/* Chat Messages */}
+          {messages.map((message) => (
+              <div
+                  key={message.id}
+                  className={`flex ${
+                      message.sender === 'user' ? 'justify-end' : 'justify-start'
+                  } mb-4`}
+              >
+                {/* Assistant Message */}
+                {message.sender === 'assistant' && (
+                    <div className="flex items-start">
+                      <div className="flex-shrink-0">
+                        <img
+                            src="/jay.jpg"
+                            alt="Assistant Icon"
+                            className="w-8 h-8 rounded-full mr-2"
+                        />
+                      </div>
+                      <div className="bg-white text-gray-800 p-4 rounded-lg shadow-md max-w-xl">
+                        {message.text}
+                      </div>
+                    </div>
+                )}
+
+                {/* User Message */}
+                {message.sender === 'user' && (
+                    <div className="flex items-end">
+                      <div className="bg-blue-500 text-white p-4 rounded-lg shadow-md max-w-xl">
+                        {message.text}
+                      </div>
+                      <div className="flex-shrink-0 ml-2">
+                        <img
+                            src="/user.jpg"
+                            alt="User Icon"
+                            className="w-8 h-8 rounded-full"
+                        />
+                      </div>
+                    </div>
+                )}
+              </div>
+          ))}
+
+          {/* Loading Indicator */}
+          {isLoading && (
+              <div className="flex justify-center mb-4">
+                <div className="loader"></div>
+              </div>
+          )}
+          {/* Dummy div to keep scroll at the bottom */}
+          <div ref={messagesEndRef} />
+        </main>
+
+        {/* Input Field */}
+        <footer className="p-4 bg-white border-t border-gray-300">
+          <div className="flex items-center">
+            <input
+                type="text"
+                className="flex-1 p-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+                placeholder="Type your message..."
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+            />
+            <button
+                className="ml-2 bg-blue-500 text-white p-2 rounded-full hover:bg-blue-600 disabled:opacity-50"
+                onClick={handleSend}
+                disabled={input.trim() === ''}
             >
-              {message.text}
-            </div>
-
-            {/* User icon */}
-            {message.sender === 'user' && (
-              <img
-                src="/user.jpg"
-                alt="User Icon"
-                className="w-14 h-14 rounded-full ml-2"
-              />
-            )}
+              {/* You can replace this with a send icon */}
+              Send
+            </button>
           </div>
-        ))}
-
-        {/* Loading status */}
-        {isLoading && (
-          <div className="flex justify-center mb-4">
-            <div className="loader"></div>
-          </div>
-        )}
-      </main>
-
-      {/* Prompt input field */}
-      <footer className="p-4 bg-white">
-        <div className="flex">
-          <input
-            type="text"
-            className="flex-1 p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Type your message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                handleSend();
-              }
-            }}
-          />
-          <button
-            className="bg-blue-600 text-white p-2 rounded-r-lg hover:bg-blue-700 disabled:opacity-50"
-            onClick={handleSend}
-            disabled={input.trim() === ''}
-          >
-            Send
-          </button>
-        </div>
-      </footer>
-    </div>
+        </footer>
+      </div>
   );
 }
