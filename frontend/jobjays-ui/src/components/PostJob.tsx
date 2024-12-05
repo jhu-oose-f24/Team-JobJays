@@ -24,7 +24,7 @@ const PostJob = () => {
         setOpen(false);
         console.log(result.data.id)
         setTimeout(() => {
-          router.push(`http://localhost:3000/post/jobs/${result.data.id}`);
+          router.push(`https://jobjays.vercel.app/post/jobs/${result.data.id}`);
         }, 2000);
         toast({
           title: "Success",
