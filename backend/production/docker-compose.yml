@@ -1,5 +1,5 @@
 services:
-  PostgreSQL Database
+  # PostgreSQL Database
   db:
     image: postgres:17
     container_name: postgres-db
