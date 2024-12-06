@@ -10,7 +10,7 @@ services:
     ports:
       - "5432:5432"  # Expose PostgreSQL on port 5432
     volumes:
-      - /var/lib/postgresql/data:/var/lib/postgresql/data # Persistent storage for database data
+      - "/var/lib/postgresql/data:/var/lib/postgresql/data" # Persistent storage for database data
     # network_mode: host  # Uses the host network directly (optional)
     restart: on-failure
     networks:
