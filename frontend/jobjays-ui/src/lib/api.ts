@@ -8,8 +8,13 @@ import {
     SavedJobCollection,
     UserTypeDto
 } from './types';
+
+//production url
 const BASE_URL = 'https://muradazimzada.me/api';
-//const BASE_URL = 'http://74.179.58.106:8080/api';
+
+//local development url
+// const BASE_URL = 'http://localhost:8080/api';
+
 
 // Fetcher function
 export const fetcher = (url: string) => {
@@ -65,11 +70,9 @@ export async function registerApplicant(applicantData: any) {
 
 
         if (response.ok) {
-            console.log("Backend in response ok");
             const employerData = await response.json();
             return { success: true, data: employerData };
         } else {
-            console.log("Not ok");
             const errorData = await response.json();
             // alert(`Error: ${errorData.message}`);
             return { success: false, error: errorData };
@@ -81,7 +84,6 @@ export async function registerApplicant(applicantData: any) {
 }
 
 export async function registerEmployer(employerData: any) {
-    console.log(BASE_URL)
     try {
         const response = await fetch(`${BASE_URL}/companies/register`, {
             method: "POST",
@@ -154,8 +156,8 @@ export async function loginEmployer(employerData: any) {
         });
 
         if (response.status == 401) {
-            //alert("Invalid username or password");
-            return response;
+            // alert("Invalid username or password");
+            return response.ok;
         }
 
         if (response.ok) {
@@ -183,7 +185,6 @@ export async function loginEmployer(employerData: any) {
 
 
 export function useApplicant() {
-    console.log("In use applicant");
     const { data, error, isLoading, mutate} = useSWR(`${BASE_URL}/applicants/profile`, fetcher);
 
 
@@ -219,12 +220,10 @@ export async function updateApplicantProfile(updatedData: any, mutate: any, appl
         });
         if (response.ok) {
             const data = await response.json();
-            console.log("Data:", data);
             mutate({...applicantProfile}); // Optimistically update the UI
             return {success: true, data: data}
         } else {
             const error = await response.json();
-            console.log(`Unexpected response: ${response.status} - ${response.statusText}`);
             return {success: false, error};
         }
     } catch (error: any) {
@@ -289,16 +288,37 @@ export async function updateEmployerProfile(updatedData: any, mutate: any, emplo
         });
         if (response.ok) {
             const data = await response.json();
-            console.log("Data:", data);
             mutate({...employerProfile}); // Optimistically update the UI
             return {success: true, data: data}
         } else {
             const error = await response.json();
-            console.log(`Unexpected response: ${response.status} - ${response.statusText}`);
             return {success: false, error};
         }
     } catch (error: any) {
-        console.error("Error updating job post:", error);
+        return {success: false, error};
+    }
+}
+
+export async function changePassword(data: any) {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": 'application/json',
+    };
+    try {
+        const response = await fetch(`${BASE_URL}/companies/profile`, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify(data),
+        });
+        if (response.ok) {
+            const data = await response.json();
+            return {success: true, data: data}
+        } else {
+            const error = await response.json();
+            return {success: false, error};
+        }
+    } catch (error: any) {
         return {success: false, error};
     }
 }
@@ -308,10 +328,8 @@ export function fetchUserProfile(id: number) {
 }
 
 export function fetchJobApplicants(id:number) {
-    console.log(id);
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const { data, error, isLoading} = useSWR(`${BASE_URL}/${id}/applicants`, fetcher);
-    console.log(data);
     return {
         applicants: data as Applicant,
         isLoading,
@@ -325,8 +343,7 @@ export function useJobApplicants(jobId: number | null) {
       fetcher
     );
   
-    console.log('Applicants data:', data); // For debugging
-  
+
     return {
       applicants: data as Applicant[] | undefined,
       isLoading: !error && !data,
@@ -393,7 +410,7 @@ export const createJobPost = async (
     // const headersTest = new Headers();
     // headersTest.set("Authorization", `Bea`)
 
-    console.log("in create job post");
+
     if (!response.ok) {
         // console.log("Response Content-Type:", response.headers.get('content-type'));
         const error = await response.json();
@@ -409,8 +426,8 @@ export const createJobPost = async (
 export const updateJobPost = async (
     id: number,
     updatedData: any,
-    mutate:any,
-    jobPost:JobPost
+    jobPost:any,
+    mutate?:any
 ) => {
     const token = localStorage.getItem("token"); // Retrieve token from localStorage
     const headers = {
@@ -425,7 +442,9 @@ export const updateJobPost = async (
         });
         if (response.ok) {
             const data = await response.json();
-            mutate({ ...jobPost }); // Optimistically update the UI
+            if (mutate) {
+                mutate({...jobPost});
+            }
             return { success: true, data: data}
         }
         else {
@@ -459,19 +478,38 @@ export const applyToJob = async (
     return { success: true };
 }
 
-export const addImpressionEvent = async (id: number) => {
+export const addJobImpressionEvent = async (id: number) => {
     const token = localStorage.getItem("token"); // Retrieve token from localStorage
     const headers = {
         "Authorization": `Bearer ${token}`,
         "Content-Type": 'application/json',
     };
     try {
-        const response = await fetch(`${BASE_URL}/metrics/impressions/${id}`, {
+        const response = await fetch(`${BASE_URL}/metrics/impressions/${id}/post`, {
             method: 'POST',
             headers: headers
         });
         if (!response.ok) {
            console.error(`Error incrementing view count: ${response.statusText}`);
+        }
+    } catch (error) {
+        console.error("Failed to increment job post view count:", error);
+    }
+}
+
+export const addProfileImpressionEvent = async (username: string) => {
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": 'application/json',
+    };
+    try {
+        const response = await fetch(`${BASE_URL}/metrics/impressions/${username}/profile`, {
+            method: 'POST',
+            headers: headers
+        });
+        if (!response.ok) {
+            console.error(`Error incrementing view count: ${response.statusText}`);
         }
     } catch (error) {
         console.error("Failed to increment job post view count:", error);
@@ -678,8 +716,30 @@ export function useSimilarJobs() {
     }
 
     return {
-        jobList: data || []
+        jobList: data || [],
+        isLoading,
     };
+}
+
+export async function deleteEmployerAccount() {
+    const token = localStorage.getItem("token");
+    const headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    }
+
+    const response = await fetch(`${BASE_URL}/companies/profile`, {
+        method: 'DELETE',
+        headers: headers
+    });
+    if (!response.ok) {
+        const error = await response.json();
+        console.log(error);
+        return {success: false, error};
+    } else {
+        console.log("Profile deleted successfully");
+        return {success: true};
+    }
 }
 
 

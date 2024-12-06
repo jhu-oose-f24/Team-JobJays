@@ -9,90 +9,88 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import {
     Building2,
-    Users,
-    Share2,
     Settings,
     Upload,
     ImagePlus,
     Trash2,
-    ChevronRight
+    ChevronRight, Terminal
 } from "lucide-react";
-import FoundingInfo from "@/components/employer/FoundingInfo";
-import SocialMediaInfo from "@/components/employer/SocialMediaInfo";
 import AccountSettings from "@/components/employer/AccountSettings";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {EmployerProfile} from "@/lib/types";
 import {Form, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 
-const ImageUploadCard = ({
-                             title,
-                             description,
-                             image,
-                             size,
-                             aspectRatio = "aspect-square",
-                             onRemove,
-                             onUpload
-                         }: {
-    title: string;
-    description: string;
-    image: string;
-    size: string;
-    aspectRatio?: string;
-    onRemove: () => void;
-    onUpload: () => void;
-}) => (
-    <Card className="overflow-hidden">
-        <CardHeader className="space-y-1">
-            <CardTitle className="text-xl">{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4 p-6">
-            <div className={cn(
-                "relative rounded-lg overflow-hidden border-2 border-dashed",
-                "border-gray-200 hover:border-gray-300 transition-colors",
-                aspectRatio
-            )}>
-                {image ? (
-                    <>
-                        <Image
-                            src={image}
-                            alt={title}
-                            fill
-                            className="object-cover"
-                        />
-                        <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity">
-                            <div className="flex h-full items-center justify-center space-x-2">
-                                <Button variant="secondary" size="sm" onClick={onUpload}>
-                                    <Upload className="w-4 h-4 mr-2" />
-                                    Replace
-                                </Button>
-                                <Button variant="destructive" size="sm" onClick={onRemove}>
-                                    <Trash2 className="w-4 h-4 mr-2" />
-                                    Remove
-                                </Button>
-                            </div>
-                        </div>
-                    </>
-                ) : (
-                    <button
-                        onClick={onUpload}
-                        className="absolute inset-0 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors"
-                    >
-                        <ImagePlus className="w-8 h-8 text-gray-400" />
-                        <span className="text-sm text-gray-500">Click to upload</span>
-                    </button>
-                )}
-            </div>
-            <div className="flex items-center justify-between text-sm text-gray-500">
-                <span>{size}</span>
-                <span>Max size: 5MB</span>
-            </div>
-        </CardContent>
-    </Card>
-);
+
+// const ImageUploadCard = ({
+//                              title,
+//                              description,
+//                              image,
+//                              size,
+//                              aspectRatio = "aspect-square",
+//                              onRemove,
+//                              onUpload
+//                          }: {
+//     title: string;
+//     description: string;
+//     image: string;
+//     size: string;
+//     aspectRatio?: string;
+//     onRemove: () => void;
+//     onUpload: () => void;
+// }) => (
+//     <Card className="overflow-hidden">
+//         <CardHeader className="space-y-1">
+//             <CardTitle className="text-xl">{title}</CardTitle>
+//             <CardDescription>{description}</CardDescription>
+//         </CardHeader>
+//         <CardContent className="space-y-4 p-6">
+//             <div className={cn(
+//                 "relative rounded-lg overflow-hidden border-2 border-dashed",
+//                 "border-gray-200 hover:border-gray-300 transition-colors",
+//                 aspectRatio
+//             )}>
+//                 {image ? (
+//                     <>
+//                         <Image
+//                             src={image}
+//                             alt={title}
+//                             fill
+//                             className="object-cover"
+//                         />
+//                         <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity">
+//                             <div className="flex h-full items-center justify-center space-x-2">
+//                                 <Button variant="secondary" size="sm" onClick={onUpload}>
+//                                     <Upload className="w-4 h-4 mr-2" />
+//                                     Replace
+//                                 </Button>
+//                                 <Button variant="destructive" size="sm" onClick={onRemove}>
+//                                     <Trash2 className="w-4 h-4 mr-2" />
+//                                     Remove
+//                                 </Button>
+//                             </div>
+//                         </div>
+//                     </>
+//                 ) : (
+//                     <button
+//                         onClick={onUpload}
+//                         className="absolute inset-0 flex flex-col items-center justify-center space-y-2 hover:bg-gray-50 transition-colors"
+//                     >
+//                         <ImagePlus className="w-8 h-8 text-gray-400" />
+//                         <span className="text-sm text-gray-500">Click to upload</span>
+//                     </button>
+//                 )}
+//             </div>
+//             <div className="flex items-center justify-between text-sm text-gray-500">
+//                 <span>{size}</span>
+//                 <span>Max size: 5MB</span>
+//             </div>
+//         </CardContent>
+//     </Card>
+// );
 
 const NavigationItem = ({
                             icon: Icon,
@@ -130,13 +128,11 @@ const jobFormSchema = z.object({
 type JobFormSchemaType = z.infer<typeof jobFormSchema>;
 
 const EditEmployerProfile = ({onSubmit, employerProfile}:{onSubmit: (data: JobFormSchemaType) => void; employerProfile: EmployerProfile}) => {
-    const [currentSection, setCurrentSection] = useState<'company-info' | 'founding-info' | 'social-media' | 'account-setting'>('company-info');
-    const [logoFile, setLogoFile] = useState<string>("/company_logo.png");
-    const [bannerFile, setBannerFile] = useState<string>("/company_ban.png");
+    const [currentSection, setCurrentSection] = useState<'company-info' | 'account-setting'>('company-info');
 
-    if (employerProfile.industry === undefined || employerProfile.industry === null) {
-        employerProfile.industry = "";
-    }
+    employerProfile.industry = employerProfile.industry ?? "";
+
+
 
     const form = useForm<JobFormSchemaType>({
       resolver: zodResolver(jobFormSchema),
@@ -151,8 +147,6 @@ const EditEmployerProfile = ({onSubmit, employerProfile}:{onSubmit: (data: JobFo
 
     const navigationItems = [
         { id: 'company-info', title: 'Company Info', icon: Building2 },
-        { id: 'founding-info', title: 'Founding Info', icon: Users },
-        { id: 'social-media', title: 'Social Media', icon: Share2 },
         { id: 'account-setting', title: 'Account Settings', icon: Settings }
     ];
 
@@ -163,7 +157,7 @@ const EditEmployerProfile = ({onSubmit, employerProfile}:{onSubmit: (data: JobFo
                 <div className="flex items-center justify-between pb-6 border-b mb-6">
                     <div className="flex items-center gap-3">
                         <div className="p-2 rounded-lg bg-primary/10">
-                            <Settings className="w-6 h-6 text-primary" />
+                            <Settings className="w-6 h-6 text-primary"/>
                         </div>
                         <div>
                             <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
@@ -171,6 +165,20 @@ const EditEmployerProfile = ({onSubmit, employerProfile}:{onSubmit: (data: JobFo
                         </div>
                     </div>
                 </div>
+
+                <div>
+                    {(!employerProfile.industry || employerProfile.industry === "") && (
+                        <Alert>
+                            <Terminal className="h-4 w-4"/>
+                            <AlertTitle>Heads up!</AlertTitle>
+                            <AlertDescription>
+                                Fill out Your Industry Information!
+                            </AlertDescription>
+                        </Alert>
+                    )}
+                </div>
+
+                <div className={"py-2"}></div>
 
                 {/* Main Content */}
                 <div className="grid grid-cols-12 gap-6">
@@ -254,35 +262,30 @@ const EditEmployerProfile = ({onSubmit, employerProfile}:{onSubmit: (data: JobFo
                                                 </div>
                                             </CardContent>
                                         </Card>
-                                        <div className="grid md:grid-cols-2 gap-6 ">
-                                            <ImageUploadCard
-                                                title="Company Logo"
-                                                description="Upload your company logo (1:1 ratio recommended)"
-                                                image={logoFile}
-                                                size="3.5 MB"
-                                                onRemove={() => setLogoFile("")}
-                                                onUpload={() => {/* Implement upload logic */
-                                                }}
-                                            />
-                                            <ImageUploadCard
-                                                title="Company Banner"
-                                                description="Upload a banner image (16:9 ratio recommended)"
-                                                image={bannerFile}
-                                                size="4.3 MB"
-                                                aspectRatio="aspect-video"
-                                                onRemove={() => setBannerFile("")}
-                                                onUpload={() => {/* Implement upload logic */
-                                                }}
-                                            />
-                                        </div>
+                                        {/*<div className="grid md:grid-cols-2 gap-6 ">*/}
+                                        {/*    <ImageUploadCard*/}
+                                        {/*        title="Company Logo"*/}
+                                        {/*        description="Upload your company logo (1:1 ratio recommended)"*/}
+                                        {/*        image={logoFile}*/}
+                                        {/*        size="3.5 MB"*/}
+                                        {/*        onRemove={() => setLogoFile("")}*/}
+                                        {/*        onUpload={() => /!* Implement upload logic *!/}*/}
+                                        {/*    />*/}
+                                        {/*    <ImageUploadCard*/}
+                                        {/*        title="Company Banner"*/}
+                                        {/*        description="Upload a banner image (16:9 ratio recommended)"*/}
+                                        {/*        image={bannerFile}*/}
+                                        {/*        size="4.3 MB"*/}
+                                        {/*        aspectRatio="aspect-video"*/}
+                                        {/*        onRemove={() => setBannerFile("")}*/}
+                                        {/*        onUpload={() => /!* Implement upload logic *!/}*/}
+                                        {/*    />*/}
+                                        {/*</div>*/}
                                     </>
                                 </form>
                             </Form>
                         )}
-
-                        {/*{currentSection === 'founding-info' && <FoundingInfo />}*/}
-                        {/*{currentSection === 'social-media' && <SocialMediaInfo />}*/}
-                        {currentSection === 'account-setting' && <AccountSettings />}
+                        {currentSection === 'account-setting' && <AccountSettings/>}
                     </div>
                 </div>
             </div>

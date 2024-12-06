@@ -16,15 +16,14 @@ const PostJob = () => {
 
   const handleJobFormSubmit = async (data: any) => {
     try {
-      //We need to send the filteredData with proper attributes to backend for now until we have type in backend
-      //JobPost.type = data.type;
+
 
       const result = await createJobPost(data);
       if (result.success) {
         setOpen(false);
-        console.log(result.data.id)
+        // console.log(result.data.id)
         setTimeout(() => {
-          router.push(`https://jobjays.vercel.app/post/jobs/${result.data.id}`);
+          router.push(`/post/jobs/${result.data.id}`);
         }, 2000);
         toast({
           title: "Success",
@@ -60,13 +59,13 @@ const PostJob = () => {
       <div className="max-w-4xl mx-auto">
         {/* Header Section */}
         <div className="mb-8">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center text-gray-600 hover:text-gray-900 mb-4"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </button>
+          {/*<button*/}
+          {/*  onClick={() => router.back()}*/}
+          {/*  className="flex items-center text-gray-600 hover:text-gray-900 mb-4"*/}
+          {/*>*/}
+          {/*  <ArrowLeft className="w-4 h-4 mr-2" />*/}
+          {/*  Back*/}
+          {/*</button>*/}
 
           <div className="flex items-center gap-3 mb-2">
             <Building2 className="w-8 h-8 text-primary" />

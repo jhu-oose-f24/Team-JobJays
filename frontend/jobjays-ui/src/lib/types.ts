@@ -20,8 +20,8 @@ export interface JobPost extends Post {
     location: Location;
     minSalary: number;
     maxSalary: number;
-    postedDate: Date;
-    closedDate: Date;
+    postedDate: Date | string;
+    closedDate: Date | string;
     numApplicants: number;
     jobType: string; //hybrid, onsite, remote
     industry: string;

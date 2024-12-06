@@ -59,18 +59,6 @@ public class EmployerService {
     if (employerToUpdate == null) {
       throw new ResourceNotFoundException("Employer not found with id: " + id);
     }
-//    EmployerProfile profile = employerToUpdate.getProfile();
-//
-//    if (newEmployer.getEmployerInfo() != null && !newEmployer.getEmployerInfo().isEmpty()) {
-//      profile.setBio(newEmployer.getEmployerInfo());
-//    }
-//    if (newEmployer.getEmployerName() != null && !newEmployer.getEmployerName().isEmpty()) {
-//      profile.setName(newEmployer.getEmployerInfo());
-//    }
-//
-//    if (newEmployer.getEnabled() != null) {
-//      employerToUpdate.setEnabled(newEmployer.getEnabled());
-//    }
 
     if (newEmployer.getEmployerInfo() != null && !newEmployer.getEmployerInfo().isEmpty()) {
       employerToUpdate.getProfile().setBio(newEmployer.getEmployerInfo());
@@ -82,6 +70,15 @@ public class EmployerService {
 
     if (newEmployer.getIndustry() != null && !newEmployer.getIndustry().isEmpty()) {
       employerToUpdate.getProfile().setIndustry(newEmployer.getIndustry());
+    }
+
+    if (newEmployer.getCurrentPassword() != null && !newEmployer.getCurrentPassword().isEmpty() &&
+        newEmployer.getNewPassword() != null && !newEmployer.getNewPassword().isEmpty()) {
+      if (passwordEncoder.matches(newEmployer.getCurrentPassword(), employerToUpdate.getPassword())) {
+        employerToUpdate.setPassword(passwordEncoder.encode(newEmployer.getNewPassword()));
+      } else {
+        throw new ResourceNotFoundException("Current password is incorrect");
+      }
     }
 
 

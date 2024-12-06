@@ -237,3 +237,30 @@
     background-color: #007bff;
     color: white;
 }
+
+.noJobs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh; /* Full viewport height */
+    text-align: center;
+    color: #555; /* Gray text */
+}
+
+.postJobButton {
+    background-color: #007bff; /* Blue background */
+    color: white; /* White text */
+    padding: 12px 24px; /* Larger padding for a button */
+    font-size: 16px; /* Slightly larger font size */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; /* Space above the button */
+    transition: background-color 0.3s ease;
+}
+
+.postJobButton:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+

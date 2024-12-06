@@ -37,8 +37,8 @@ public class JobMetricsService {
   // For updating cumulative count
   public void addJobImpressionEvent(@NotNull JobPost jobPost) {
     ImpressionEvent newEvent = jobPost.addImpression(); //logs impression, creates and logs if there isnt an impression already
-    impressionsRepository.save(jobPost.getImpressions());
-    //impressionEventRepository.save(newEvent); // Log event
+    //impressionsRepository.save(jobPost.getImpressions());
+    impressionEventRepository.save(newEvent); // Log event
   }
 
   public void addProfileImpressionEvent(@NotNull Employer employer) {

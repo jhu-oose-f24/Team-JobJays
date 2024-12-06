@@ -4,9 +4,13 @@ import com.example.jobjays.kafka.JobPostPublisherService;
 import com.example.jobjays.model.*;
 import com.example.jobjays.dto.jobPost.*;
 import com.example.jobjays.repository.JobPostRepository;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -76,8 +80,29 @@ public class JobPostService {
       jobPostToUpdate.setMaxSalary(jobPost.getMaxSalary());
     }
 
-    if (jobPost.getClosedDate() != null) {
-      jobPostToUpdate.setClosedDate(jobPost.getClosedDate());
+    if (jobPost.getClosedDate() != null && !jobPost.getClosedDate().isEmpty()) {
+      Instant instant = Instant.parse(jobPost.getClosedDate());
+      jobPostToUpdate.setClosedDate(LocalDateTime.ofInstant(instant, java.time.ZoneId.systemDefault()));
+    }
+
+    if (jobPost.getTags() != null && !jobPost.getTags().isEmpty()) {
+      jobPostToUpdate.setTags(jobPost.getTags());
+    }
+
+    if (jobPost.getJobType() != null && !jobPost.getJobType().isEmpty()) {
+      jobPostToUpdate.setJobType(jobPost.getJobType());
+    }
+
+    if (jobPost.getIndustry() != null && !jobPost.getIndustry().isEmpty()) {
+      jobPostToUpdate.setIndustry(jobPost.getIndustry());
+    }
+
+    if (jobPost.getWorkTiming() != null && !jobPost.getWorkTiming().isEmpty()) {
+      jobPostToUpdate.setWorkTiming(jobPost.getWorkTiming());
+    }
+
+    if (jobPost.getSkillsRequired() != null && !jobPost.getSkillsRequired().isEmpty()) {
+      jobPostToUpdate.setSkillsRequired(jobPost.getSkillsRequired());
     }
 
     return jobPostRepository.save(jobPostToUpdate);

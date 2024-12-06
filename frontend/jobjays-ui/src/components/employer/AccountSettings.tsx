@@ -137,15 +137,97 @@
 
 import React, { useState } from 'react';
 import styles from '@/styles/account-settings.module.css';
-import { Settings, MapPin, Phone, Mail, Lock, AlertTriangle } from 'lucide-react';
+import { Settings, Lock, AlertTriangle } from 'lucide-react';
+import {changePassword, deleteEmployerAccount, logout} from "@/lib/api";
+import {useToast} from "@/hooks/use-toast";
+import {useRouter} from "next/navigation";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
 
 const AccountSettings: React.FC = () => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [mapLocation, setMapLocation] = useState('');
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
+    const router = useRouter();
+    const { toast } = useToast();
+
+
+    const handleChangePassword = async () => {
+        const data = {
+            currentPassword: currentPassword,
+            newPassword: newPassword
+        }
+        if (newPassword !== confirmPassword) {
+            toast({
+                title: "Error",
+                description: "Passwords do not match",
+                variant: "destructive",
+            });
+            return;
+        }
+        if (currentPassword === newPassword) {
+            toast({
+                title: "Error",
+                description: "New password cannot be the same as current password",
+                variant: "destructive",
+            });
+            return;
+        }
+        if (currentPassword === "") {
+            toast({
+                title: "Error",
+                description: "Current password cannot be empty",
+                variant: "destructive",
+            });
+            return;
+        }
+        const result = await changePassword(data);
+        if (result.success) {
+            toast({
+                title: "Success",
+                description: "Password updated successfully! Logging you out now.",
+                variant: "default",
+            });
+            logout();
+            router.push("/signin");
+        } else {
+            toast({
+                title: "Error",
+                description: `Failed to update password. Message: ${result.error.message}, Code: ${result.error.status}`,
+                variant: "destructive",
+            });
+        }
+    }
+
+    const handleDeleteAccount = async() => {
+        const result = await deleteEmployerAccount();
+        if (result.success) {
+            toast({
+                title: "Success",
+                description: "Employer Account Deleted Successfully. Sorry to see you go!",
+                variant: "default",
+            });
+            logout();
+            router.push("/signup");
+        } else {
+            toast({
+                title: "Error",
+                description: `Failed to delete employer account. Message: ${result.error.message}, Code: ${result.error.status}`,
+                variant: "destructive",
+            });
+        }
+    }
+
 
     const SectionHeader = ({ title, description }: { title: string; description?: string }) => (
         <div className={styles.sectionHeader}>
@@ -167,65 +249,6 @@ const AccountSettings: React.FC = () => {
             </div>
 
             <div className={styles.content}>
-                {/* Contact Information */}
-                <div className={styles.section}>
-                    <SectionHeader 
-                        title="Contact Information"
-                        description="Manage your contact details and location"
-                    />
-                    <div className={styles.formGrid}>
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>
-                                <MapPin size={16} className={styles.labelIcon} />
-                                Map Location
-                            </label>
-                            <input
-                                type="text"
-                                className={styles.input}
-                                placeholder="Enter your location"
-                                value={mapLocation}
-                                onChange={(e) => setMapLocation(e.target.value)}
-                            />
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>
-                                <Phone size={16} className={styles.labelIcon} />
-                                Phone Number
-                            </label>
-                            <div className={styles.phoneInput}>
-                                <select className={styles.countryCode}>
-                                    <option value="+880">🇧🇩 +880</option>
-                                </select>
-                                <input
-                                    type="tel"
-                                    className={styles.input}
-                                    placeholder="Enter phone number"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                />
-                            </div>
-                        </div>
-
-                        <div className={styles.formGroup}>
-                            <label className={styles.label}>
-                                <Mail size={16} className={styles.labelIcon} />
-                                Email Address
-                            </label>
-                            <input
-                                type="email"
-                                className={styles.input}
-                                placeholder="Enter email address"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div className={styles.actionButtons}>
-                        <button className={styles.saveButton}>Save Changes</button>
-                    </div>
-                </div>
 
                 {/* Change Password */}
                 <div className={styles.section}>
@@ -278,7 +301,9 @@ const AccountSettings: React.FC = () => {
                     </div>
 
                     <div className={styles.actionButtons}>
-                        <button className={styles.saveButton}>Update Password</button>
+                        <button
+                            onClick={handleChangePassword}
+                            className={styles.saveButton}>Update Password</button>
                     </div>
                 </div>
 
@@ -293,7 +318,27 @@ const AccountSettings: React.FC = () => {
                             <AlertTriangle className={styles.warningIcon} size={20} />
                             <p>This action cannot be undone. This will permanently delete your account and remove your data from our servers.</p>
                         </div>
-                        <button className={styles.deleteButton}>Delete Account</button>
+                        <AlertDialog>
+                            <AlertDialogTrigger>
+                                <button className={styles.deleteButton}>Delete Account</button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        This action cannot be undone. This will permanently delete your account
+                                        and remove your data from our servers.
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                    onClick={handleDeleteAccount}
+                                    >Continue</AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+
                     </div>
                 </div>
             </div>

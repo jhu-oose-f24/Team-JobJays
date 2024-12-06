@@ -9,6 +9,10 @@ public class UpdateEmployerDto {
 
   String employerInfo; //bio
 
+  String currentPassword;
+
+  String newPassword;
+
   String industry;
 
   Boolean enabled;

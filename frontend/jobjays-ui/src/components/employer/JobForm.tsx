@@ -32,8 +32,8 @@ const jobFormSchema = z.object({
     }),
     jobType: z.string().nonempty("Job type is required"), // On-site, Remote, Hybrid
     workTiming: z.string().nonempty("Work timing is required"), // Full-time, Part-time, Flexible
-    minSalary: z.string().transform((val) => Number(val)),
-    maxSalary: z.string().transform((val) => Number(val)),
+    minSalary: z.preprocess((val) => parseFloat(val as string), z.number()),
+    maxSalary: z.preprocess((val) => parseFloat(val as string), z.number()),
     closedDate: z.string().transform((val) => new Date(val).toISOString()),
     skillsRequired: z.array(z.string()).min(1, "At least one skill is required")
 });
@@ -169,8 +169,7 @@ export const JobForm = ({ onSubmit }: { onSubmit: (data: JobFormSchemaType) => v
                         <FormItem>
                             <FormLabel>Job Type</FormLabel>
                             <Select
-                                onValueChange={(value) => { field.onChange(value);
-                                console.log(value)}} // Update form state with selected value
+                                onValueChange={(value) => { field.onChange(value);}} // Update form state with selected value
                                 value={field.value}
                             >
                                 <FormControl>

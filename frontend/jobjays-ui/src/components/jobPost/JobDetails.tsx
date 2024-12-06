@@ -2,7 +2,7 @@
 import React, {useEffect, useState} from "react";
 import { useParams } from "next/navigation";
 import {
-    addImpressionEvent,
+    addJobImpressionEvent,
     applyToJob,
     createNewSaveCollection,
     fetchJobPost,
@@ -39,7 +39,7 @@ const ApplicantView = ({ jobId }: { jobId: number }) => {
     const { toast } = useToast();
 
     useEffect(() => {
-        addImpressionEvent(jobId);
+        addJobImpressionEvent(jobId);
     }, [jobId]);
 
     // Handle job application
@@ -180,7 +180,7 @@ const JobDetails = () => {
 
     // Handle job form submission
     const handleJobFormSubmit = async (data: any) => {
-        const result = await updateJobPost(Number(id), data, mutate, data);
+        const result = await updateJobPost(Number(id), data, data, mutate);
         if (result.success) {
             setOpen(false); // Close the dialog
             toast({
@@ -223,7 +223,7 @@ const JobDetails = () => {
                             <ApplicantView jobId={Number(id)}/>
                         ) : role === "employer" ? (
                             <div className="flex flex-col space-y-2">
-                                <Dialog open={open} onOpenChange={setOpen}>
+                                <Dialog modal={false} open={open} onOpenChange={setOpen}>
                                     <DialogTrigger asChild>
                                         <Button onClick={() => setOpen(true)} className="px-4 py-2 bg-blue-400 text-white rounded-md">
                                             Edit Job Details
@@ -259,7 +259,7 @@ const JobDetails = () => {
                         <li>Date posted: {(new Date(JobPost.postedDate)).toDateString()}</li>
                         {/*<li>Experience: $50k-$60k/month</li>*/}
                         {/*<li>Job level: Entry Level</li>*/}
-                        <li>Location: {JobPost.location.city},{JobPost.location.state},{JobPost.location.country} </li>
+                        <li>Location: {JobPost.location.city}, {JobPost.location.state}, {JobPost.location.country} </li>
                     </ul>
                 </div>
 
