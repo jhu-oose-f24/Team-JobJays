@@ -1,20 +1,20 @@
 services:
-  # PostgreSQL Database
-  # db:
-  #   image: postgres:17
-  #   container_name: postgres-db
-  #   environment:
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: postgres
-  #     POSTGRES_DB: postgres
-  #   ports:
-  #     - "5432:5432"  # Expose PostgreSQL on port 5432
-  #   volumes:
-  #     - db_data:/var/lib/postgresql/data  # Persistent storage for database data
-  #   # network_mode: host  # Uses the host network directly (optional)
-  #   restart: on-failure
-  #   networks:
-  #     - kafka-network
+  PostgreSQL Database
+  db:
+    image: postgres:17
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"  # Expose PostgreSQL on port 5432
+    volumes:
+      - /var/lib/postgresql/data:/var/lib/postgresql/data # Persistent storage for database data
+    # network_mode: host  # Uses the host network directly (optional)
+    restart: on-failure
+    networks:
+      - kafka-network
 
 
   # Confluent Kafka setup
@@ -73,7 +73,7 @@ services:
       - "8080:8080"
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
-      SPRING_DATASOURCE_URL: 'jdbc:postgresql://host.docker.internal:5432/postgres'
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres-db:5432/postgres'
       SPRING_DATASOURCE_USERNAME: 'postgres'
       SPRING_DATASOURCE_PASSWORD: 'postgres'
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: 'org.postgresql.Driver' 
@@ -92,7 +92,7 @@ services:
       # - db
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
-      SPRING_DATASOURCE_URL: 'jdbc:postgresql://host.docker.internal:5432/postgres'
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres-db:5432/postgres'
       SPRING_DATASOURCE_USERNAME: 'postgres'
       SPRING_DATASOURCE_PASSWORD: 'postgres'
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: 'org.postgresql.Driver'  # Added here
@@ -110,7 +110,7 @@ services:
       # - db
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
-      SPRING_DATASOURCE_URL: 'jdbc:postgresql://host.docker.internal:5432/postgres'
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres-db:5432/postgres'
       SPRING_DATASOURCE_USERNAME: 'postgres'
       SPRING_DATASOURCE_PASSWORD: 'postgres'
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: 'org.postgresql.Driver'  # Added here
@@ -128,7 +128,7 @@ services:
       # - db
     environment:
       SPRING_KAFKA_BOOTSTRAP_SERVERS: 'broker:29092'
-      SPRING_DATASOURCE_URL: 'jdbc:postgresql://host.docker.internal:5432/postgres'
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres-db:5432/postgres'
       SPRING_DATASOURCE_USERNAME: 'postgres'
       SPRING_DATASOURCE_PASSWORD: 'postgres'
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: 'org.postgresql.Driver'  # Added here
@@ -140,7 +140,6 @@ networks:
     driver: bridge
 
 volumes:
-  db_data:
   kafka-data:
   kafka-streams-state:
 
