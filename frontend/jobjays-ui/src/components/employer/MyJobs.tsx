@@ -85,6 +85,10 @@ const MyJobs: React.FC = () => {
         }
     }
 
+    const handlePostJobButton = () => {
+        router.push('/employer/post-job');
+    }
+
 
     if (isLoading) return <SkeletonMyJobs />;
     if (isError) return <ErrorPage/>;
@@ -97,62 +101,77 @@ const MyJobs: React.FC = () => {
                 <div className={styles.header}>
                     <h2>My Jobs</h2>
                     <span className={styles.jobCount}>{EmployerProfile.jobPostsSize}</span>
-                    <div className={styles.filter}>
-                        <label htmlFor="jobStatus">Job status:</label>
-                        <select
-                            id="jobStatus"
-                            value={jobStatusFilter}
-                            onChange={handleStatusChange}
-                        >
-                            <option value="all">All Jobs</option>
-                            <option value="active">Active</option>
-                            <option value="expire">Expired</option>
-                        </select>
-                    </div>
+                    {EmployerProfile.jobPostsSize > 0 && (
+                        <div className={styles.filter}>
+                            <label htmlFor="jobStatus">Job status:</label>
+                            <select
+                                id="jobStatus"
+                                value={jobStatusFilter}
+                                onChange={handleStatusChange}
+                            >
+                                <option value="all">All Jobs</option>
+                                <option value="active">Active</option>
+                                <option value="expire">Expired</option>
+                            </select>
+                        </div>
+                    )}
                 </div>
 
-                {/* Job List */}
-                <div className={styles.jobList}>
-                    {filteredJobs.map((job) => (
-                        <div key={job.id} className={styles.jobRow}>
-                            <div className={styles.jobDetails}>
-                                <h4>{job.title}</h4>
-                                <p>{job.workTiming} &bull; {job.daysRemaining > 0 ? `${job.daysRemaining} days remaining` : 'Expired'}</p>
-                            </div>
-                            <div className={styles.jobStatus}>
-                                {job.status === 'Active' ? (
-                                    <span className={styles.activeStatus}>Active</span>
-                                ) : (
-                                    <span className={styles.expiredStatus}>Expired</span>
-                                )}
-                                <p>{job.numApplicants} Applications</p>
-                            </div>
-                            <div className={styles.jobActions}>
-                                <button
-                                    onClick={() => handleViewApplications(job.id)}
-                                    className={styles.viewApplicationsButton}>
-                                    View Applications
-                                </button>
-                                <div className={styles.moreActions}>
-                                    <button className={styles.moreActionsButton}>⋮</button>
-                                    <div className={styles.moreActionsMenu}>
-                                        {/*{job.status === 'Active' && (*/}
-                                        {/*    <button onClick={() => handleActionClick(job.id, 'promote')}>*/}
-                                        {/*        Promote Job*/}
-                                        {/*    </button>*/}
-                                        {/*)}*/}
-                                        <button onClick={() => handleViewJobDetail(job.id)}>View Detail</button>
-                                        {job.status === 'Active' && (
-                                            <button onClick={() => handleExpiration(job)}>
-                                                Make it Expire
+                {/* Conditional Content */}
+                {EmployerProfile.jobPostsSize === 0 ? (
+                    <div className={styles.noJobs}>
+                        <p>You do not have any Job Posts. Post a job now!</p>
+                        <button className={styles.postJobButton} onClick={handlePostJobButton}>
+                            Post a Job
+                        </button>
+                    </div>
+                ) : (
+                    /* Job List */
+                    <div className={styles.jobList}>
+                        {filteredJobs.map((job) => (
+                            <div key={job.id} className={styles.jobRow}>
+                                <div className={styles.jobDetails}>
+                                    <h4>{job.title}</h4>
+                                    <p>
+                                        {job.workTiming} &bull;{" "}
+                                        {job.daysRemaining > 0
+                                            ? `${job.daysRemaining} days remaining`
+                                            : "Expired"}
+                                    </p>
+                                </div>
+                                <div className={styles.jobStatus}>
+                                    {job.status === "Active" ? (
+                                        <span className={styles.activeStatus}>Active</span>
+                                    ) : (
+                                        <span className={styles.expiredStatus}>Expired</span>
+                                    )}
+                                    <p>{job.numApplicants} Applications</p>
+                                </div>
+                                <div className={styles.jobActions}>
+                                    <button
+                                        onClick={() => handleViewApplications(job.id)}
+                                        className={styles.viewApplicationsButton}
+                                    >
+                                        View Applications
+                                    </button>
+                                    <div className={styles.moreActions}>
+                                        <button className={styles.moreActionsButton}>⋮</button>
+                                        <div className={styles.moreActionsMenu}>
+                                            <button onClick={() => handleViewJobDetail(job.id)}>
+                                                View Detail
                                             </button>
-                                        )}
+                                            {job.status === "Active" && (
+                                                <button onClick={() => handleExpiration(job)}>
+                                                    Make it Expire
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
+                )}
 
                 {/* Pagination */}
                 <div className={styles.pagination}>

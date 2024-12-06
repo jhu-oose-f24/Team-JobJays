@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {useToast} from "@/hooks/use-toast";
-import {registerApplicant, registerEmployer} from "@/lib/api";
+import {loginEmployer, registerApplicant, registerEmployer} from "@/lib/api";
 
 export default function CreateAccount() {
   const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
@@ -65,10 +65,30 @@ export default function CreateAccount() {
     if (response.success) {
       toast({
         title: "Success",
-        description: "Registration successful! Check your email for verification",
+        description: "Registration successful! Check your email for verification. " +
+            "You will now be signed in",
         variant: "default",
       });
-      router.push(`/signin`);
+      const loginData = {
+        username: employerData.username,
+        password: employerData.password,
+      }
+      const login = await loginEmployer(loginData) as Response;
+        if (login.ok) {
+          toast({
+            title: "Success",
+            description: "Login successful!",
+            variant: "default",
+          });
+          router.push(`employer/profile`);
+        } else {
+            toast({
+                title: "Error! Try Again",
+                description: `${login.status}: Invalid username or password`,
+                variant: "destructive",
+            });
+        }
+      //router.push(`/signin`);
     } else {
       toast({
         title: "Error! Try Again",
