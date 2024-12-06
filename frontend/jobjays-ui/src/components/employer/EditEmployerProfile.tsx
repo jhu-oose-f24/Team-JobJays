@@ -131,12 +131,8 @@ type JobFormSchemaType = z.infer<typeof jobFormSchema>;
 
 const EditEmployerProfile = ({onSubmit, employerProfile}:{onSubmit: (data: JobFormSchemaType) => void; employerProfile: EmployerProfile}) => {
     const [currentSection, setCurrentSection] = useState<'company-info' | 'founding-info' | 'social-media' | 'account-setting'>('company-info');
-    const [logoFile, setLogoFile] = useState<string>("/company_logo.png");
-    const [bannerFile, setBannerFile] = useState<string>("/company_ban.png");
 
-    if (employerProfile.industry === undefined || employerProfile.industry === null) {
-        employerProfile.industry = "";
-    }
+    employerProfile.industry = employerProfile.industry ?? "";
 
     const form = useForm<JobFormSchemaType>({
       resolver: zodResolver(jobFormSchema),
@@ -151,8 +147,6 @@ const EditEmployerProfile = ({onSubmit, employerProfile}:{onSubmit: (data: JobFo
 
     const navigationItems = [
         { id: 'company-info', title: 'Company Info', icon: Building2 },
-        { id: 'founding-info', title: 'Founding Info', icon: Users },
-        { id: 'social-media', title: 'Social Media', icon: Share2 },
         { id: 'account-setting', title: 'Account Settings', icon: Settings }
     ];
 
@@ -254,34 +248,29 @@ const EditEmployerProfile = ({onSubmit, employerProfile}:{onSubmit: (data: JobFo
                                                 </div>
                                             </CardContent>
                                         </Card>
-                                        <div className="grid md:grid-cols-2 gap-6 ">
-                                            <ImageUploadCard
-                                                title="Company Logo"
-                                                description="Upload your company logo (1:1 ratio recommended)"
-                                                image={logoFile}
-                                                size="3.5 MB"
-                                                onRemove={() => setLogoFile("")}
-                                                onUpload={() => {/* Implement upload logic */
-                                                }}
-                                            />
-                                            <ImageUploadCard
-                                                title="Company Banner"
-                                                description="Upload a banner image (16:9 ratio recommended)"
-                                                image={bannerFile}
-                                                size="4.3 MB"
-                                                aspectRatio="aspect-video"
-                                                onRemove={() => setBannerFile("")}
-                                                onUpload={() => {/* Implement upload logic */
-                                                }}
-                                            />
-                                        </div>
+                                        {/*<div className="grid md:grid-cols-2 gap-6 ">*/}
+                                        {/*    <ImageUploadCard*/}
+                                        {/*        title="Company Logo"*/}
+                                        {/*        description="Upload your company logo (1:1 ratio recommended)"*/}
+                                        {/*        image={logoFile}*/}
+                                        {/*        size="3.5 MB"*/}
+                                        {/*        onRemove={() => setLogoFile("")}*/}
+                                        {/*        onUpload={() => /!* Implement upload logic *!/}*/}
+                                        {/*    />*/}
+                                        {/*    <ImageUploadCard*/}
+                                        {/*        title="Company Banner"*/}
+                                        {/*        description="Upload a banner image (16:9 ratio recommended)"*/}
+                                        {/*        image={bannerFile}*/}
+                                        {/*        size="4.3 MB"*/}
+                                        {/*        aspectRatio="aspect-video"*/}
+                                        {/*        onRemove={() => setBannerFile("")}*/}
+                                        {/*        onUpload={() => /!* Implement upload logic *!/}*/}
+                                        {/*    />*/}
+                                        {/*</div>*/}
                                     </>
                                 </form>
                             </Form>
                         )}
-
-                        {/*{currentSection === 'founding-info' && <FoundingInfo />}*/}
-                        {/*{currentSection === 'social-media' && <SocialMediaInfo />}*/}
                         {currentSection === 'account-setting' && <AccountSettings />}
                     </div>
                 </div>

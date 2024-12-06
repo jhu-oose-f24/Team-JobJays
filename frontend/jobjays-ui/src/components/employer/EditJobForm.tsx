@@ -22,8 +22,8 @@ const jobFormSchema = z.object({
     }),
     jobType: z.string(), // On-site, Remote, Hybrid
     workTiming: z.string(), // Full-time, Part-time, Flexible
-    minSalary: z.number().transform((val) => Number(val)),
-    maxSalary: z.number().transform((val) => Number(val)),
+    minSalary: z.preprocess((val) => parseFloat(val as string), z.number()),
+    maxSalary: z.preprocess((val) => parseFloat(val as string), z.number()),
     closedDate: z.string().transform((val) => new Date(val).toISOString()),
     skillsRequired: z.array(z.string())
 });
@@ -49,8 +49,8 @@ export const EditJobForm = ({
             },
             jobType: `${jobPost.jobType}`,
             workTiming: `${jobPost.workTiming}`,
-            minSalary: jobPost.minSalary,
-            maxSalary: jobPost.maxSalary,
+            minSalary: jobPost.minSalary ,
+            maxSalary: jobPost.maxSalary ,
             closedDate: new Date(jobPost.closedDate).toISOString(),
             skillsRequired: jobPost.skillsRequired, // Initialize with an empty skill
         },
@@ -214,7 +214,8 @@ export const EditJobForm = ({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Minimum Salary</FormLabel>
-                            <Input {...field} placeholder="Enter minimum salary" />
+                            <Input {...field}
+                                   placeholder="Enter minimum salary" />
                             <FormMessage />
                         </FormItem>
                     )}
@@ -226,7 +227,8 @@ export const EditJobForm = ({
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Maximum Salary</FormLabel>
-                            <Input {...field} placeholder="Enter maximum salary" />
+                            <Input {...field}
+                                   placeholder="Enter maximum salary" />
                             <FormMessage />
                         </FormItem>
                     )}

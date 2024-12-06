@@ -23,8 +23,7 @@ public class UpdateJobPostDto {
   @Positive
   Double maxSalary;
 
-  @Future
-  LocalDateTime closedDate;
+  String closedDate;
 
   String jobType;
 

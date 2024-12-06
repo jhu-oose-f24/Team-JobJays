@@ -2,7 +2,6 @@
 import React from 'react';
 import { useJobApplicants } from '../../../../lib/api';
 import { Applicant } from '../../../../lib/types';
-import { useParams } from 'next/navigation';
 import ErrorPage from "@/components/ui/ErrorPage";
 
 

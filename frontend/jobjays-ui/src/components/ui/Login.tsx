@@ -49,10 +49,9 @@ export default function Login() {
       });
       router.push(`employer/dashboard`);
     } else {
-
         toast({
             title: "Error! Try Again",
-            description: `${response.statusText}: ${await response.json()} Invalid username or password`,
+            description: `${response.type}: Invalid username or password`,
             variant: "destructive",
         });
     }

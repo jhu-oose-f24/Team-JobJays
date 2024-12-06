@@ -278,11 +278,6 @@ import { useToast } from "@/hooks/use-toast";
 const ProfilePage = () => {
   const { toast } = useToast();
   const { EmployerProfile, isLoading, isError, mutate } = useEmployer();
-
-
-
-
-
   if (isLoading) return <div>Loading profile...</div>;
   if (isError) return <ErrorPage/>;
 

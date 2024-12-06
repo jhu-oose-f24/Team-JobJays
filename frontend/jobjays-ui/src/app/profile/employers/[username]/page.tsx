@@ -1,7 +1,7 @@
 "use client";
 import {useParams} from "next/navigation";
-import {useEmployerFromUsername} from "@/lib/api";
-import React from "react";
+import {addJobImpressionEvent, addProfileImpressionEvent, useEmployerFromUsername} from "@/lib/api";
+import React, {useEffect} from "react";
 import ErrorPage from "@/components/ui/ErrorPage";
 // import {useEmployer} from "@/lib/api";
 // import Link from "next/link";
@@ -13,8 +13,14 @@ const EmployerProfilePage = () => {
     const { username } = useParams<{ username: string }>();
     const {Employer, isLoading, isError} = useEmployerFromUsername(username);
 
+    useEffect(() => {
+        addProfileImpressionEvent(username);
+    }, [username]);
+
     if (isLoading) return <div>Loading...</div>;
     if (isError) return <ErrorPage/>;
+
+
 
     const { name, bio } = Employer.employerProfile;
     return (

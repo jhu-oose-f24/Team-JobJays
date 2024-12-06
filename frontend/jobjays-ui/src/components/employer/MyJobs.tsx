@@ -4,16 +4,18 @@ import React, {useEffect, useState } from 'react';
 import styles from '@/styles/my-jobs.module.css';
 
 import {EmployerProfile, JobPost} from "@/lib/types";
-import {addJobAttributes, useEmployer} from '@/lib/api';
+import {addJobAttributes, updateJobPost, useEmployer} from '@/lib/api';
 import { useParams } from 'next/navigation';
 import Link from "next/link";
 import {useRouter} from "next/navigation";
 import SkeletonMyJobs from "@/components/employer/SkeletonMyJobs";
 import ErrorPage from "@/components/ui/ErrorPage";
+import {useToast} from "@/hooks/use-toast";
 
 
 const MyJobs: React.FC = () => {
-    const { EmployerProfile, isLoading, isError} = useEmployer();
+    const { EmployerProfile, isLoading, isError, mutate} = useEmployer();
+    const {toast} = useToast();
 
     const [jobPosts, setJobPosts] = useState<JobPost[]>([]);
     const router = useRouter();
@@ -39,17 +41,48 @@ const MyJobs: React.FC = () => {
     );
 
 
-    const handleActionClick = (jobId: number, action: string) => {
-        console.log(`Job ${jobId} action: ${action}`);
-
-    };
-
     const handleViewJobDetail = (jobId: number) => {
         router.push(`/post/jobs/${jobId}`);
     }
 
     const handleViewApplications = (jobId: number) => {
         router.push(`/employer/view-applicants/${jobId}`);
+    }
+
+    const handleExpiration = async (job: JobPost) => {
+        const data = {
+            closedDate: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString()
+        }
+        const originalJob = EmployerProfile.jobPosts.find((j) => j.id === job.id);
+
+        if (originalJob) {
+            const updatedJob = {...originalJob, ...data};
+            const index = EmployerProfile.jobPosts.findIndex((j) => j.id === updatedJob.id);
+            if (index > -1) {
+                EmployerProfile.jobPosts[index] = updatedJob;
+            }
+            const response = await updateJobPost(job.id, data, updatedJob, mutate);
+            if (response.success) {
+                toast({
+                    title: "Success",
+                    description: "Job closed!",
+                    variant: "default",
+                });
+
+            } else {
+                toast({
+                    title: "Error",
+                    description: "Job failed to be updated",
+                    variant: "destructive",
+                });
+            }
+        } else {
+            toast({
+                title: "Error",
+                description: "Job failed to be updated: Could not be found",
+                variant: "destructive",
+            });
+        }
     }
 
 
@@ -103,14 +136,14 @@ const MyJobs: React.FC = () => {
                                 <div className={styles.moreActions}>
                                     <button className={styles.moreActionsButton}>⋮</button>
                                     <div className={styles.moreActionsMenu}>
-                                        {job.status === 'Active' && (
-                                            <button onClick={() => handleActionClick(job.id, 'promote')}>
-                                                Promote Job
-                                            </button>
-                                        )}
+                                        {/*{job.status === 'Active' && (*/}
+                                        {/*    <button onClick={() => handleActionClick(job.id, 'promote')}>*/}
+                                        {/*        Promote Job*/}
+                                        {/*    </button>*/}
+                                        {/*)}*/}
                                         <button onClick={() => handleViewJobDetail(job.id)}>View Detail</button>
                                         {job.status === 'Active' && (
-                                            <button onClick={() => handleActionClick(job.id, 'expire')}>
+                                            <button onClick={() => handleExpiration(job)}>
                                                 Make it Expire
                                             </button>
                                         )}
