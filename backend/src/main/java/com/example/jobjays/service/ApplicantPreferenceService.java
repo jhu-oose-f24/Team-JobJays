@@ -109,6 +109,7 @@ public class ApplicantPreferenceService {
         preference.setMinMonthlySalary(dto.getMinMonthlySalary());
         preference.setJobTypes(dto.getJobTypes());
         preference.setWorkTimings(dto.getWorkTimings());
+        preference.setSkills(dto.getSkills());
 
         List<Location> locations = dto.getLocations().stream()
                 .map(locDto -> new Location(locDto.getCountry(), locDto.getState(), locDto.getCity()))
