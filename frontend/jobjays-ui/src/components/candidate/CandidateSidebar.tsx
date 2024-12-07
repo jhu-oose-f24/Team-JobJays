@@ -1,5 +1,5 @@
 import Link from "next/link";
-import {BookmarkPlus, Brain, Briefcase, ChevronLeft, Eye, LogOut, UserCircle, Gavel, PenTool} from "lucide-react";
+import {BookmarkPlus, Brain, Briefcase, ChevronLeft, Eye, LogOut, UserCircle, Gavel, PenTool, Cannabis} from "lucide-react";
 import {logout} from "@/lib/api";
 import React from "react";
 import {useRouter} from "next/navigation";
@@ -40,6 +40,11 @@ const CandidateSidebar = () => {
             href: `/candidate/skills`,
             label: 'Add Skills To Profile',
             icon: <PenTool className="w-5 h-5" />
+        },
+        {
+            href: `/candidate/preference`,
+            label: 'Preferences',
+            icon: <Cannabis className="w-5 h-5" />
         },
         {
             href: `/advice`,
