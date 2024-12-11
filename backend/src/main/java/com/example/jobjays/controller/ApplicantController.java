@@ -233,6 +233,15 @@ public class ApplicantController {
         .applicantId(applicant.getID()).resumes(applicantResume).build());
   }
 
+
+  @GetMapping("/resume")
+  @PreAuthorize("hasAuthority('APPLICANT')")
+  public ResponseEntity<ResponseApplicantDto> fetchCurrentUsersResumes() {
+    String userId = getCurrentUserId();
+    Long applicantId = Long.valueOf(userId);
+    return fetchResumesByApplicantId(applicantId);
+  }
+
   @PostMapping("/resume/delete")
   public ResponseEntity<ResponseApplicantDto> deleteResumesByResumeId(@RequestParam("resumeId") Long resumeId) {
     ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
@@ -319,8 +328,10 @@ public class ApplicantController {
 
 
   @PostMapping("/resume")
-  public ResponseEntity<ResponseApplicantDto> uploadResume(@RequestParam("applicantId") Long applicantId,
-      @RequestParam("resume") MultipartFile resume) {
+  @PreAuthorize("hasAuthority('APPLICANT')")
+  public ResponseEntity<ResponseApplicantDto> uploadResume(@RequestParam("resume") MultipartFile resume) {
+    String currentUserId = getCurrentUserId();
+    Long applicantId = Long.parseLong(currentUserId);
     ResponseApplicantDto responseApplicantDto = ResponseApplicantDto.builder().build();
     responseApplicantDto.setApplicantId(applicantId);
     if (resume.isEmpty() || !resume.getContentType().equals("application/pdf")) {

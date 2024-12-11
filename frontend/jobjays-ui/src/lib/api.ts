@@ -1,7 +1,7 @@
 import useSWR from 'swr' ;
 import {
     Applicant,
-    ApplicantProfile,
+    ApplicantProfile, ApplicantResume,
     Employer,
     EmployerProfile, Impressions, ImpressionsChartData,
     JobPost,
@@ -196,6 +196,17 @@ export function useApplicant() {
     };
 }
 
+
+export function useResumes() {
+    const { data, error, isLoading} = useSWR(`${BASE_URL}/applicants/resume`, fetcher);
+
+    return {
+        applicantResumes: data as ApplicantResume[],
+        isLoading,
+        isError: error
+    };
+}
+
 export function useAllApplicants() {
     const { data, error, isLoading } = useSWR(`${BASE_URL}/applicants`, fetcher);
 
@@ -321,6 +332,43 @@ export async function changePassword(data: any) {
     } catch (error: any) {
         return {success: false, error};
     }
+}
+
+export async function resumeUpload(file: any) {
+    const formData = new FormData();
+    formData.append("resume", file);
+    console.log(file.name);
+    const token = localStorage.getItem("token"); // Retrieve token from localStorage
+    const headers = {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": 'application/json',
+    };
+    try {
+        const response = await fetch(`${BASE_URL}/applicants/resume`, {
+            method: "POST",
+            headers: headers,
+            body: formData
+        });
+
+
+        if (response.ok) {
+            console.log(response);
+            const applicantData = await response.json();
+            console.log(applicantData);
+            return {success: true, data: applicantData};
+            //alert("Upload Successful!");
+            //fetchPdfFiles();
+            //router.push(`employer/${employerId}/dashboard`); // redirect to new user's dashboard
+        } else {
+            const errorData = await response.json();
+            alert(`Error: ${errorData.failReason}`);
+            return {success: false, data: errorData};
+        }
+    } catch (error) {
+        alert(`An error occurred: ${error}`);
+        return {success: false, data: error};
+    }
+
 }
 
 export function fetchUserProfile(id: number) {

@@ -11,16 +11,17 @@ import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import {cn} from "@/lib/utils";
 import Image from "next/image";
-import {Building2, CalendarIcon, ChevronRight, ImagePlus, Settings, Share2, Trash2, Upload, Users} from "lucide-react";
+import {Building2, ChevronRight, ImagePlus, Settings, Share2, Trash2, Upload, Users} from "lucide-react";
 import {ApplicantProfile} from "@/lib/types";
-import FoundingInfo from "@/components/employer/FoundingInfo";
+//import FoundingInfo from "@/components/employer/FoundingInfo";
 import SocialMediaInfo from "@/components/employer/SocialMediaInfo";
 import AccountSettings from "@/components/employer/AccountSettings";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {format} from "date-fns";
-import {Calendar} from "@/components/ui/calendar";
-import {DayPicker} from "react-day-picker";
-import ReactDatePicker from "react-datepicker";
+import PersonalSettings from "@/components/candidate/PersonalSettings";
+// import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+// import {format} from "date-fns";
+// import {Calendar} from "@/components/ui/calendar";
+// import {DayPicker} from "react-day-picker";
+// import ReactDatePicker from "react-datepicker";
 // import styles from "react-day-picker/style.css";
 
 const ImageUploadCard = ({
@@ -138,10 +139,10 @@ const EditApplicantProfile = ({ onSubmit, applicantProfile }: {
     onSubmit: (data: ApplicantProfileType) => void;
     applicantProfile: ApplicantProfile;
 }) => {
-    const [currentSection, setCurrentSection] = useState<'company-info' | 'founding-info' | 'social-media' | 'account-setting'>('company-info');
+    const [currentSection, setCurrentSection] = useState<'company-info' | 'founding-info' | 'social-media' | 'resumes' | 'account-setting'>('company-info');
     const [logoFile, setLogoFile] = useState<string>("/company_logo.png");
-    const [bannerFile, setBannerFile] = useState<string>("/company_ban.png");
-    const [datePopoverOpen, setDatePopoverOpen] = useState(false);
+    //const [bannerFile, setBannerFile] = useState<string>("/company_ban.png");
+    // const [datePopoverOpen, setDatePopoverOpen] = useState(false);
 
 
     const form = useForm<ApplicantProfileType>({
@@ -162,9 +163,10 @@ const EditApplicantProfile = ({ onSubmit, applicantProfile }: {
 
     //TODO change navigation items names
     const navigationItems = [
-        { id: 'company-info', title: 'Company Info', icon: Building2 },
-        { id: 'founding-info', title: 'Founding Info', icon: Users },
+        { id: 'company-info', title: 'Basic Info', icon: Building2 },
+        //{ id: 'founding-info', title: 'Founding Info', icon: Users },
         { id: 'social-media', title: 'Social Media', icon: Share2 },
+        { id: 'resumes', title: 'Resume Manage', icon: Users },
         { id: 'account-setting', title: 'Account Settings', icon: Settings }
     ];
 
@@ -212,7 +214,7 @@ const EditApplicantProfile = ({ onSubmit, applicantProfile }: {
                                         <Card>
                                             <CardHeader>
                                                 <CardTitle>Company Details</CardTitle>
-                                                <CardDescription>Basic information about your company</CardDescription>
+                                                <CardDescription>Basic information about candidate</CardDescription>
                                             </CardHeader>
                                             <CardContent className="space-y-6">
                                                 <div className="space-y-4">
@@ -374,21 +376,11 @@ const EditApplicantProfile = ({ onSubmit, applicantProfile }: {
                                         </Card>
                                         <div className="grid md:grid-cols-2 gap-6 ">
                                             <ImageUploadCard
-                                                title="Company Logo"
-                                                description="Upload your company logo (1:1 ratio recommended)"
+                                                title="Photos"
+                                                description="Upload your personal photo (1:1 ratio recommended)"
                                                 image={logoFile}
                                                 size="3.5 MB"
                                                 onRemove={() => setLogoFile("")}
-                                                onUpload={() => {/* Implement upload logic */
-                                                }}
-                                            />
-                                            <ImageUploadCard
-                                                title="Company Banner"
-                                                description="Upload a banner image (16:9 ratio recommended)"
-                                                image={bannerFile}
-                                                size="4.3 MB"
-                                                aspectRatio="aspect-video"
-                                                onRemove={() => setBannerFile("")}
                                                 onUpload={() => {/* Implement upload logic */
                                                 }}
                                             />
@@ -398,10 +390,10 @@ const EditApplicantProfile = ({ onSubmit, applicantProfile }: {
                             </Form>
                         )}
 
-                        {currentSection === 'founding-info' && <FoundingInfo />}
+                        {/*{currentSection === 'founding-info' && <FoundingInfo />}*/}
                         {currentSection === 'social-media' && <SocialMediaInfo />}
                         {currentSection === 'account-setting' && <AccountSettings />}
-
+                        {currentSection === 'resumes' && < PersonalSettings/>}
                     </div>
                 </div>
             </div>
