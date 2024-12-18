@@ -27,8 +27,8 @@ const CandidatePage = ({jobId}: {jobId: number}) => {
               <th className="py-3 px-4 border-b text-left">Name</th>
               <th className="py-3 px-4 border-b text-left">Username</th>
               <th className="py-3 px-4 border-b text-left">Bio</th>
-              <th className="py-3 px-4 border-b text-left">Applied Date</th>
-              <th className="py-3 px-4 border-b text-left">Status</th>
+              {/*<th className="py-3 px-4 border-b text-left">Applied Date</th>*/}
+              {/*<th className="py-3 px-4 border-b text-left">Status</th>*/}
             </tr>
           </thead>
           <tbody>
