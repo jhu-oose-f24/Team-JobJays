@@ -7,18 +7,28 @@ import {useToast} from "@/hooks/use-toast";
 import {loginApplicant, loginEmployer} from "@/lib/api";
 
 export default function Login() {
-  const [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
-    "Candidate"
-  );
+  const router = useRouter()
+  // if user already logged in, redirect to dashboard
+
   const {toast} = useToast();
 
-  const router = useRouter()
 
   const [formData, setFormData] = useState({
     username: "",
     password: "",
   });
 
+    if (window.localStorage.getItem("token")) {
+        // check  role
+        const role = window.localStorage.getItem("role");
+        if (role === "applicant") {
+            router.push("/candidate/profile");
+        } else if (role === "employer") {
+            router.push("/employer/dashboard");}
+    }
+    const  [selectedTab, setSelectedTab] = useState<"Candidate" | "Employer">(
+        "Candidate"
+    );
   // const [candForm, setCandForm] = useState({
   //   username: "",
   //   password: ""
@@ -51,7 +61,7 @@ export default function Login() {
     } else {
         toast({
             title: "Error! Try Again",
-            description: `${response.type}: Invalid username or password`,
+            description: `Invalid username or password`, // ${response.type}:
             variant: "destructive",
         });
     }
@@ -77,7 +87,7 @@ export default function Login() {
     } else {
       toast({
         title: "Error! Try Again",
-        description: `${response.statusText}: ${await response.json()} Invalid username or password`,
+        description: `Invalid username or password`,
         variant: "destructive",
       });
     }

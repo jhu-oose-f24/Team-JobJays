@@ -98,7 +98,7 @@ const ListJob = ({ query }: ListJobProps) => {
             {filteredJobListings.map((jobListing) => (
                 <Link
                     key={jobListing.id}
-                    href={`http://localhost:3000/post/jobs/${jobListing.id}`}
+                    href={`/post/jobs/${jobListing.id}`}
                     className={styles.jobBox} // This applies styling to the entire box
                 >
                     <div>
