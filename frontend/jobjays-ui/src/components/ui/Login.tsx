@@ -18,7 +18,8 @@ export default function Login() {
     password: "",
   });
 
-    if (window.localStorage.getItem("token")) {
+    if (typeof window !== "undefined"
+    && window.localStorage.getItem("token")) {
         // check  role
         const role = window.localStorage.getItem("role");
         if (role === "applicant") {
