@@ -1,13 +1,48 @@
 import useSWR from 'swr' ;
+import {jwtDecode} from "jwt-decode";
+
 import {
     Applicant,
-    ApplicantProfile, ApplicantResume,
+    ApplicantProfile,
+    // ApplicantResume
     Employer,
     EmployerProfile, Impressions, ImpressionsChartData,
     JobPost,
     SavedJobCollection,
     UserTypeDto
 } from './types';
+
+// const set exp date on token
+const setExpirationDate = (token: string) => {
+    if (token) {
+        const decoded = jwtDecode (token);
+        const exp = decoded.exp; // Extract 'exp' claim
+        if (exp) {
+            const expirationDate = new Date(exp * 1000);
+            localStorage.setItem("expirationDate", expirationDate.toString());
+            // Convert UNIX timestamp to Date
+            console.log("Token expires at:", expirationDate);
+        } else {
+            console.log("'exp' claim is missing in the token.");
+        }
+    } else {
+        console.log("No token found.");
+    }
+}
+
+const parseJwt = (token: string) => {
+    try {
+        if(!token) {
+            // Split the JWT token into parts (header, payload, signature)
+            const payloadBase64 = token.split('.')[1]; // Get the payload part
+            const payload = JSON.parse(atob(payloadBase64)); // Decode from Base64 and parse JSON
+            return payload.exp; // Return the 'exp' claim
+        }
+    } catch (error) {
+        console.error("Invalid JWT token", error);
+        return null; // Handle invalid tokens
+    }
+};
 
 //production url
 const BASE_URL = 'https://muradazimzada.me/api';
@@ -133,6 +168,11 @@ export async function loginApplicant(applicantData: any) {
             }
 
             localStorage.setItem("token", applicantData.token);
+            // set expiration time for token
+
+            setExpirationDate(applicantData.token);
+
+            (applicantData.token);
             localStorage.setItem("role", "candidate");
             return response;
         } else {
@@ -171,6 +211,8 @@ export async function loginEmployer(employerData: any) {
 
             localStorage.setItem("token", employerData.token);
             localStorage.setItem("role", "employer");
+            // set expiration time for token
+            setExpirationDate(employerData.token);
             return response;
         } else {
             // const errorData = await response.json();
@@ -201,7 +243,7 @@ export function useResumes() {
     const { data, error, isLoading} = useSWR(`${BASE_URL}/applicants/resume`, fetcher);
 
     return {
-        applicantResumes: data as ApplicantResume[],
+        applicantResumes: data as []  , //ApplicantResume
         isLoading,
         isError: error
     };

@@ -1,4 +1,4 @@
-
+import {useToast} from "@/hooks/use-toast";
 import React, { useState, useEffect } from 'react';
 import { fetchPreference, updatePreference } from '../../lib/preference-api';
 import styles from '../../styles/preference.module.css';
@@ -26,13 +26,16 @@ interface ApplicantPreferenceDto {
 }
 
 const Preference = () => {
+    const {toast }= useToast();
     const [preferences, setPreferences] = useState<ApplicantPreferenceDto | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+
     const [industryInput, setIndustryInput] = useState<string>('');
     const [skillInput, setSkillInput] = useState<string>('');
     const [jobTitleInput, setJobTitleInput] = useState<string>('');
     const [locationInput, setLocationInput] = useState<LocationDto>({ country: '', state: '', city: '' });
+
     const [industries, setIndustries] = useState<string[]>([]);
     const [jobTitles, setJobTitles] = useState<string[]>([]);
     const [locations, setLocations] = useState<LocationDto[]>([]);
@@ -46,15 +49,30 @@ const Preference = () => {
     useEffect(() => {
         fetchPreference()
             .then((data) => {
-                setPreferences(data);
-                setIndustries(data.industries);
-                setJobTitles(data.jobTitles);
-                setLocations(data.locations);
-                setJobTypes(data.jobTypes);
-                setWorkTimings(data.workTimings);
-                setSkills(data.skills);
+                const defaultPreferences: ApplicantPreferenceDto = {
+                    applicantId: 0,
+                    industries: [],
+                    jobTitles: [],
+                    minMonthlySalary: 0,
+                    skills: [],
+                    locations: [],
+                    jobTypes: [],
+                    workTimings: [],
+                    notificationPreference: { notificationFrequency: 'DAILY' },
+                };
+
+                const finalPreferences = { ...defaultPreferences, ...data };
+                setPreferences(finalPreferences);
+
+                // Initialize individual state variables
+                setIndustries(finalPreferences.industries || []);
+                setJobTitles(finalPreferences.jobTitles || []);
+                setLocations(finalPreferences.locations || []);
+                setJobTypes(finalPreferences.jobTypes || []);
+                setWorkTimings(finalPreferences.workTimings || []);
+                setSkills(finalPreferences.skills || []);
             })
-            .catch((error) => setError(error.message || "An error occurred while fetching preferences."))
+            .catch((error) => setError(error.message || 'An error occurred while fetching preferences.'))
             .finally(() => setLoading(false));
     }, []);
 
@@ -68,30 +86,41 @@ const Preference = () => {
                 jobTypes,
                 workTimings,
                 skills,
-                applicantId: localStorage.getItem('applicantId')
             };
             updatePreference(updatedPreferences)
-                .then((data) => setPreferences(data))
-                .catch((error) => setError(error.message || "An error occurred while updating preferences."));
+                .then((data) => {
+                    setPreferences(data);
+                    toast({
+                        title: "Success",
+                        description: "Preferences updated successfully!",
+                        variant: "default",
+                    });
+                })
+                .catch((error) => {
+                    setError(error.message || "An error occurred while updating preferences.");
+                    toast({
+                        title: "Failure",
+                        description: "Preferences can't be updated right now",
+                        variant: "destructive",
+                    })        });
         }
     };
-
     const handleIndustryAdd = () => {
-        if (industryInput.trim() !== '') {
+        if (industryInput.trim()) {
             setIndustries([...industries, industryInput.trim()]);
             setIndustryInput('');
         }
     };
 
     const handleJobTitleAdd = () => {
-        if (jobTitleInput.trim() !== '') {
+        if (jobTitleInput.trim()) {
             setJobTitles([...jobTitles, jobTitleInput.trim()]);
             setJobTitleInput('');
         }
     };
 
     const handleSkillAdd = () => {
-        if (skillInput.trim() !== '') {
+        if (skillInput.trim()) {
             setSkills([...skills, skillInput.trim()]);
             setSkillInput('');
         }
@@ -117,13 +146,13 @@ const Preference = () => {
     };
 
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <div className={styles.preferenceContainer}>
             <h2>Applicant Preferences</h2>
             <div className={styles.preferenceForm}>
-                {/* Industries Field Group */}
+                {/* Industries */}
                 <div className={styles.fieldGroup}>
                     <label>Industries:</label>
                     <input
@@ -140,7 +169,7 @@ const Preference = () => {
                     </div>
                 </div>
 
-                {/* Job Titles Field Group */}
+                {/* Job Titles */}
                 <div className={styles.fieldGroup}>
                     <label>Job Titles:</label>
                     <input
@@ -157,9 +186,9 @@ const Preference = () => {
                     </div>
                 </div>
 
-                {/* Skills Field Group */}
+                {/* Skills */}
                 <div className={styles.fieldGroup}>
-                    <label>Skills :</label>
+                    <label>Skills:</label>
                     <input
                         type="text"
                         value={skillInput}
@@ -174,7 +203,7 @@ const Preference = () => {
                     </div>
                 </div>
 
-                {/* Locations Field Group */}
+                {/* Locations */}
                 <div className={styles.fieldGroup}>
                     <label>Locations:</label>
                     <input
@@ -205,7 +234,7 @@ const Preference = () => {
                     </div>
                 </div>
 
-                {/* Job Types Field Group */}
+                {/* Job Types */}
                 <div className={styles.fieldGroup}>
                     <label>Job Types:</label>
                     <select onChange={(e) => handleJobTypeSelect(e.target.value)} defaultValue="">
@@ -221,7 +250,7 @@ const Preference = () => {
                     </div>
                 </div>
 
-                {/* Work Timings Field Group */}
+                {/* Work Timings */}
                 <div className={styles.fieldGroup}>
                     <label>Work Timings:</label>
                     <select onChange={(e) => handleWorkTimingSelect(e.target.value)} defaultValue="">
@@ -237,25 +266,26 @@ const Preference = () => {
                     </div>
                 </div>
 
-                {/* Min Monthly Salary Field Group */}
+                {/* Min Monthly Salary */}
                 <div className={styles.fieldGroup}>
                     <label>Min Monthly Salary:</label>
                     <input
+                        type="number"
                         value={preferences?.minMonthlySalary || ''}
                         onChange={(e) =>
                             setPreferences({
                                 ...preferences!,
-                                minMonthlySalary:  parseFloat(e.target?.value) ? parseFloat(e.target?.value) : 0
+                                minMonthlySalary: parseFloat(e.target.value) || 0,
                             })
                         }
                     />
                 </div>
 
-                {/* Notification Frequency Field Group */}
+                {/* Notification Frequency */}
                 <div className={styles.fieldGroup}>
                     <label>Notification Frequency:</label>
                     <select
-                        value={preferences?.notificationPreference.notificationFrequency}
+                        value={preferences?.notificationPreference?.notificationFrequency || 'DAILY'}
                         onChange={(e) =>
                             setPreferences({
                                 ...preferences!,
