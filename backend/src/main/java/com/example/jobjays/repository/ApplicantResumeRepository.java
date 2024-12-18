@@ -16,8 +16,10 @@ public interface ApplicantResumeRepository extends JpaRepository<ApplicantResume
           "FROM ApplicantResume a WHERE a.userId = :userId")
   List<ApplicantResume> findByUserId(Long userId);
 
-
-
+  
+  // 新增方法，用于查询简历的完整数据，包括 fileData
+  @Query("SELECT a FROM ApplicantResume a WHERE a.userId = :userId")
+  List<ApplicantResume> findByUserIdWithResumeData(Long userId);
 
 
 
