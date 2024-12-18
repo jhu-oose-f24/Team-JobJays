@@ -87,4 +87,4 @@ Please refer this file (https://github.com/jhu-oose-f24/Team-JobJays/blob/main/h
 
 # Miscellaneous
 ## How Preference, JobMatching Services works(video explanation) - 
-(https://drive.google.com/file/d/1K8zL4N61aZ6ESc-EVxIhXuNwvQRUu8E2/view?usp=sharing)
+(https://drive.google.com/file/d/1K8zL4N61aZ6ESc-EVxIhXuNwvQRUu8E2/view?usp=sharing).
